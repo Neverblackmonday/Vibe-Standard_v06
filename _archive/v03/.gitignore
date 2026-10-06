@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.py[cod]
+*.class
+.venv/
+venv/
+
+# Environment & Local Settings
+.env
+.claude/settings.local.json
+
+# Logs & Temporary
+*.log
+.DS_Store
+Thumbs.db

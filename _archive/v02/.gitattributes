@@ -1,0 +1,18 @@
+*.bat text eol=crlf
+*.cmd text eol=crlf
+.githooks/* text eol=lf
+
+# 배포본(git archive) 제외 규칙: 표준 개발 이력은 고객 배포본에 넣지 않는다
+_archive/** export-ignore
+Claude?outputs/** export-ignore
+Audits/AUDIT_* export-ignore
+Departments/**/REQ-0*.md export-ignore
+Departments/**/EC-0*.md export-ignore
+Departments/**/DEV-0*.md export-ignore
+Departments/**/RES-0*.md export-ignore
+Departments/**/RES_DEV-0*.md export-ignore
+Departments/**/HOTFIX-0*.md export-ignore
+Departments/*/workspace/** export-ignore
+Departments/*/workspace/.gitkeep -export-ignore
+Departments/Secretariat/assets/inbox/** export-ignore
+Departments/Secretariat/assets/inbox/.gitkeep -export-ignore

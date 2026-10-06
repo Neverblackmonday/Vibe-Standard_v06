@@ -1,0 +1,11 @@
+#!/bin/sh
+# 바이브 코딩 표준 v02 커밋 전 자동 안전성 검사
+python Departments/Development/assets/scripts/check_standard.py
+if [ $? -ne 0 ]; then
+  echo ""
+  echo "❌ [BLOCKED] 표준 검사 실패로 인해 커밋이 차단되었습니다."
+  echo "   위 결함을 해결한 후 다시 커밋하십시오."
+  exit 1
+fi
+
+exit 0

@@ -1,0 +1,81 @@
+시각: 2026-10-06T13:54:13+09:00
+원본 setup.cmd 앞머리 BOM 개수: 2, 첫 16바이트: b'\xef\xbb\xbf\xef\xbb\xbf@echo off\r'
+
+=== BOM 0개 사본 | 종료 코드 0 | 명령 줄 표시(echo 켜짐) False | 첫 줄 오류 False | 끝까지 실행 True | 첫 줄 정상 처리 True
+--- stdout
+[바이브 코딩 표준 v02] 프로젝트 초기 설정을 시작합니다...
+Initialized empty Git repository in C:/Users/Changho Kim/AppData/Local/Temp/req002_bom0_m18av87y/.git/
+- Git 저장소 초기화 완료.
+- Git 환경 설정(core.quotepath, core.hooksPath) 완료.
+[master (root-commit) 9e4b4c6] chore: 바이브 코딩 표준 v02 초기화
+ 1 file changed, 27 insertions(+)
+ create mode 100644 setup.cmd
+- 초기 커밋 완료.
+
+[성공] 프로젝트 환경 설정이 완료되었습니다.
+--- stderr
+
+
+=== BOM 1개 사본 | 종료 코드 0 | 명령 줄 표시(echo 켜짐) False | 첫 줄 오류 False | 끝까지 실행 True | 첫 줄 정상 처리 True
+--- stdout
+[바이브 코딩 표준 v02] 프로젝트 초기 설정을 시작합니다...
+Initialized empty Git repository in C:/Users/Changho Kim/AppData/Local/Temp/req002_bom1_q4zing0n/.git/
+- Git 저장소 초기화 완료.
+- Git 환경 설정(core.quotepath, core.hooksPath) 완료.
+[master (root-commit) 873bcc8] chore: 바이브 코딩 표준 v02 초기화
+ 1 file changed, 27 insertions(+)
+ create mode 100644 setup.cmd
+- 초기 커밋 완료.
+
+[성공] 프로젝트 환경 설정이 완료되었습니다.
+--- stderr
+
+
+=== BOM 2개 사본 | 종료 코드 0 | 명령 줄 표시(echo 켜짐) True | 첫 줄 오류 True | 끝까지 실행 True | 첫 줄 정상 처리 False
+--- stdout
+
+C:\Users\CHANGH~1\AppData\Local\Temp\req002_bom2_utbd_89z>﻿@echo off 
+
+C:\Users\CHANGH~1\AppData\Local\Temp\req002_bom2_utbd_89z>chcp 65001  1>nul 
+
+C:\Users\CHANGH~1\AppData\Local\Temp\req002_bom2_utbd_89z>echo [바이브 코딩 표준 v02] 프로젝트 초기 설정을 시작합니다... 
+[바이브 코딩 표준 v02] 프로젝트 초기 설정을 시작합니다...
+
+C:\Users\CHANGH~1\AppData\Local\Temp\req002_bom2_utbd_89z>if not exist ".git" (
+git init  
+ echo - Git 저장소 초기화 완료. 
+) 
+Initialized empty Git repository in C:/Users/Changho Kim/AppData/Local/Temp/req002_bom2_utbd_89z/.git/
+- Git 저장소 초기화 완료.
+
+C:\Users\CHANGH~1\AppData\Local\Temp\req002_bom2_utbd_89z>git config core.quotepath false 
+
+C:\Users\CHANGH~1\AppData\Local\Temp\req002_bom2_utbd_89z>git config core.hooksPath .githooks 
+
+C:\Users\CHANGH~1\AppData\Local\Temp\req002_bom2_utbd_89z>echo - Git 환경 설정(core.quotepath, core.hooksPath) 완료. 
+- Git 환경 설정(core.quotepath, core.hooksPath) 완료.
+
+C:\Users\CHANGH~1\AppData\Local\Temp\req002_bom2_utbd_89z>git rev-parse --verify HEAD  1>nul 2>&1 
+
+C:\Users\CHANGH~1\AppData\Local\Temp\req002_bom2_utbd_89z>if 128 NEQ 0 (
+git add .  
+ git commit -m "chore: 바이브 코딩 표준 v02 초기화"  
+ echo - 초기 커밋 완료. 
+)  else (echo - 기존 커밋이 이미 존재합니다. ) 
+[master (root-commit) 856f579] chore: 바이브 코딩 표준 v02 초기화
+ 1 file changed, 27 insertions(+)
+ create mode 100644 setup.cmd
+- 초기 커밋 완료.
+
+C:\Users\CHANGH~1\AppData\Local\Temp\req002_bom2_utbd_89z>echo.
+
+
+C:\Users\CHANGH~1\AppData\Local\Temp\req002_bom2_utbd_89z>echo [성공] 프로젝트 환경 설정이 완료되었습니다. 
+[성공] 프로젝트 환경 설정이 완료되었습니다.
+--- stderr
+'﻿@echo' is not recognized as an internal or external command,
+operable program or batch file.
+
+적용본 setup.cmd: 앞머리 BOM 0개, 첫 16바이트 b'@echo off\r\nchcp ', CRLF 26줄, 단독 LF 0줄, 원본 본문과 동일 True
+
+전체 결과: 기대대로
