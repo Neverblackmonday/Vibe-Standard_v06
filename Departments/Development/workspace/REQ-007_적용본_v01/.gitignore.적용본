@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+*.class
+.venv/
+venv/
+
+# Environment & Local Settings
+.env
+.claude/settings.local.json
+
+# Logs & Temporary
+*.log
+.DS_Store
+Thumbs.db
+
+# 배포본·업데이트 패키지를 푸는 자리: 내용은 커밋하지 않고 폴더 자리(.gitkeep)만 추적한다
+/Package_sample/*
+!/Package_sample/.gitkeep
+/Package_update/*
+!/Package_update/.gitkeep

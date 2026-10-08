@@ -4,8 +4,6 @@
 
 # 배포본(git archive) 제외 규칙: 표준 개정 기록과 내부 작업물은 신규 프로젝트 배포본에 넣지 않는다
 _archive/** export-ignore
-Update_Package/** export-ignore
-Update_Package/.gitkeep -export-ignore
 Audits/** export-ignore
 Audits/.gitkeep -export-ignore
 Departments/**/REQ-[0-9][0-9][0-9]*.md export-ignore
