@@ -122,7 +122,11 @@ def load_latest(folder, kind):
 
 
 def is_governance_path(scope_item):
-    return any(scope_item == g or scope_item.startswith(g + "/") for g in GOVERNANCE_PATHS)
+    # 거버넌스 경로 안의 항목만 보면, scope 대조(item_covers)로는 거버넌스 파일을 포함하는
+    # 상위 폴더(Departments/Development/assets)나 확장자를 뺀 이름(AGENTS)이 핫픽스 제외를 우회한다.
+    # 제외 판단을 scope 대조와 같은 함수로 하여 두 규칙이 어긋나지 않게 한다
+    return any(scope_item == g or scope_item.startswith(g + "/") or item_covers(scope_item, g)
+               for g in GOVERNANCE_PATHS)
 
 
 def approval_problem(rec, key):
