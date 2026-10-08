@@ -6,7 +6,7 @@ approved: "" # 대표님 직접 기재 또는 Workflow/07_문서_서식_및_번�
 author:
   agent: "PM"
   model: "Claude Opus 5.5" # 실제 실행 모델
-  effort: "medium" # 실제 적용 effort
+  effort: "medium (실행 명령 기준)" # 실행 명령 지시문의 effort 값과 출처. 얻을 수 없으면 "확인 불가"(Workflow/04_모델_운용 「모델 메타데이터 기록」)
 workflow:
   # "<부서>: <단계명>"을 단계 순서대로 적는다(Workflow/03_라이프사이클 「원스톱 파이프라인」). Minor는 EC 작성·EC 판정이 없다
   - "Design: EC 작성"
@@ -61,5 +61,5 @@ scope:
 > 명령 형식은 `Workflow/05_인수인계_및_실행명령` 「실행 명령」, effort는 `Workflow/04_모델_운용` 「effort」를 따른다.
 
 ```bash
-claude --model claude-opus-5-5 --effort medium --permission-mode acceptEdits "Departments/Secretariat/docs/requests/REQ-007_v01.md 원스톱 파이프라인을 실행하라. Workflow/03_라이프사이클.md 「원스톱 파이프라인」 절을 따른다."
+claude --model claude-opus-5-5 --effort medium --permission-mode acceptEdits "Departments/Secretariat/docs/requests/REQ-007_v01.md 원스톱 파이프라인을 실행하라. Workflow/03_라이프사이클.md 「원스톱 파이프라인」 절을 따른다. effort: medium"
 ```

@@ -5,7 +5,7 @@ created: "YYYY-MM-DD"
 author:
   agent: "Design"
   model: "Claude Opus 5.5" # 실제 실행 모델
-  effort: "medium" # 실제 적용 effort
+  effort: "medium (실행 명령 기준)" # 실행 명령 지시문의 effort 값과 출처. 얻을 수 없으면 "확인 불가"(Workflow/04_모델_운용 「모델 메타데이터 기록」)
 status: "draft" # draft | approved (Workflow/07_문서_서식_및_번호 「머리말」 EC 상태 전이)
 gate: "" # approved로 바꿀 때 최신 EC 판정서 경로 (예: Departments/Quality/results/RES-007-EC_v01)
 scope:

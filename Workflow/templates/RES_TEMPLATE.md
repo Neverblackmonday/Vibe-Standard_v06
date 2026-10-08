@@ -6,7 +6,7 @@ completed_at: "YYYY-MM-DDTHH:MM:SS+09:00"
 auditor:
   agent: "Quality"
   model: "Claude Opus 5.5" # 실제 판정 모델. 다르면 무효(Workflow/04_모델_운용 「모델」)
-  effort: "medium" # 실제 적용 effort
+  effort: "medium (실행 명령 기준)" # 실행 명령 지시문의 effort 값과 출처. 얻을 수 없으면 "확인 불가"(Workflow/04_모델_운용 「모델 메타데이터 기록」)
 ---
 
 # RES-007: 판정서
@@ -16,7 +16,7 @@ auditor:
 ## 1. 판정 요약
 - **판정 결과**: `pass` | `fail` | `rejected`
 - **대상 문서**: 판정한 문서 경로와 버전
-- **판정 차수**: 1차 (재판정이면 직전 판정서 경로)
+- **판정 차수**: 1차 (재판정이면 직전 판정서 경로. 문체 반영 대조이면 「문체 반영 대조」와 직전 판정서 경로)
 
 ## 2. 판정 기준별 결과
 | 번호 | 판정 기준 | 결과 | 근거(파일·절·명령 결과) |
@@ -32,9 +32,17 @@ auditor:
 | 항목 | 명령 | 시각 | 결과 원문 |
 | :--- | :--- | :--- | :--- |
 | 범위 대조 | `git status --porcelain -uall` | YYYY-MM-DDTHH:MM:SS+09:00 | 결과 원문 |
+| 변경 규모(최종 판정만) | `git diff --stat` | YYYY-MM-DDTHH:MM:SS+09:00 | 결과 원문 |
 | 커밋 전 검사 | `python Departments/Development/assets/scripts/check_standard.py` | YYYY-MM-DDTHH:MM:SS+09:00 | 결과 원문 |
 
 ## 5. 결함 목록과 반려 부서 (`fail`·`rejected`일 때만)
 | 번호 | 위치 | 결함 | 반려 부서 |
 | :---: | :--- | :--- | :--- |
 | D1 | 파일·절 | 결함 내용 | 설계·개발 등 |
+
+## 6. 문체 지적
+> 지적의 구분과 처리는 `Workflow/03_라이프사이클` 「판정 지적의 구분과 문체 지적 처리」를 따른다. 문체 지적이 없으면 「없음」으로 적는다.
+
+| 번호 | 위치 | 원문 | 수정 문안 | 대상 부서 |
+| :---: | :--- | :--- | :--- | :--- |
+| S1 | 파일·절 | 지적한 문장 원문 | 바꿀 문장 | 설계·개발 등 |
