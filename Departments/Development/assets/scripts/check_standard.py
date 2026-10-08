@@ -10,7 +10,8 @@ check_standard.py - 바이브 코딩 표준 v04 커밋 전 검사기
 2. Git 조회 실패 시 차단한다
 3. CEO/ 아래 변경을 차단한다
 4. scope 대조 제외 구역(WHITELIST_PREFIXES, 부서 직속 results/·workspace/)을 뺀다
-5. 남은 변경 파일 전체가 승인된 REQ(최신 버전) 하나 또는 확인된 HOTFIX(최신 버전) 하나의 scope에 들어가야 한다
+5. 남은 변경 파일 전체가 승인된 REQ(최신 버전) 하나 또는 확인된 HOTFIX(최신 버전) 하나의 scope에 들어가야 한다.
+   HOTFIX로 통과하려면 남은 변경 파일이 HOTFIX_MAX_SCOPE개 이하여야 한다
 6. 소스코드·테스트가 바뀌었으면 단위 테스트를 실행한다
 """
 
@@ -33,7 +34,7 @@ ROOT_DIR = Path(__file__).resolve().parent.parent.parent.parent.parent
 # scope 대조에서 빼는 경로 (규정상 작업 구역은 Workflow/02 「작업 구역」이 원천이고, 이 목록은 커밋 검사용 구현이다)
 WHITELIST_PREFIXES = (
     "Departments/Secretariat/docs/requests/REQ-",  # REQ 기록 (승인 전 초안 포함)
-    "Departments/Secretariat/assets/",  # 요구 메모, 조사 자료, 보고 자료
+    "Departments/Secretariat/assets/",  # ORDER, 승인 기록, 조사 자료, 보고 자료
     "Audits/",  # 외부 검토 보고서
 )
 # _archive/(지난 버전 기록)는 제외하지 않는다. 읽기 전용 구역이므로 변경은 scope 대조에서 차단된다
@@ -52,6 +53,7 @@ GOVERNANCE_PATHS = (
     "CEO",
     "_archive",
 )
+# 핫픽스 대상 조건 「수정 파일 3개 이하」(Workflow/03 「핫픽스 트랙」). scope 항목 수와 덮는 변경 파일 수에 함께 쓴다
 HOTFIX_MAX_SCOPE = 3
 
 # 공식 기록 파일명: <종류>-<세 자리 번호>[-<파생 번호>]_v<두 자리 버전>.md (Workflow/07 「번호와 버전」)
@@ -147,11 +149,15 @@ def load_records():
     approved, rejected = [], []
     for f in load_latest(ROOT_DIR / "Departments" / "Secretariat" / "docs" / "requests", "REQ"):
         rec = parse_header(f, "approved")
+        rec["kind"] = "REQ"
         problem = approval_problem(rec, "approved")
         (rejected if problem else approved).append((rec, problem))
     for f in load_latest(ROOT_DIR / "Departments" / "Secretariat" / "results", "HOTFIX"):
         rec = parse_header(f, "confirmed")
+        rec["kind"] = "HOTFIX"
         problem = approval_problem(rec, "confirmed")
+        # 항목 수 검사는 기록만으로 판단할 수 있는 요건이다. 항목 하나가 폴더이면 여러 파일을 덮으므로
+        # 실제 변경 파일 수는 변경 목록을 알아야 하며 hotfix_file_count_problem()이 따로 검사한다
         if not problem and not 1 <= len(rec["scope"]) <= HOTFIX_MAX_SCOPE:
             problem = f"scope 항목 {len(rec['scope'])}개(허용 1~{HOTFIX_MAX_SCOPE}개)"
         if not problem:
@@ -160,6 +166,17 @@ def load_records():
                 problem = f"scope에 핫픽스 제외 경로 포함: {', '.join(governance)} - 거버넌스 파일·CEO/·_archive/는 핫픽스 대상이 아님"
         (rejected if problem else approved).append((rec, problem))
     return [r for r, _ in approved], rejected
+
+
+def hotfix_file_count_problem(rec, files):
+    """HOTFIX가 덮는 변경 파일이 허용 수를 넘으면 사유를, 아니면 None을 돌려준다.
+
+    scope 항목 수만 세면 폴더 항목 하나로 「수정 파일 3개 이하」 조건을 넘을 수 있다.
+    covers()가 참일 때만 부르므로 files 전체가 그 HOTFIX로 덮이는 파일이다.
+    """
+    if rec["kind"] == "HOTFIX" and len(files) > HOTFIX_MAX_SCOPE:
+        return f"덮는 변경 파일 {len(files)}개(허용 {HOTFIX_MAX_SCOPE}개 이하)"
+    return None
 
 
 # 기록 문서의 버전 접미사(_vNN). scope에 버전 없이 적은 항목이 모든 버전을 포함하게 한다
@@ -282,7 +299,9 @@ def check_standard(staged=False):
         return True
 
     approved, rejected = load_records()
-    matched = next((r for r in approved if covers(r, work_files)), None)
+    covering = [r for r in approved if covers(r, work_files)]
+    # 파일 수를 넘은 HOTFIX는 건너뛰고, 같은 변경 파일을 덮는 승인된 REQ가 있으면 그 REQ로 통과시킨다
+    matched = next((r for r in covering if not hotfix_file_count_problem(r, work_files)), None)
     if matched:
         print(f"[PASS] 변경 파일이 {matched['name']} (승인: {matched['approved']})의 scope 안에 있습니다.")
         return run_tests(work_files)
@@ -290,6 +309,9 @@ def check_standard(staged=False):
     print("[FAIL] 변경 파일 전체를 포함하는 승인된 REQ 또는 확인된 HOTFIX가 없습니다. 대상 파일:")
     for f in work_files:
         print(f"  - {f}")
+    for rec in covering:
+        print(f"       참고: {rec['name']}의 scope는 대상 파일을 포함하지만 핫픽스 파일 수 조건을 넘습니다 "
+              f"({hotfix_file_count_problem(rec, work_files)}).")
     for rec, problem in rejected:
         if covers(rec, work_files):
             print(f"       참고: {rec['name']}의 scope는 대상 파일을 포함하지만 승인 요건을 갖추지 못했습니다 ({problem}).")
