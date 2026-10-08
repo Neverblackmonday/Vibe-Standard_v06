@@ -1,0 +1,692 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vibe Office 시안</title>
+<style>
+:root{
+  --background:oklch(1 0 0); --foreground:oklch(0.145 0 0);
+  --card:oklch(1 0 0); --card-foreground:oklch(0.145 0 0);
+  --muted:oklch(0.97 0 0); --muted-foreground:oklch(0.556 0 0);
+  --accent:oklch(0.97 0 0); --border:oklch(0.922 0 0); --input:oklch(0.922 0 0);
+  --ring:oklch(0.708 0 0); --primary:oklch(0.205 0 0); --primary-foreground:oklch(0.985 0 0);
+  --destructive:oklch(0.577 0.245 27.325); --destructive-soft:oklch(0.577 0.245 27.325 / 8%);
+  --warning:oklch(0.666 0.179 58.318); --warning-soft:oklch(0.769 0.188 70.08 / 12%);
+  --success:oklch(0.596 0.145 163.225);
+  --destructive-text:oklch(0.505 0.213 27.518); --warning-text:oklch(0.555 0.163 48.998); --on-destructive:oklch(1 0 0);
+  --sidebar:oklch(0.985 0 0); --canvas:oklch(0.985 0 0); --dot:oklch(0.87 0 0);
+  --edge:oklch(0.80 0 0); --edge-active:oklch(0.205 0 0);
+  --shadow:0 1px 2px 0 oklch(0 0 0 / 6%), 0 1px 3px 0 oklch(0 0 0 / 4%);
+  --radius:0.625rem;
+  --g-auth:oklch(0.623 0.214 259.815); --g-home:oklch(0.554 0.046 257.417); --g-write:oklch(0.627 0.265 303.9);
+  --g-publish:oklch(0.696 0.17 162.48); --g-analytics:oklch(0.769 0.188 70.08); --g-settings:oklch(0.715 0.143 215.221);
+  --g-billing:oklch(0.645 0.246 16.439);
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --background:oklch(0.145 0 0); --foreground:oklch(0.985 0 0);
+    --card:oklch(0.205 0 0); --card-foreground:oklch(0.985 0 0);
+    --muted:oklch(0.269 0 0); --muted-foreground:oklch(0.708 0 0);
+    --accent:oklch(0.269 0 0); --border:oklch(1 0 0 / 10%); --input:oklch(1 0 0 / 15%);
+    --ring:oklch(0.556 0 0); --primary:oklch(0.922 0 0); --primary-foreground:oklch(0.205 0 0);
+    --destructive:oklch(0.704 0.191 22.216); --destructive-soft:oklch(0.704 0.191 22.216 / 12%);
+    --warning:oklch(0.828 0.189 84.429); --warning-soft:oklch(0.828 0.189 84.429 / 10%);
+    --success:oklch(0.765 0.177 163.223);
+    --destructive-text:oklch(0.808 0.114 19.571); --warning-text:oklch(0.879 0.169 91.605); --on-destructive:oklch(0.145 0 0);
+    --sidebar:oklch(0.17 0 0); --canvas:oklch(0.16 0 0); --dot:oklch(0.30 0 0);
+    --edge:oklch(0.40 0 0); --edge-active:oklch(0.922 0 0);
+    --shadow:0 1px 2px 0 oklch(0 0 0 / 40%);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --background:oklch(0.145 0 0); --foreground:oklch(0.985 0 0);
+  --card:oklch(0.205 0 0); --card-foreground:oklch(0.985 0 0);
+  --muted:oklch(0.269 0 0); --muted-foreground:oklch(0.708 0 0);
+  --accent:oklch(0.269 0 0); --border:oklch(1 0 0 / 10%); --input:oklch(1 0 0 / 15%);
+  --ring:oklch(0.556 0 0); --primary:oklch(0.922 0 0); --primary-foreground:oklch(0.205 0 0);
+  --destructive:oklch(0.704 0.191 22.216); --destructive-soft:oklch(0.704 0.191 22.216 / 12%);
+  --warning:oklch(0.828 0.189 84.429); --warning-soft:oklch(0.828 0.189 84.429 / 10%);
+  --success:oklch(0.765 0.177 163.223);
+  --destructive-text:oklch(0.808 0.114 19.571); --warning-text:oklch(0.879 0.169 91.605); --on-destructive:oklch(0.145 0 0);
+  --sidebar:oklch(0.17 0 0); --canvas:oklch(0.16 0 0); --dot:oklch(0.30 0 0);
+  --edge:oklch(0.40 0 0); --edge-active:oklch(0.922 0 0);
+  --shadow:0 1px 2px 0 oklch(0 0 0 / 40%);
+  color-scheme:dark;
+}
+
+:root{ --g-sec:oklch(0.623 0.214 259.815); --g-des:oklch(0.627 0.265 303.9); --g-dev:oklch(0.696 0.17 162.48);
+  --g-qa:oklch(0.645 0.246 16.439); --g-ops:oklch(0.715 0.143 215.221); --g-mkt:oklch(0.769 0.188 70.08);
+  --g-vis:oklch(0.656 0.241 354.308); --g-ceo:oklch(0.554 0.046 257.417); --g-aud:oklch(0.553 0.013 58.071); }
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:var(--background);color:var(--foreground);
+  font-family:"Pretendard Variable","Pretendard","Inter","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;letter-spacing:-0.01em;word-break:keep-all}
+button{font:inherit;color:inherit}
+.mono{font-family:ui-monospace,"SF Mono","Cascadia Code",Consolas,monospace;letter-spacing:0}
+svg.i{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+
+/* shell */
+.app{display:grid;grid-template-columns:240px minmax(0,1fr);min-height:100vh}
+.sidebar{background:var(--sidebar);border-right:1px solid var(--border);padding:12px;display:flex;flex-direction:column;gap:16px;position:sticky;top:0;height:100vh;overflow:auto}
+.brand{display:flex;align-items:center;gap:10px;padding:6px 8px}
+.brand .logo{width:32px;height:32px;border-radius:8px;background:var(--primary);color:var(--primary-foreground);display:grid;place-items:center}
+.brand b{display:block;font-size:14px;font-weight:600;line-height:1.2}
+.brand span{font-size:12px;color:var(--muted-foreground)}
+.nav-label{font-size:12px;color:var(--muted-foreground);padding:0 8px;margin-bottom:4px;font-weight:500}
+.nav{display:flex;flex-direction:column;gap:2px}
+.nav button{display:flex;align-items:center;gap:8px;width:100%;border:0;background:transparent;padding:7px 8px;border-radius:6px;cursor:pointer;text-align:left;font-size:14px}
+.nav button:hover{background:var(--accent)}
+.nav button[aria-current="true"]{background:var(--accent);font-weight:600}
+.count{margin-left:auto;font-size:12px;color:var(--muted-foreground)}
+.count.bad{color:var(--on-destructive);background:var(--destructive);border-radius:999px;padding:0 7px;line-height:18px}
+.count.warn{color:var(--background);background:var(--warning);border-radius:999px;padding:0 7px;line-height:18px}
+.dot{width:8px;height:8px;border-radius:999px;flex:none;background:var(--c)}
+.side-foot{margin-top:auto;border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px;font-size:12px;color:var(--muted-foreground);background:var(--card)}
+.side-foot b{color:var(--foreground);font-weight:600;display:block;margin-bottom:2px}
+.main{min-width:0;display:flex;flex-direction:column}
+.topbar{height:56px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;padding:0 24px;position:sticky;top:0;background:color-mix(in oklch, var(--background) 85%, transparent);backdrop-filter:blur(8px);z-index:5}
+.crumb{display:flex;align-items:center;gap:6px;font-size:14px;color:var(--muted-foreground);white-space:nowrap;min-width:0}
+.crumb b{color:var(--foreground);font-weight:500}
+.crumb svg.i{width:14px;height:14px}
+.floors{margin-left:auto;display:inline-flex;background:var(--muted);border-radius:8px;padding:3px;gap:2px}
+.floors button{border:0;background:transparent;padding:4px 10px;border-radius:6px;cursor:pointer;color:var(--muted-foreground);font-size:13px;font-weight:500}
+.floors button[aria-selected="true"]{background:var(--background);color:var(--foreground);box-shadow:var(--shadow)}
+.icon-btn{width:36px;height:36px;border:1px solid var(--border);background:var(--background);border-radius:8px;display:grid;place-items:center;cursor:pointer}
+.icon-btn:hover{background:var(--accent)}
+.content{padding:24px;display:flex;flex-direction:column;gap:16px}
+.page-head h1{margin:0;font-size:24px;font-weight:700;letter-spacing:-0.025em}
+.page-head p{margin:4px 0 0;color:var(--muted-foreground)}
+.alert{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--border);border-radius:var(--radius);padding:10px 14px;font-size:13px;color:var(--muted-foreground);background:var(--card)}
+.alert svg.i{margin-top:2px;color:var(--foreground)}
+.alert.err{border-color:color-mix(in oklch,var(--destructive) 45%,transparent);background:var(--destructive-soft);color:var(--destructive-text)}
+.alert.err svg.i{color:var(--destructive-text)}
+.alert b{color:inherit}
+.alert button{margin-left:auto}
+.card{background:var(--card);color:var(--card-foreground);border:1px solid var(--border);border-radius:calc(var(--radius) + 2px);box-shadow:var(--shadow)}
+.panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px;border-bottom:1px solid var(--border);flex-wrap:wrap}
+.panel-head h2{margin:0;font-size:15px;font-weight:600}
+.panel-head p{margin:2px 0 0;font-size:13px;color:var(--muted-foreground)}
+.view{display:none}.view.on{display:flex;flex-direction:column;gap:16px}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.stat{padding:14px 16px}
+.stat .lbl{font-size:13px;color:var(--muted-foreground);font-weight:500;display:flex;align-items:center;justify-content:space-between}
+.stat .val{font-size:26px;font-weight:700;letter-spacing:-0.03em;margin-top:2px;font-variant-numeric:tabular-nums}
+.stat .sub{font-size:12px;color:var(--muted-foreground)}
+.stat.bad .val{color:var(--destructive)}
+.badge{display:inline-flex;align-items:center;gap:5px;height:20px;padding:0 8px;border-radius:6px;font-size:11px;font-weight:500;border:1px solid var(--border);white-space:nowrap;color:var(--foreground);background:var(--background)}
+.badge::before{content:"";width:6px;height:6px;border-radius:999px;background:var(--bc,currentColor)}
+.badge.ok{--bc:var(--success)}
+.badge.mut{--bc:var(--muted-foreground);background:var(--muted);border-color:transparent}
+.badge.err{color:var(--destructive-text);background:var(--destructive-soft);border-color:transparent;--bc:var(--destructive)}
+.badge.warn{color:var(--warning-text);background:var(--warning-soft);border-color:transparent;--bc:var(--warning)}
+.badge.plain::before{display:none}
+.btn{display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 14px;border-radius:8px;border:1px solid var(--primary);background:var(--primary);color:var(--primary-foreground);font-size:13px;font-weight:500;cursor:pointer}
+.btn.o{background:var(--background);color:var(--foreground);border-color:var(--border)}
+.btn.o:hover{background:var(--accent)}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.btn.sm{height:28px;padding:0 10px;font-size:12px}
+.table{width:100%;border-collapse:collapse;font-size:13px}
+.table th{text-align:left;font-weight:500;color:var(--muted-foreground);padding:10px 16px;border-bottom:1px solid var(--border);white-space:nowrap}
+.table td{padding:11px 16px;border-bottom:1px solid var(--border);vertical-align:top}
+.table tr:last-child td{border-bottom:0}
+.table .mono,.table b{white-space:nowrap}
+.muted{color:var(--muted-foreground)}
+.chip{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;border:1px solid var(--border);background:var(--background);border-radius:6px;padding:2px 8px;margin:0 4px 4px 0;font-size:12px;cursor:pointer}
+.chip:hover{background:var(--accent)}
+
+/* office */
+.office-wrap{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:16px;align-items:start}
+.office{background:#2b2733;border-radius:0 0 calc(var(--radius) + 2px) calc(var(--radius) + 2px);padding:14px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;image-rendering:pixelated}
+.room{position:relative;height:170px;border:4px solid #4a4356;border-radius:2px;overflow:hidden;cursor:pointer;
+  background-color:var(--floor);background-image:linear-gradient(45deg,rgba(0,0,0,.07) 25%,transparent 25%,transparent 75%,rgba(0,0,0,.07) 75%),linear-gradient(45deg,rgba(0,0,0,.07) 25%,transparent 25%,transparent 75%,rgba(0,0,0,.07) 75%);background-size:16px 16px;background-position:0 0,8px 8px}
+.room::before{content:"";position:absolute;left:0;right:0;top:0;height:30px;background:var(--wall);border-bottom:4px solid rgba(0,0,0,.25)}
+.room:hover{outline:2px solid var(--ring)}
+.room.sel{outline:3px solid #fff}
+.room .tag{position:absolute;left:8px;top:6px;font:700 12px/1 ui-monospace,Consolas,monospace;color:#fff;text-shadow:1px 1px 0 #000;letter-spacing:0;z-index:2;display:flex;gap:6px;align-items:center}
+.room .tag i{width:8px;height:8px;background:var(--c);display:inline-block}
+.desk{position:absolute;width:44px;height:18px;background:#8a5a3b;border-bottom:4px solid #5e3c27}
+.desk::after{content:"";position:absolute;left:12px;top:-12px;width:18px;height:12px;background:#cfd6dc;border:2px solid #5b6570}
+.plant{position:absolute;right:8px;top:34px;width:12px;height:18px;background:#7a4b2e}
+.plant::before{content:"";position:absolute;left:-6px;top:-14px;width:24px;height:16px;background:#3f8f4a;box-shadow:0 -4px 0 -2px #4fae5b}
+.sprite{position:absolute;width:32px;height:40px;z-index:3}
+.sprite svg{width:32px;height:40px;display:block}
+.sprite.work svg{animation:bob .6s steps(2) infinite}
+@keyframes bob{50%{transform:translateY(-2px)}}
+@media (prefers-reduced-motion: reduce){.sprite.work svg{animation:none}}
+.sprite .nm{position:absolute;top:41px;left:50%;transform:translateX(-50%);font:700 10px/1 ui-monospace,Consolas,monospace;letter-spacing:0;color:#fff;text-shadow:1px 1px 0 #000;white-space:nowrap}
+.bubble{position:absolute;bottom:46px;left:50%;transform:translateX(-50%);background:#fffdf5;color:#1d1b20;border:2px solid #1d1b20;padding:3px 6px;font-size:11px;line-height:1.3;width:max-content;max-width:170px;text-align:center;z-index:4;font-weight:600}
+.bubble::after{content:"";position:absolute;left:50%;bottom:-6px;margin-left:-4px;border:4px solid transparent;border-top-color:#1d1b20}
+.bubble.alarm{background:#ffe3df;border-color:#b3261e;color:#7a1610}
+.bubble.alarm::after{border-top-color:#b3261e}
+.bubble.note{border-style:dashed;border-radius:0;background:#f4ecd2}
+.papers{position:absolute;right:14px;bottom:14px;width:34px;height:28px;z-index:3}
+.papers i{position:absolute;left:0;width:30px;height:6px;background:#f5f1e6;border:2px solid #6d6a62}
+.papers b{position:absolute;right:-8px;top:-10px;background:#d63c2f;color:#fff;font:700 11px/18px ui-monospace,Consolas,monospace;min-width:18px;text-align:center;border:2px solid #1d1b20}
+.legend{display:flex;gap:14px;flex-wrap:wrap;padding:10px 16px;border-top:1px solid var(--border);font-size:12px;color:var(--muted-foreground)}
+.feed{padding:4px 0}
+.feed li{list-style:none;display:flex;gap:10px;padding:8px 16px;font-size:13px;border-bottom:1px solid var(--border)}
+.feed li:last-child{border-bottom:0}
+.feed time{color:var(--muted-foreground);font-size:12px;white-space:nowrap}
+.feed ul{margin:0;padding:0}
+
+/* board */
+.board{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px 10px;padding:14px}
+.col h3{margin:0 0 8px;font-size:12px;font-weight:600;color:var(--muted-foreground);display:flex;justify-content:space-between}
+.col.stop h3{color:var(--destructive-text)}
+.ticket{display:block;width:100%;text-align:left;border:1px solid var(--border);background:var(--card);border-radius:var(--radius);padding:9px 10px;margin-bottom:8px;cursor:pointer;box-shadow:var(--shadow)}
+.ticket:hover{border-color:var(--ring)}
+.ticket .id{font-size:11px;color:var(--muted-foreground);display:flex;gap:6px;align-items:center}
+.ticket .t{display:block;font-weight:600;font-size:13px;margin:2px 0 6px}
+.ticket .st{font-size:12px;color:var(--muted-foreground)}
+.ticket.err{border-color:color-mix(in oklch,var(--destructive) 55%,transparent)}
+.empty{font-size:12px;color:var(--muted-foreground);border:1px dashed var(--border);border-radius:var(--radius);padding:10px;text-align:center}
+.meter{display:flex;gap:3px;margin-top:6px}
+.meter i{width:14px;height:5px;border-radius:2px;background:var(--muted)}
+.meter i.on{background:var(--destructive)}
+
+/* approvals */
+.split{display:grid;grid-template-columns:320px minmax(0,1fr);gap:16px;align-items:start}
+.list button{display:flex;flex-direction:column;align-items:flex-start;gap:3px;width:100%;text-align:left;border:0;border-bottom:1px solid var(--border);background:transparent;padding:12px 16px;cursor:pointer}
+.list button:last-child{border-bottom:0}
+.list button:hover{background:var(--accent)}
+.list button[aria-current="true"]{background:var(--accent);box-shadow:inset 3px 0 0 var(--primary)}
+.list .k{font-size:12px;color:var(--muted-foreground);display:flex;gap:6px;align-items:center;width:100%}
+.list .k .badge{margin-left:auto}
+.list b{font-size:14px}
+.sec{padding:14px 16px;border-bottom:1px solid var(--border)}
+.sec:last-child{border-bottom:0}
+.sec h3{margin:0 0 8px;font-size:13px;font-weight:600;display:flex;align-items:baseline;gap:4px 6px;flex-wrap:wrap}
+.sec h3 > :not(.muted){flex:none}
+.sec h3 .muted{font-weight:400;font-size:12px}
+.chain{display:flex;flex-wrap:wrap;align-items:center;gap:4px}
+.chain span{font-size:12px;border:1px solid var(--border);border-radius:999px;padding:2px 9px;background:var(--background)}
+.chain span.done{background:var(--muted);border-color:transparent}
+.chain span.now{background:var(--primary);color:var(--primary-foreground);border-color:var(--primary)}
+.chain span.gate{border-style:dashed;color:var(--muted-foreground)}
+.chain svg.i{width:12px;height:12px;color:var(--muted-foreground)}
+.kv{display:grid;grid-template-columns:90px minmax(0,1fr);gap:6px 12px;font-size:13px;margin:0}
+.kv dt{color:var(--muted-foreground)}
+.kv dd{margin:0;min-width:0;overflow-wrap:anywhere}
+.dec td:nth-child(3){min-width:200px}
+.seg{display:inline-flex;background:var(--muted);border-radius:7px;padding:2px;gap:2px}
+.seg label{display:inline-flex;align-items:center;padding:3px 9px;border-radius:5px;font-size:12px;cursor:pointer;color:var(--muted-foreground)}
+.seg input{position:absolute;opacity:0;pointer-events:none}
+.seg label:has(input:checked){background:var(--background);color:var(--foreground);box-shadow:var(--shadow);font-weight:600}
+.seg label:has(input:disabled){cursor:not-allowed}
+.actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.note{font-size:12px;color:var(--muted-foreground)}
+.fnode{display:inline-flex;flex-direction:column;border:1px solid var(--border);border-radius:var(--radius);padding:7px 10px;margin:0 6px 6px 0;background:var(--card);min-width:140px;cursor:pointer}
+.fnode.hot{border-color:var(--warning);box-shadow:0 0 0 2px var(--warning-soft)}
+.fnode small{font-size:11px;color:var(--muted-foreground)}
+.fnode b{font-size:13px}
+
+/* map */
+.map{position:relative;overflow:auto;box-shadow:inset -24px 0 16px -16px oklch(0 0 0 / 12%);background-color:var(--canvas);background-image:radial-gradient(var(--dot) 1px, transparent 1px);background-size:18px 18px;border-radius:0 0 calc(var(--radius) + 2px) calc(var(--radius) + 2px)}
+.map-inner{position:relative;display:flex;gap:32px;padding:20px;width:max-content;min-width:100%}
+.mcol{display:flex;flex-direction:column;gap:10px;width:160px;position:relative;z-index:1}
+.mcol h4{margin:0;font-size:11px;font-weight:600;color:var(--muted-foreground);letter-spacing:.04em}
+.mnode{display:block;width:160px;text-align:left;border:1px solid var(--border);background:var(--card);border-radius:var(--radius);padding:9px 11px;cursor:pointer;box-shadow:var(--shadow)}
+.mnode.planned{border-style:dashed}
+.mnode.sel{border-color:var(--primary);box-shadow:0 0 0 1px var(--primary),var(--shadow)}
+.mnode .row{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted-foreground)}
+.mnode .nm{display:block;font-size:13px;font-weight:600;margin:2px 0 5px}
+.mnode .live{margin-left:auto;font-size:10px;font-weight:600;color:var(--warning-text);white-space:nowrap}
+svg.wires{position:absolute;inset:0;pointer-events:none;overflow:visible;z-index:0}
+.wire{fill:none;stroke:var(--edge);stroke-width:1.5}
+.map-detail{position:sticky;top:72px}
+
+/* dialog */
+dialog{border:1px solid var(--border);border-radius:calc(var(--radius) + 4px);padding:0;width:min(460px,92vw);background:var(--card);color:var(--foreground);box-shadow:0 10px 30px oklch(0 0 0 / 25%)}
+dialog::backdrop{background:oklch(0 0 0 / 45%)}
+dialog .hd{padding:18px 20px 6px}
+dialog h3{margin:0;font-size:17px}
+dialog .bd{padding:6px 20px 14px;font-size:13px;color:var(--muted-foreground)}
+dialog .phrase{margin-top:10px;padding:10px 12px;border-radius:8px;background:var(--muted);color:var(--foreground);font-weight:600}
+dialog .ft{display:flex;justify-content:flex-end;gap:8px;padding:12px 20px;border-top:1px solid var(--border)}
+
+@media (max-width: 1100px){
+  .office-wrap,.split{grid-template-columns:minmax(0,1fr)}
+  .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .office{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width: 760px){
+  .app{grid-template-columns:1fr}
+  .sidebar{position:static;height:auto;flex-direction:row;flex-wrap:wrap;gap:8px}
+  .sidebar .nav{flex-direction:row;flex-wrap:wrap}
+  .side-foot,.nav-label,.brand span{display:none}
+  .content{padding:16px}
+  .topbar{padding:0 16px}
+  .crumb{display:none}
+  .office{grid-template-columns:1fr}
+  .dec thead{display:none}
+  .dec tr{display:block;border-bottom:1px solid var(--border)}
+  .dec td{display:block;border:0;padding:6px 12px}
+  .dec td:nth-child(3){min-width:0}
+  .seg{flex-wrap:wrap}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="logo"><svg class="i" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 17.5h7M17.5 14v7"/></svg></div>
+      <div><b>Vibe Office</b><span>시안 v01</span></div>
+    </div>
+    <div><div class="nav-label">화면</div><nav class="nav" id="nav"></nav></div>
+    <div class="side-foot"><b>예시 데이터</b>시안 확인용 가상의 안건·기능입니다. 실제 저장소를 읽지 않으며, 버튼을 눌러도 파일에 기록하지 않습니다.</div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div class="crumb">Vibe Office <svg class="i" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg> <span id="crumbFloor"></span> <svg class="i" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg> <b id="crumbView"></b></div>
+      <div class="floors" role="tablist" aria-label="프로젝트 층" id="floors"></div>
+      <button class="icon-btn" id="themeBtn" title="밝은 화면·어두운 화면 전환" aria-label="밝은 화면·어두운 화면 전환"></button>
+    </header>
+
+    <main class="content">
+      <div class="page-head"><h1 id="title"></h1><p id="desc"></p></div>
+      <div class="alert err" id="stopAlert"></div>
+
+      <!-- 사무실 -->
+      <section class="view" id="v-office">
+        <div class="office-wrap">
+          <div class="card">
+            <div class="panel-head"><div><h2>사무실</h2><p>방을 누르면 오른쪽에 그 부서의 안건이 나옵니다. 대표실의 서류 더미를 누르면 결재함으로 이동합니다.</p></div></div>
+            <div class="office" id="office"></div>
+            <div class="legend"><span>실선 말풍선: 오케스트레이터 진행 문구(2차, 원천 B)</span><span>점선 알림판: 파일 변화(1차, 원천 A)</span><span>붉은 알림판: 결재·중단 경보(1차, 원천 A)</span><span>흔들리는 캐릭터: 작업 중(2차, 원천 B)</span><span>캐릭터 위치: 안건 상태 판정 결과(1차, 원천 A)</span></div>
+          </div>
+          <div class="card" id="roomPanel"></div>
+        </div>
+      </section>
+
+      <!-- 안건 게시판 -->
+      <section class="view" id="v-board">
+        <div class="card">
+          <div class="panel-head"><div><h2>안건 게시판</h2><p>칸은 시스템 구성 제안 3.2·3.3절의 상태를 묶은 것입니다. 붉은 막대는 반려·재판정 한도 사용량입니다.</p></div></div>
+          <div class="board" id="board"></div>
+        </div>
+      </section>
+
+      <!-- 결재함 -->
+      <section class="view" id="v-approve">
+        <div class="split">
+          <div class="card"><div class="panel-head"><div><h2>결재 대기</h2><p id="apSummary"></p></div></div><div class="list" id="apList"></div></div>
+          <div class="card" id="apDetail"></div>
+        </div>
+      </section>
+
+      <!-- 기능 지도 -->
+      <section class="view" id="v-map">
+        <div class="office-wrap">
+          <div class="card">
+            <div class="panel-head"><div><h2>기능 지도</h2><p>주황 테두리는 진행 중인 안건과 연결된 기능입니다. 기능을 누르면 근거 안건의 상태가 나옵니다.</p></div></div>
+            <div class="map" id="mapBox"><div class="map-inner" id="map"></div></div>
+          </div>
+          <div class="card map-detail" id="mapDetail"></div>
+        </div>
+      </section>
+
+      <!-- 보고 -->
+      <section class="view" id="v-report">
+        <section class="stats" id="stats"></section>
+        <div class="card">
+          <div class="panel-head"><div><h2>이번 주 완료 안건</h2><p>2026-10-05 ~ 2026-10-11, 최종 판정 pass 기준. 커밋 완료 표시는 결정 8 채택 시에만 가능합니다.</p></div></div>
+          <div style="overflow-x:auto"><table class="table" id="doneTable"></table></div>
+        </div>
+        <div class="card">
+          <div class="panel-head"><div><h2>판정 이력</h2><p>2026-10-05 ~ 2026-10-11, 판정 구분별 결과 건수(예시 안건 REQ-009~015)</p></div></div>
+          <div style="overflow-x:auto"><table class="table" id="judgeTable"></table></div>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+
+<dialog id="dlg">
+  <div class="hd"><h3>승인 확인</h3></div>
+  <div class="bd">아래 문구로 승인을 기록합니다. 시안이므로 실제 파일에는 기록하지 않습니다.<div class="phrase" id="dlgPhrase"></div></div>
+  <div class="ft"><button class="btn o" id="dlgNo">취소</button><button class="btn" id="dlgYes">승인 확정</button></div>
+</dialog>
+
+<script>
+/* ===== 예시 데이터 ===== */
+const DEPTS = [
+  {id:"ceo", name:"대표실", c:"--g-ceo", floor:"#6b5b4b", wall:"#3b3240"},
+  {id:"sec", name:"비서실", c:"--g-sec", floor:"#7c8fb0", wall:"#33405a", agent:"secretariat"},
+  {id:"des", name:"설계", c:"--g-des", floor:"#9a84b8", wall:"#43385a", agent:"design"},
+  {id:"dev", name:"개발", c:"--g-dev", floor:"#7aa08a", wall:"#2f4a3c", agent:"development"},
+  {id:"qa",  name:"품질", c:"--g-qa",  floor:"#b58a85", wall:"#55302d", agent:"quality"},
+  {id:"ops", name:"운영", c:"--g-ops", floor:"#7aa3ad", wall:"#2c4a52", agent:"operations"},
+  {id:"mkt", name:"마케팅", c:"--g-mkt", floor:"#b8a274", wall:"#56482a", agent:"marketing"},
+  {id:"vis", name:"비주얼", c:"--g-vis", floor:"#b689a2", wall:"#55304a", agent:"visual"},
+  {id:"aud", name:"외부감사실", c:"--g-aud", floor:"#8e8a84", wall:"#3d3a36"}
+];
+const D = Object.fromEntries(DEPTS.map(d=>[d.id,d]));
+
+// state: 시스템 구성 제안 3.2절 순서 번호와 상태 이름
+const ITEMS = [
+  {id:"REQ-014", title:"외부 블로그 연동", cls:"Major", order:0, state:"중단(오너님 결정 필요)", room:"ceo", col:"stop",
+   why:"RES-014-EC_v01 result: rejected — REQ 목적이 서로 모순됨", stage:"EC 판정", limits:null},
+  {id:"REQ-011", title:"요금제·결제", cls:"Critical", order:4, state:"반려 수정 중", room:"des", col:"final",
+   why:"RES-011_v02 fail — 반려 부서: 설계", stage:"최종 판정", limits:{label:"최종 판정 반려", used:2, max:3}},
+  {id:"REQ-010", title:"대표 이미지 생성", cls:"Minor", order:2, state:"최종 승인·커밋 대기", room:"ceo", col:"done", approve:"final", stage:"최종 판정"},
+  {id:"REQ-012", title:"블로그 예약 발행", cls:"Major", order:6, state:"구현 진행 중", room:"dev", col:"run", stage:"구현"},
+  {id:"REQ-013", title:"키워드 분석 개선", cls:"Minor", order:7, state:"REQ 승인 대기", room:"ceo", col:"wait", approve:"req", stage:"REQ 승인"},
+  {id:"REQ-015", title:"발행 결과 알림", cls:"Minor", order:9, state:"REQ 판정 중", room:"qa", col:"req", stage:"REQ 판정", limits:{label:"REQ 재판정", used:1, max:3}},
+  {id:"MEMO", title:"요구메모_20261008_통계내보내기_v01", cls:"", order:10, state:"요구 접수", room:"sec", col:"memo", stage:"요구 접수"},
+  {id:"HOTFIX-004", title:"발행 시각 표시 오류", cls:"", order:null, state:"핫픽스 확인 대기", room:"ceo", col:"hot", approve:"hotfix", stage:"핫픽스 확인"}
+];
+const COLS = [
+  {id:"stop", name:"중단"}, {id:"memo", name:"요구 접수"}, {id:"req", name:"REQ 판정·수정"}, {id:"wait", name:"승인 대기"}, {id:"run", name:"진행"},
+  {id:"final", name:"최종 판정"}, {id:"done", name:"최종 승인·커밋 대기"}, {id:"hot", name:"핫픽스"}
+];
+// 오케스트레이터 진행 문구(Workflow/05 4절 형식) — 2차(원천 B) 기능의 시안
+const CHARS = [
+  {dept:"ceo", name:"오너님", working:false, notice:true},
+  {dept:"sec", name:"창구", working:false, notice:true, bubble:"새 요구 메모 1건"},
+  {dept:"des", name:"design", working:true, bubble:"[설계] 명세 단계를 시작합니다."},
+  {dept:"dev", name:"development", working:true, bubble:"[개발] 구현 단계를 시작합니다."},
+  {dept:"qa", name:"quality", working:true, bubble:"[품질] REQ 판정 단계를 시작합니다."},
+  {dept:"ops", name:"operations", working:false}, {dept:"mkt", name:"marketing", working:false},
+  {dept:"vis", name:"visual", working:false}, {dept:"aud", name:"창구", working:false}
+];
+const FEED = [
+  {t:"14:42", d:"qa", m:"[품질] REQ 판정 단계를 시작합니다. (REQ-015_v02)"},
+  {t:"14:35", d:"dev", m:"[개발] 구현 단계를 시작합니다. (REQ-012_v01)"},
+  {t:"14:20", d:"qa", m:"최종 판정 fail — RES-011_v02, 반려 부서: 설계"},
+  {t:"13:58", d:"qa", m:"최종 판정 pass — RES-010_v01"},
+  {t:"13:10", d:"sec", m:"새 요구 메모: 요구메모_20261008_통계내보내기_v01.md"}
+];
+const APPROVE = {
+  "REQ-013": {file:"REQ-013_v02", kind:"REQ 승인", res:"RES-013-REQ_v02", result:"pass",
+    criteria:["① 요청 원문 누락·변경 없음","② 체크리스트 1:1 대응","③ scope가 요구를 덮음","④ 분류·workflow 일치","⑤ 완료 기준 확인 가능","⑥ 중의성 없음"],
+    decisions:[{id:"D1", q:"키워드 수집 주기", rec:"하루 1회", alt:"6시간마다"},{id:"D2", q:"과거 데이터 보관 기간", rec:"90일", alt:"1년"}],
+    scope:["Departments/Development/assets/src/analytics/keyword.py","Departments/Development/assets/tests/test_keyword.py"],
+    chain:[["REQ","done"],["RES-REQ","done"],["(승인)","now"],["RPT","gate"],["DEV","gate"],["RES","gate"]]},
+  "REQ-010": {file:"REQ-010_v01", kind:"최종 승인", res:"RES-010_v01", result:"pass",
+    checklist:[["1","대표 이미지 자동 생성","PASS","DEV-010_v01 2절, test_thumbnail.py 통과"],["2","생성 실패 시 기본 이미지","PASS","test_thumbnail.py::test_fallback"],["3","설정 화면 연결","PASS","settings/account.py 120행"]],
+    diff:"3 files changed, 142 insertions(+), 8 deletions(-)",
+    chain:[["REQ","done"],["RES-REQ","done"],["(승인)","done"],["DEV","done"],["RES","done"],["(최종 승인)","now"]]},
+  "HOTFIX-004": {file:"HOTFIX-004_v01", kind:"핫픽스 확인", result:null,
+    files:["Departments/Development/assets/src/publish/result.py"], cause:"예약 발행 결과 화면의 시각이 UTC로 표시됨", change:"표시 시각을 +09:00으로 변환",
+    chain:[["(사전 승인)","done"],["HOTFIX","done"],["(확인)","now"]]}
+};
+const MAP = {
+  features:[
+    {id:"F01", entry:true, name:"로그인", group:"계정", status:"tested", req:"REQ-001", files:["auth/login.py"], tests:["test_login.py"], next:["F02"]},
+    {id:"F02", name:"대시보드", group:"홈", status:"tested", req:"REQ-001", files:["home/dashboard.py"], tests:["test_dashboard.py"], next:["F03","F09"]},
+    {id:"F03", name:"새 글 작성", group:"글 작성", status:"tested", req:"REQ-002", files:["editor/new_post.py"], tests:["test_new_post.py"], next:["F06","F12"]},
+    {id:"F09", name:"계정 설정", group:"설정", status:"tested", req:"REQ-001", files:["settings/account.py"], tests:[], next:["F10"]},
+    {id:"F06", name:"예약 발행", group:"발행", status:"planned", req:"REQ-012", files:[], tests:[], next:["F08"]},
+    {id:"F12", name:"대표 이미지 생성", group:"글 작성", status:"built", req:"REQ-010", files:["editor/thumbnail.py"], tests:["test_thumbnail.py"], next:[]},
+    {id:"F10", name:"요금제·결제", group:"결제", status:"built", req:"REQ-011", files:["billing/plan.py"], tests:["test_plan.py"], next:[], exit:true},
+    {id:"F08", name:"발행 결과 확인", group:"발행", status:"built", req:"REQ-004", files:["publish/result.py"], tests:[], next:["F11"]},
+    {id:"F11", name:"키워드 분석", group:"분석", status:"built", req:"REQ-006", files:["analytics/keyword.py"], tests:["test_keyword.py"], next:[], exit:true}
+  ]
+};
+const STATUS = {planned:"기획", built:"구현", tested:"검증"};
+const GDIR = {"계정":"auth","홈":"home","글 작성":"editor","설정":"settings","발행":"publish","결제":"billing","분석":"analytics"};
+const FM = () => Object.fromEntries(MAP.features.map(f=>[f.id,f]));
+const PREV = id => MAP.features.filter(f=>f.next.includes(id));
+const REACH = () => { const F=FM(), seen=new Set(["F01"]), q=["F01"]; while(q.length){ const c=q.shift(); F[c].next.forEach(n=>{ if(F[n]&&!seen.has(n)){seen.add(n);q.push(n);} }); } return seen; };
+const CHECKS = [
+  {sev:"err", title:"연결 없음", test:f=>!f.entry && PREV(f.id).length===0 && f.next.length===0},
+  {sev:"err", title:"시작점에서 도달 불가", test:f=>!REACH().has(f.id)},
+  {sev:"err", title:"막다른 길", test:f=>f.next.length===0 && !f.exit},
+  {sev:"err", title:"구현 표시인데 코드 경로 없음", test:f=>f.status!=="planned" && f.files.length===0},
+  {sev:"err", title:"그룹과 코드 폴더 불일치", test:f=>f.files.some(p=>!p.startsWith(GDIR[f.group]+"/"))},
+  {sev:"err", title:"없는 기능을 가리킴", test:f=>f.next.some(n=>!FM()[n])},
+  {sev:"warn", title:"근거 안건 없음", test:f=>!f.req},
+  {sev:"warn", title:"검증 표시인데 테스트 없음", test:f=>f.status==="tested" && f.tests.length===0}
+];
+const FLOORS = ["예시 프로젝트 A", "예시 프로젝트 B"];
+
+/* ===== 화면 상태 ===== */
+const VIEWS = [
+  {id:"office", name:"사무실", desc:"부서 방과 캐릭터로 지금 누가 무엇을 하는지 봅니다.", icon:'<path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"/>'},
+  {id:"board", name:"안건 게시판", desc:"안건이 어느 단계에 있는지, 반려 한도에 얼마나 가까운지 봅니다.", icon:'<rect x="3" y="3" width="5" height="18" rx="1"/><rect x="10" y="3" width="5" height="12" rx="1"/><rect x="17" y="3" width="4" height="8" rx="1"/>'},
+  {id:"approve", name:"결재함", desc:"오너님이 처리할 일입니다. 1차는 보기 전용이며, 결재 버튼은 4차에 도입합니다.", icon:'<path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>'},
+  {id:"map", name:"기능 지도", desc:"제품 기능과 기능 사이의 연결, 기능별 근거 안건의 진행 상태를 봅니다. 실데이터 연결은 3차(결정 3·4)입니다.", icon:'<rect x="9" y="2" width="6" height="6" rx="1"/><rect x="2" y="16" width="6" height="6" rx="1"/><rect x="16" y="16" width="6" height="6" rx="1"/><path d="M5 16v-3h14v3M12 12V8"/>'},
+  {id:"report", name:"보고", desc:"기간별 완료 안건과 판정 결과를 요약합니다(2차 도입 예정).", icon:'<path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/>'}
+];
+let view="office", room="ceo", apSel="REQ-013", fSel="F06", floor=0, demo=false;
+const icon=(d)=>`<svg class="i" viewBox="0 0 24 24">${d}</svg>`;
+const CHEV='<path d="m9 18 6-6-6-6"/>';
+const approvals = ITEMS.filter(i=>i.approve);
+const stops = ITEMS.filter(i=>i.col==="stop");
+const itemById = id => ITEMS.find(i=>i.id===id);
+
+/* ===== 픽셀 캐릭터 ===== */
+const SPR = [
+  "..HHHH..",
+  ".HHHHHH.",
+  ".HSSSSH.",
+  ".SEsSEs.",
+  ".SSSSSS.",
+  "..SSSS..",
+  ".CCCCCC.",
+  "CCCCCCCC",
+  "SCCCCCCS",
+  "SCCCCCCS",
+  ".CCCCCC.",
+  ".PP..PP.",
+  ".PP..PP.",
+  ".BB..BB."
+];
+function sprite(color, hair){
+  const pal={H:hair, S:"#f1c9a5", E:"#1d1b20", s:"#f1c9a5", C:color, P:"#3c3f58", B:"#26232b"};
+  let r=""; SPR.forEach((row,y)=>[...row].forEach((ch,x)=>{ if(ch!=="."&&pal[ch]) r+=`<rect x="${x}" y="${y}" width="1" height="1" style="fill:${pal[ch]}"/>`; }));
+  return `<svg viewBox="0 0 8 14" shape-rendering="crispEdges" aria-hidden="true">${r}</svg>`;
+}
+const HAIRS=["#3b2a20","#1d1b20","#7a4b2e","#c58b3f","#5a3a5e","#2e4a6b","#8b2f2f","#444","#6b5b4b"];
+
+/* ===== 공통 ===== */
+function renderNav(){
+  document.getElementById("nav").innerHTML = VIEWS.map(v=>{
+    let c=""; if(floor===0){ if(v.id==="approve") c=`<span class="count warn">${approvals.length+stops.length}</span>`;
+    if(v.id==="board" && stops.length) c=`<span class="count bad">${stops.length}</span>`; }
+    return `<button data-v="${v.id}" aria-current="${view===v.id}">${icon(v.icon)}${v.name}${c}</button>`; }).join("");
+  document.querySelectorAll("[data-v]").forEach(b=>b.onclick=()=>{ view=b.dataset.v; renderAll(); });
+  document.getElementById("floors").innerHTML = FLOORS.map((f,i)=>`<button role="tab" data-f="${i}" aria-selected="${floor===i}">${f}</button>`).join("");
+  document.querySelectorAll("[data-f]").forEach(b=>b.onclick=()=>{ floor=+b.dataset.f; renderAll(); });
+  const v=VIEWS.find(x=>x.id===view);
+  document.getElementById("title").textContent=v.name; document.getElementById("desc").textContent=v.desc;
+  document.getElementById("crumbView").textContent=v.name; document.getElementById("crumbFloor").textContent=FLOORS[floor];
+  document.querySelectorAll(".view").forEach(s=>s.classList.toggle("on", s.id==="v-"+view));
+  const a=document.getElementById("stopAlert");
+  if(floor===1){ a.style.display="none"; }
+  else { a.style.display="flex";
+    a.innerHTML = `${icon('<circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/>')}<div><b>중단 ${stops.length}건</b> — ${stops.map(s=>`${s.id} ${s.title}: ${s.why}`).join(" / ")}. 오너님 결정이 필요합니다.</div>${view==="approve"?"":`<button class="btn sm o" id="toStop">결재함에서 보기</button>`}`;
+    const ts=document.getElementById("toStop"); if(ts) ts.onclick=()=>{ apSel=stops[0].id; view="approve"; renderAll(); }; }
+}
+function emptyFloor(el){ el.innerHTML = `<div class="sec"><div class="empty">예시 프로젝트 B에는 진행 중인 안건이 없습니다. 층(탭)을 바꾸면 프로젝트별 화면으로 전환되는 모습을 보여 주는 시안입니다.</div></div>`; }
+
+/* ===== 사무실 ===== */
+function renderOffice(){
+  const el=document.getElementById("office");
+  if(floor===1){ el.innerHTML = DEPTS.map(d=>roomHTML(d,[],0)).join(""); bindRooms(); renderRoomPanel(); return; }
+  el.innerHTML = DEPTS.map(d=>{
+    const ch=CHARS.filter(c=>c.dept===d.id);
+    return roomHTML(d,ch, d.id==="ceo"?approvals.length+stops.length:0);
+  }).join("");
+  bindRooms(); renderRoomPanel();
+}
+function roomHTML(d, chars, papers){
+  const i=DEPTS.indexOf(d);
+  const c = chars.map((ch,k)=>{
+    const alarm = d.id==="ceo" && stops.length && floor===0; const note = ch.notice && !alarm;
+    const bub = floor===0 && (ch.bubble || (alarm?`결재 ${approvals.length}건 · 중단 ${stops.length}건`:"")) ;
+    return `<div class="sprite ${ch.working?"work":""}" style="left:calc(50% - 16px + ${k*60}px);top:76px">
+      ${bub?`<div class="bubble ${alarm?"alarm":""} ${note?"note":""}">${bub}</div>`:""}${sprite(`var(${d.c})`, HAIRS[i])}<span class="nm">${ch.name}</span></div>`;
+  }).join("");
+  return `<div class="room ${room===d.id?"sel":""}" data-r="${d.id}" style="--floor:${d.floor};--wall:${d.wall};--c:var(${d.c})" role="button" tabindex="0" aria-label="${d.name} 방">
+    <span class="tag"><i></i>${d.name}</span>
+    <div class="desk" style="left:14px;top:132px"></div>${d.id!=="ceo"&&d.id!=="aud"?'<div class="desk" style="right:40px;top:132px"></div>':""}
+    <div class="plant"></div>${c}
+    ${papers?`<div class="papers" data-papers title="결재함으로 이동"><i style="top:18px"></i><i style="top:12px"></i><i style="top:6px"></i><b>${papers}</b></div>`:""}
+  </div>`;
+}
+function bindRooms(){
+  document.querySelectorAll("[data-r]").forEach(r=>{ const go=()=>{ room=r.dataset.r; renderOffice(); };
+    r.onclick=go; r.onkeydown=e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); go(); } }; });
+  const p=document.querySelector("[data-papers]"); if(p) p.onclick=e=>{ e.stopPropagation(); view="approve"; renderAll(); };
+}
+function renderRoomPanel(){
+  const el=document.getElementById("roomPanel"), d=D[room];
+  if(floor===1){ el.innerHTML=`<div class="panel-head"><div><h2>${d.name}</h2></div></div>`; const s=document.createElement("div"); el.appendChild(s); emptyFloor(s); return; }
+  const its=ITEMS.filter(i=>i.room===room);
+  const feed=FEED.filter(f=>f.d===room || room==="ceo");
+  el.innerHTML = `<div class="panel-head"><div><h2><i class="dot" style="--c:var(${d.c});display:inline-block;margin-right:6px"></i>${d.name}</h2><p>${d.agent?`서브에이전트 <span class="mono">${d.agent}</span>`:(room==="ceo"?"결재석":"창구 검토 보고서")}</p></div></div>
+    <div class="sec"><h3>이 방의 안건 <span class="muted">${its.length}건</span></h3>${its.length? its.map(i=>`<button class="ticket ${i.col==="stop"?"err":""}" data-go="${i.id}"><span class="id mono">${i.id}${i.cls?` · ${i.cls}`:""}</span><span class="t">${i.title}</span><span class="st">${i.state}</span></button>`).join("") : `<div class="empty">지금은 안건이 없습니다.</div>`}</div>
+    <div class="sec" style="padding:0"><h3 style="padding:14px 16px 0">최근 활동</h3><div class="feed"><ul>${feed.length?feed.map(f=>`<li><time class="mono">${f.t}</time><span>${f.m}</span></li>`).join(""):`<li><span class="muted">최근 활동이 없습니다.</span></li>`}</ul></div></div>`;
+  el.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>openItem(b.dataset.go));
+}
+function openItem(id){ const it=itemById(id); if(it && it.approve){ apSel=id; view="approve"; } else { view="board"; } renderAll(); }
+
+/* ===== 게시판 ===== */
+function renderBoard(){
+  const el=document.getElementById("board");
+  el.innerHTML = COLS.map(c=>{
+    const its = floor===0? ITEMS.filter(i=>i.col===c.id) : [];
+    return `<div class="col ${c.id==="stop"?"stop":""}"><h3>${c.name}<span>${its.length}</span></h3>${its.length? its.map(i=>`<button class="ticket ${c.id==="stop"?"err":""}" data-go="${i.id}">
+      <span class="id mono"><i class="dot" style="--c:var(${D[i.room].c})"></i>${i.id}${i.cls?` · ${i.cls}`:""}</span>
+      <span class="t">${i.title}</span><span class="st">${i.state} · ${D[i.room].name}</span>
+      ${i.limits?`<div class="meter" title="${i.limits.label} ${i.limits.used}/${i.limits.max}">${Array.from({length:i.limits.max},(_,k)=>`<i class="${k<i.limits.used?"on":""}"></i>`).join("")}</div><span class="st">${i.limits.label} ${i.limits.used}/${i.limits.max}</span>`:""}
+      ${i.why?`<span class="st" style="display:block;margin-top:4px;color:var(--destructive-text)">${i.why}</span>`:""}
+    </button>`).join("") : `<div class="empty">없음</div>`}</div>`;
+  }).join("");
+  el.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>openItem(b.dataset.go));
+}
+
+/* ===== 결재함 ===== */
+function renderApprove(){
+  const list=document.getElementById("apList"), det=document.getElementById("apDetail");
+  if(floor===1){ list.innerHTML=""; emptyFloor(list); det.innerHTML=`<div class="sec"><div class="empty">선택할 결재 건이 없습니다.</div></div>`; document.getElementById("apSummary").textContent="결재할 일이 없습니다."; return; }
+  document.getElementById("apSummary").textContent = `결재 ${approvals.length}건, 중단 ${stops.length}건`;
+  list.innerHTML = [...stops, ...approvals].map(i=>`<button data-ap="${i.id}" aria-current="${apSel===i.id}">
+      <span class="k mono">${i.id}<span class="badge ${i.col==="stop"?"err":"warn"}">${i.col==="stop"?"중단":APPROVE[i.id].kind}</span></span>
+      <b>${i.title}</b><span class="note">${i.state}</span></button>`).join("");
+  list.querySelectorAll("[data-ap]").forEach(b=>b.onclick=()=>{ apSel=b.dataset.ap; renderApprove(); });
+  const it=itemById(apSel);
+  if(it.col==="stop"){
+    det.innerHTML = `<div class="panel-head"><div><h2>${it.id} ${it.title}</h2><p>중단 — 오너님 결정 필요</p></div><span class="badge err">중단</span></div>
+      <div class="sec"><h3>중단 사유</h3><p style="margin:0">${it.why}</p></div>
+      <div class="sec"><h3>할 일</h3><p class="note" style="margin:0">REQ를 고쳐 새 버전으로 다시 판정받을지, 안건을 종결할지 정합니다(Workflow/03 7절). 결정은 창구 또는 Claude Code 세션에 전달합니다.</p></div>`;
+    return;
+  }
+  const a=APPROVE[it.id];
+  const chain = `<div class="chain">${a.chain.map((c,k)=>`${k?icon(CHEV):""}<span class="${c[1]}">${c[0]}</span>`).join("")}</div>`;
+  let body="";
+  if(a.kind==="REQ 승인"){
+    const hit = MAP.features.filter(f=>f.files.some(p=>a.scope.some(s=>s.endsWith(p))));
+    body = `
+    <div class="sec"><h3>결정 사항 및 선택지 <span class="muted">4차 결재 버튼 도입 시 D번호마다 직접 지정해야 승인할 수 있습니다(권고안을 미리 선택하지 않음)</span></h3>
+      <div style="overflow-x:auto"><table class="table dec"><thead><tr><th>번호</th><th>정할 일</th><th>결정</th></tr></thead><tbody>
+      ${a.decisions.map(d=>`<tr><td class="mono">${d.id}</td><td>${d.q}<div class="note">권고안: ${d.rec}</div></td><td><div class="seg" role="radiogroup" aria-label="${d.id} 결정">
+        <label><input type="radio" name="${d.id}" value="rec" ${demo?"":"disabled"}>권고안 · ${d.rec}</label><label><input type="radio" name="${d.id}" value="alt" ${demo?"":"disabled"}>대안 · ${d.alt}</label></div></td></tr>`).join("")}
+      </tbody></table></div></div>
+    <div class="sec"><h3>REQ 판정 <span class="badge ok">${a.result}</span> <span class="muted mono">${a.res}</span></h3>
+      <div>${a.criteria.map(c=>`<span class="chip" style="cursor:default">${c} · PASS</span>`).join("")}</div></div>
+    <div class="sec"><h3>기능 지도 영향 <span class="muted">3차 · REQ scope와 구현 파일을 대조한 결과, 영향을 받을 수 있는 기존 기능</span></h3>
+      ${hit.length? hit.map(f=>`<span class="fnode hot" data-f2="${f.id}"><small>${f.group} · ${f.id}</small><b>${f.name}</b></span>`).join("") : `<div class="empty">대조되는 기존 기능이 없습니다.</div>`}
+      <dl class="kv" style="margin-top:8px"><dt>scope</dt><dd class="mono" style="font-size:12px">${a.scope.join("<br>")}</dd></dl></div>`;
+  } else if(a.kind==="최종 승인"){
+    body = `
+    <div class="sec"><h3>체크리스트 대조 <span class="badge ok">${a.result}</span> <span class="muted mono">${a.res}</span></h3>
+      <div style="overflow-x:auto"><table class="table"><thead><tr><th>번호</th><th>요청 원문 항목</th><th>결과</th><th>근거</th></tr></thead><tbody>
+      ${a.checklist.map(r=>`<tr><td class="mono">${r[0]}</td><td>${r[1]}</td><td><span class="badge ok">${r[2]}</span></td><td class="muted">${r[3]}</td></tr>`).join("")}</tbody></table></div></div>
+    <div class="sec"><h3>변경 파일 <span class="muted">결정 8 채택 시 · git --no-optional-locks diff --stat(결재 화면을 열 때만 실행)</span></h3><div class="mono" style="font-size:12px">${a.diff}</div></div>
+    <div class="sec"><h3>기능 상태 변화 <span class="muted">3차</span></h3><span class="fnode"><small>글 작성 · F12</small><b>대표 이미지 생성</b></span> <span class="badge mut">구현</span> → <span class="badge ok">검증</span><p class="note" style="margin:8px 0 0">연결 검사: 변화 없음(오류 1건 유지 — 대표 이미지 생성: 막다른 길)</p></div>`;
+  } else {
+    body = `
+    <div class="sec"><h3>핫픽스 내용</h3><dl class="kv"><dt>원인</dt><dd>${a.cause}</dd><dt>변경 요지</dt><dd>${a.change}</dd><dt>대상 파일</dt><dd class="mono" style="font-size:12px">${a.files.join("<br>")}</dd></dl></div>`;
+  }
+  const canApprove = demo;
+  det.innerHTML = `<div class="panel-head"><div><h2>${it.id} ${it.title}</h2><p class="mono">${a.file} · ${a.kind}</p></div><span class="badge warn">${it.state}</span></div>
+    <div class="sec"><h3>문서 추적 사슬 <span class="muted">Minor는 EC·RES-EC가 없고, 명세가 필요할 때만 RPT가 생깁니다</span></h3>${chain}</div>${body}
+    <div class="sec"><div class="actions">
+      <button class="btn" id="apBtn" ${canApprove?"":"disabled"}>${a.kind==="핫픽스 확인"?"확인":"승인"}</button>
+      <button class="btn o" id="demoBtn">${demo?"보기 전용으로 돌아가기":"4차 결재 버튼 미리 보기"}</button>
+      <span class="note">${demo?"시안: 버튼을 눌러도 파일에 기록하지 않습니다.":"1차는 보기 전용입니다. 승인은 지금처럼 창구에 승인 문구를 보내거나 직접 기재합니다."}</span>
+    </div></div>`;
+  document.getElementById("demoBtn").onclick=()=>{ demo=!demo; renderApprove(); };
+  det.querySelectorAll("[data-f2]").forEach(b=>b.onclick=()=>{ fSel=b.dataset.f2; view="map"; renderAll(); });
+  const ab=document.getElementById("apBtn");
+  ab.onclick=()=>{
+    let phrase=`${a.file} ${a.kind==="핫픽스 확인"?"확인":"승인"}`;
+    if(a.decisions){
+      const picks=a.decisions.map(d=>{ const r=det.querySelector(`input[name="${d.id}"]:checked`); return r? `${d.id} ${r.value==="rec"?`권고안(${d.rec})`:`대안(${d.alt})`}` : null; });
+      if(picks.includes(null)){ ab.insertAdjacentHTML("afterend",' <span class="note" style="color:var(--destructive-text)" id="need">모든 D번호의 결정을 지정해야 승인할 수 있습니다.</span>'); setTimeout(()=>{const n=document.getElementById("need"); if(n) n.remove();},2500); return; }
+      phrase += ", " + picks.join(", ");
+    }
+    document.getElementById("dlgPhrase").textContent = `「${phrase}」`;
+    document.getElementById("dlg").showModal();
+  };
+}
+document.getElementById("dlgNo").onclick=()=>document.getElementById("dlg").close();
+document.getElementById("dlgYes").onclick=()=>{ document.getElementById("dlg").close(); };
+
+/* ===== 기능 지도 ===== */
+function renderMap(){
+  const map=document.getElementById("map");
+  if(floor===1){ map.innerHTML=""; const s=document.createElement("div"); s.style.padding="20px"; map.appendChild(s); emptyFloor(s); document.getElementById("mapDetail").innerHTML=""; return; }
+  const F=Object.fromEntries(MAP.features.map(f=>[f.id,f]));
+  const depth={F01:0}; for(let k=0;k<10;k++) MAP.features.forEach(f=>{ if(depth[f.id]===undefined) return; f.next.forEach(n=>{ if(depth[n]===undefined||depth[n]<depth[f.id]+1) depth[n]=depth[f.id]+1; }); });
+  const maxD=Math.max(...Object.values(depth)); const cols=[];
+  for(let d=0;d<=maxD;d++) cols.push(MAP.features.filter(f=>depth[f.id]===d));
+  const live = id => { const it=itemById(F[id].req); return it? it : null; };
+  map.innerHTML = cols.map((c,d)=>`<div class="mcol"><h4>${d===0?"시작":d+"단계"}</h4>${c.map(f=>{ const it=live(f.id);
+    return `<button class="mnode ${f.status==="planned"?"planned":""} ${fSel===f.id?"sel":""}" data-m="${f.id}" ${it?'style="border-color:var(--warning)"':""}>
+      <span class="row">${f.group}${it?`<span class="live">● ${it.id}</span>`:""}</span><span class="nm">${f.name}</span>
+      <span class="row"><span class="badge ${f.status==="tested"?"ok":f.status==="built"?"mut":""}">${STATUS[f.status]}</span><span class="mono" style="margin-left:auto">${f.id}</span></span></button>`; }).join("")}</div>`).join("")
+    + `<svg class="wires" id="mwires"></svg>`;
+  map.querySelectorAll("[data-m]").forEach(b=>b.onclick=()=>{ fSel=b.dataset.m; renderMap(); });
+  const selEl=map.querySelector(".mnode.sel"); if(selEl && map.offsetParent) selEl.scrollIntoView({inline:"center",block:"nearest"});
+  requestAnimationFrame(()=>{
+    const svg=document.getElementById("mwires"); if(!svg||!map.offsetParent) return; const base=map.getBoundingClientRect(); let d="";
+    svg.setAttribute("width",map.scrollWidth); svg.setAttribute("height",map.scrollHeight);
+    MAP.features.forEach(f=>f.next.forEach(n=>{ const a=map.querySelector(`[data-m="${f.id}"]`), b=map.querySelector(`[data-m="${n}"]`); if(!a||!b) return;
+      const r1=a.getBoundingClientRect(), r2=b.getBoundingClientRect(); const x1=r1.right-base.left, y1=r1.top-base.top+r1.height/2, x2=r2.left-base.left, y2=r2.top-base.top+r2.height/2, mx=(x1+x2)/2;
+      d+=`<path class="wire" d="M${x1},${y1} C${mx},${y1} ${mx},${y2} ${x2},${y2}"/>`; }));
+    svg.innerHTML=d; });
+  const f=F[fSel], it=itemById(f.req);
+  document.getElementById("mapDetail").innerHTML = `<div class="panel-head"><div><h2>${f.name}</h2><p class="mono">${f.id} · ${f.group}</p></div><span class="badge ${f.status==="tested"?"ok":f.status==="built"?"mut":""}">${STATUS[f.status]}</span></div>
+    <div class="sec"><h3>근거 안건</h3>${it? `<button class="ticket" data-go="${it.id}"><span class="id mono">${it.id}${it.cls?` · ${it.cls}`:""}</span><span class="t">${it.title}</span><span class="st">${it.state} · ${D[it.room].name}</span></button>` : `<p class="note" style="margin:0"><span class="mono">${f.req}</span> — 진행 중인 안건이 아닙니다.</p>`}</div>
+    <div class="sec"><h3>코드</h3>${f.files.length? f.files.map(p=>`<div class="mono note">assets/src/${p}</div>`).join("") : `<div class="note">아직 없습니다(기획 상태).</div>`}</div>
+    <div class="sec"><h3>연결 검사 <span class="muted">3차 · 기능 지도 프로토타입의 8종, 전체 기능 기준</span></h3>${CHECKS.map(c=>{ const h=MAP.features.filter(c.test); return `<div style="display:flex;gap:8px;align-items:flex-start;margin-bottom:6px"><span class="badge ${h.length?(c.sev==="err"?"err":"warn"):"ok"}">${h.length?(c.sev==="err"?"오류":"경고"):"통과"}</span><span style="font-size:12px">${c.title}${h.length?` — ${h.map(x=>x.name).join(", ")}`:""}</span></div>`; }).join("")}</div>`;
+  document.querySelectorAll("#mapDetail [data-go]").forEach(b=>b.onclick=()=>openItem(b.dataset.go));
+}
+
+/* ===== 보고 ===== */
+function renderReport(){
+  const zero = floor===1;
+  document.getElementById("stats").innerHTML = `
+    <div class="card stat"><div class="lbl">진행 중 안건</div><div class="val">${zero?0:ITEMS.filter(i=>!["done","stop"].includes(i.col)).length}</div><div class="sub">요구 메모·핫픽스 포함</div></div>
+    <div class="card stat"><div class="lbl">이번 주 완료</div><div class="val">${zero?0:2}</div><div class="sub">최종 판정 pass</div></div>
+    <div class="card stat"><div class="lbl">첫 판정 통과율</div><div class="val">${zero?"—":"64%"}</div><div class="sub">첫 판정 14건 가운데 pass 9건</div></div>
+    <div class="card stat ${zero?"":"bad"}"><div class="lbl">중단 <span class="badge err plain">결정 필요</span></div><div class="val">${zero?0:stops.length}</div><div class="sub">rejected·한도 초과</div></div>`;
+  document.getElementById("doneTable").innerHTML = `<thead><tr><th>안건</th><th>분류</th><th>최종 판정</th><th>판정 횟수</th><th>상태</th></tr></thead><tbody>${zero?`<tr><td colspan="5" class="muted">없음</td></tr>`:`
+    <tr><td><b>REQ-010</b> 대표 이미지 생성</td><td>Minor</td><td class="mono">RES-010_v01</td><td>1회</td><td><span class="badge warn">최종 승인·커밋 대기</span></td></tr>
+    <tr><td><b>REQ-009</b> 맞춤법 검수 개선</td><td>Major</td><td class="mono">RES-009_v02</td><td>2회</td><td><span class="badge ok">커밋 완료</span><div class="note">결정 8 채택 시에만 표시(Git 기록으로 판별)</div></td></tr>`}</tbody>`;
+  document.getElementById("judgeTable").innerHTML = `<thead><tr><th>판정 구분</th><th>pass</th><th>fail</th><th>rejected</th></tr></thead><tbody>${zero?`<tr><td colspan="4" class="muted">없음</td></tr>`:`
+    <tr><td>REQ 판정</td><td>6</td><td>2</td><td>0</td></tr><tr><td>EC 판정</td><td>3</td><td>0</td><td>1</td></tr><tr><td>최종 판정</td><td>2</td><td>3</td><td>0</td></tr>`}</tbody>`;
+}
+
+/* ===== 테마 ===== */
+const SUN='<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>';
+const MOON='<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>';
+function isDark(){ const t=document.documentElement.dataset.theme; return t? t==="dark" : matchMedia("(prefers-color-scheme: dark)").matches; }
+function paintTheme(){ document.getElementById("themeBtn").innerHTML = icon(isDark()?SUN:MOON); }
+document.getElementById("themeBtn").onclick=()=>{ document.documentElement.dataset.theme = isDark()?"light":"dark"; paintTheme(); };
+addEventListener("resize",()=>{ if(view==="map") renderMap(); });
+
+function renderAll(){ renderNav(); renderOffice(); renderBoard(); renderApprove(); renderMap(); renderReport(); }
+paintTheme(); renderAll();
+</script>
+</body>
+</html>
