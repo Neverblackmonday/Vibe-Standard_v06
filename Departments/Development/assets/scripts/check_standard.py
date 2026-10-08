@@ -8,7 +8,7 @@ check_standard.py - 바이브 코딩 표준 v04 커밋 전 검사기
         python check_standard.py --staged   # 커밋 대상(index)만 검사한다 (pre-commit 훅)
 1. 초기 커밋 예외: .git이나 HEAD가 없으면 검사를 생략한다
 2. Git 조회 실패 시 차단한다
-3. CEO/ 아래 변경을 차단한다
+3. CEO/ 아래 변경: 작업 트리 검사는 빼고, --staged 검사는 CEO/ 변경만 있으면 통과, 그 밖의 변경과 섞이면 차단한다
 4. scope 대조 제외 구역(WHITELIST_PREFIXES, 부서 직속 results/·workspace/)을 뺀다
 5. 남은 변경 파일 전체가 승인된 REQ(최신 버전) 하나 또는 확인된 HOTFIX(최신 버전) 하나의 scope에 들어가야 한다.
    HOTFIX로 통과하려면 남은 변경 파일이 HOTFIX_MAX_SCOPE개 이하여야 한다
@@ -286,12 +286,34 @@ def check_standard(staged=False):
         print("[PASS] 변경된 파일이 없습니다.")
         return True
 
+    # 대표님이 CEO/를 커밋하지 않은 채 써도 파이프라인이 멈추지 않게 작업 트리 검사에서는 빼고,
+    # 커밋 때는 CEO/ 변경과 다른 변경이 한 커밋에 섞이지 않게 막는다 (REQ-013).
+    # 섞임 판단은 대조 제외(순서 4)보다 먼저 해야 제외 구역 경로와 섞인 커밋도 막힌다.
+    # 이름 변경은 changed_files()가 두 경로를 따로 돌려주므로 경로마다 판별된다
     ceo = [f for f in files if f.startswith("CEO/")]
-    if ceo:
-        print("[FAIL] CEO/ 아래는 대표님 전용 구역입니다. 다음 변경을 되돌리십시오:")
+    others = [f for f in files if not f.startswith("CEO/")]
+    if ceo and not staged:
+        print("[INFO] CEO/ 아래 변경은 작업 트리 검사에서 뺍니다(대표님 구역):")
         for f in ceo:
             print(f"  - {f}")
+        if not others:
+            print("[PASS] 변경 파일이 모두 CEO/ 아래에 있습니다.")
+            return True
+    elif ceo and others:
+        print("[FAIL] CEO/ 아래 변경과 그 밖의 변경이 한 커밋에 섞여 있습니다.")
+        print("  CEO/ 아래 변경:")
+        for f in ceo:
+            print(f"  - {f}")
+        print("  그 밖의 변경:")
+        for f in others:
+            print(f"  - {f}")
+        print("       원인: CEO/ 변경은 그 밖의 변경과 따로 커밋해야 합니다(Workflow/06_통제장치_및_배포 「대표님 전용 구역의 커밋」).")
+        print("       조치: git restore --staged <경로>로 한쪽을 스테이징에서 빼고 나눠 커밋하십시오.")
         return False
+    elif ceo:
+        print("[PASS] 커밋 대상이 모두 CEO/ 아래 변경입니다(대표님 구역). scope 대조를 생략합니다.")
+        return True
+    files = others
 
     work_files = [f for f in files if not is_whitelisted(f)]
     if not work_files:
