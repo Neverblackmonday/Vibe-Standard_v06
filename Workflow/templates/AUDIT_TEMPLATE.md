@@ -2,7 +2,7 @@
 audit_id: "AUDIT_YYYYMMDD_<주제>_v01"
 created: "YYYY-MM-DD"
 auditor:
-  agent: "External" # 검토를 수행한 창구·세션 (예: 코워크)
+  agent: "External" # 검토를 수행한 비서실·세션 (예: 코워크)
   model: "확인 불가" # 실제 실행 모델. 확인할 수 없으면 "확인 불가"
   effort: "확인 불가"
 ---

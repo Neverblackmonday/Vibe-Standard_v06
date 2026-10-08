@@ -4,7 +4,7 @@ classification: "Major" # Critical | Major | Minor (Workflow/03_라이프사이�
 created: "YYYY-MM-DD"
 approved: "" # 대표님 직접 기재 또는 Workflow/07_문서_서식_및_번호 「승인 기록」 절차. 형식 "YYYY-MM-DDTHH:MM:SS+09:00". 비어 있으면 작업·커밋 불가
 author:
-  agent: "Secretariat"
+  agent: "PM"
   model: "Claude Opus 5.5" # 실제 실행 모델
   effort: "medium" # 실제 적용 effort
 workflow:
@@ -27,7 +27,7 @@ scope:
 > 파일명은 `REQ-<번호>_v<버전>.md`, 파생 안건은 `REQ-<번호>-<파생 번호>_v<버전>.md`다(`Workflow/07_문서_서식_및_번호` 「번호와 버전」). 이 안내문은 작성할 때 지운다.
 
 ## 1. 요청 원문
-> 요구 메모(`Departments/Secretariat/assets/inbox/<메모>.md`)의 대표님 지시를 원형 그대로 인용한다. 항목마다 번호를 붙인다.
+> ORDER(`Departments/Secretariat/assets/inbox/ORD-<번호>_v<버전>.md`)를 출처로 밝히고, 지시 원문과 이 REQ가 맡는 요구 항목을 ORDER의 번호 그대로 원형 인용한다. 5절 체크리스트는 이 요구 항목 번호와 1:1로 대응한다.
 
 ## 2. 배경 및 목적
 - **배경**: 이 작업이 필요한 사실
