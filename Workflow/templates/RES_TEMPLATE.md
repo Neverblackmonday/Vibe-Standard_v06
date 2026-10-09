@@ -17,6 +17,7 @@ auditor:
 - **판정 결과**: `pass` | `fail` | `rejected`
 - **대상 문서**: 판정한 문서 경로와 버전
 - **판정 차수**: 1차 (재판정이면 직전 판정서 경로. 문체 반영 대조이면 「문체 반영 대조」와 직전 판정서 경로)
+- **부적합 기록**: 이 판정으로 부적합 기록을 작성했으면 그 경로(`Workflow/03_라이프사이클` 「부적합 관리」), 없으면 「해당 없음」
 
 ## 2. 판정 기준별 결과
 | 번호 | 판정 기준 | 결과 | 근거(파일·절·명령 결과) |
@@ -34,6 +35,8 @@ auditor:
 | 범위 대조 | `git status --porcelain -uall` | YYYY-MM-DDTHH:MM:SS+09:00 | 결과 원문 |
 | 변경 규모(최종 판정만) | `git diff --stat` | YYYY-MM-DDTHH:MM:SS+09:00 | 결과 원문 |
 | 커밋 전 검사 | `python Departments/Development/assets/scripts/check_standard.py` | YYYY-MM-DDTHH:MM:SS+09:00 | 결과 원문 |
+| 인수 시험 재실행(최종 판정, 인수 시험 단계가 있으면) | `python -m pytest Departments/Quality/assets/acceptance/REQ-007_v01` | YYYY-MM-DDTHH:MM:SS+09:00 | 결과 원문 |
+| 인수 시험 해시 대조(최종 판정, 인수 시험 단계가 있으면) | `git diff --no-index --full-index /dev/null <시험 파일>` | YYYY-MM-DDTHH:MM:SS+09:00 | 결과 원문 |
 
 ## 5. 결함 목록과 반려 부서 (`fail`·`rejected`일 때만)
 | 번호 | 위치 | 결함 | 반려 부서 |
@@ -53,3 +56,15 @@ auditor:
 | 번호 | 경로 | 추적 여부 | 근거 |
 | :---: | :--- | :--- | :--- |
 | 1 | `Departments/Development/workspace/REQ-007_대조_20261009a.py` | 추적 / 미추적 | 근거 |
+
+## 8. 인수 시험 판정 (최종 판정, 인수 시험 단계가 있는 경우만)
+> 기준은 `Workflow/03_라이프사이클` 「단계별 통과 조건과 판정 기준」의 최종 판정 기준 8이다. 인수 시험 단계가 없으면 「해당 없음」으로 적는다.
+
+| 번호 | 기준 8 항목 | 결과 | 근거 |
+| :---: | :--- | :---: | :--- |
+| ① | 실행으로 확인하는 항목을 빠짐없이 덮고 열람 항목의 구분이 맞다 | PASS | 근거 |
+| ② | 결과가 늘 같은 시험이 아니다(구현 전 통과 시험의 사유 포함) | PASS | 근거 |
+| ③ | 현행 인수 시험(현행 ACC `test_dir`)을 다시 실행해 통과한다 | PASS | 근거 |
+| ④ | 시험 파일의 해시가 현행 ACC에 적힌 값과 같다 | PASS | 근거 |
+| ⑤ | 「대상 없음」이면 그 판단이 맞다 | PASS | 근거 |
+| ⑥ | 인수 시험의 결함은 반려 부서를 품질로 적었다 | PASS | 근거 |

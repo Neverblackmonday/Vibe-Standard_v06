@@ -10,7 +10,7 @@ check_standard.py - 바이브 코딩 표준 v04 커밋 전 검사기
 2. Git 조회 실패 시 차단한다
 3. CEO/ 아래 변경: 작업 트리 검사는 빼고, --staged 검사는 CEO/ 변경만 있으면 통과, 그 밖의 변경과 섞이면 차단한다.
    Lab/ 아래 변경: 작업 트리 검사는 빼고, --staged 검사는 Lab/ 변경만 있으면 통과, 그 밖의 변경과 섞이면 Lab/ 경로도 4·5의 대조를 받는다
-4. scope 대조 제외 구역(WHITELIST_PREFIXES, 부서 직속 results/·workspace/)을 뺀다
+4. scope 대조 제외 구역(WHITELIST_PREFIXES, 품질의 인수 시험·부적합 기록 경로, 부서 직속 results/·workspace/)을 뺀다
 5. 남은 변경 파일 전체가 승인된 REQ(최신 버전) 하나 또는 확인된 HOTFIX(최신 버전) 하나의 scope에 들어가야 한다.
    HOTFIX로 통과하려면 남은 변경 파일이 HOTFIX_MAX_SCOPE개 이하여야 한다
 6. 소스코드·테스트가 바뀌었으면 단위 테스트를 실행한다
@@ -33,10 +33,16 @@ for stream in (sys.stdout, sys.stderr):
 ROOT_DIR = Path(__file__).resolve().parent.parent.parent.parent.parent
 
 # scope 대조에서 빼는 경로 (규정상 작업 구역은 Workflow/02 「작업 구역」이 원천이고, 이 목록은 커밋 검사용 구현이다)
+# 품질의 인수 시험·부적합 기록은 판정서(results/)처럼 안건 scope와 관계없이 커밋되어야 한다.
+# 그 안건의 scope:에 품질 폴더가 없거나, REQ 판정 fail로 생긴 부적합 기록이어도 막히지 않게 뺀다.
+# 인수 시험의 통과는 구현 단계와 최종 판정이 확인하므로 커밋 때 다시 실행하지 않는다
+# (이 경로는 순서 4에서 빠지므로 순서 6 run_tests()의 대상이 아니다) (REQ-017)
 WHITELIST_PREFIXES = (
     "Departments/Secretariat/docs/requests/REQ-",  # REQ 기록 (승인 전 초안 포함)
     "Departments/Secretariat/assets/",  # ORDER, 승인 기록, 조사 자료, 보고 자료
     "Audits/",  # 외부감사실(외부 보고서)
+    "Departments/Quality/assets/acceptance/",  # 인수 시험(품질. Workflow/03 「시험실」)
+    "Departments/Quality/docs/nonconformance/",  # 부적합 기록(품질. Workflow/03 「부적합 관리」)
 )
 # _archive/(지난 버전 기록)는 제외하지 않는다. 읽기 전용 구역이므로 변경은 scope 대조에서 차단된다
 

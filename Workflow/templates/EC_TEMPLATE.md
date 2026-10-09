@@ -45,6 +45,7 @@ scope:
 | 단계 | 부서 | 작업 | 산출물 |
 | :--- | :--- | :--- | :--- |
 | 명세 | 설계 | PRD·TAD 작성 | `Departments/Design/docs/prd/01_개요.md` |
+| 인수 시험 | 품질 | 인수 시험 작성과 구현 전 실행 | `Departments/Quality/assets/acceptance/REQ-007_v01/`, `Departments/Quality/results/ACC-007_v01.md` |
 | 구현 | 개발 | 구현과 테스트 | `Departments/Development/assets/src/main.py` |
 
 ## 4. 위험 분석 및 대응
@@ -56,5 +57,6 @@ scope:
 | 번호 | 기준 | 확인 방법 |
 | :---: | :--- | :--- |
 | 1 | 단위 테스트 통과 | `python -m pytest Departments/Development/assets/tests` |
-| 2 | 커밋 전 검사 통과 | `python Departments/Development/assets/scripts/check_standard.py` 종료 코드 0 |
-| 3 | REQ 체크리스트 번호별 근거 확보 | 최종 판정서 「체크리스트 대조」 절 |
+| 2 | 인수 시험 통과 | `python -m pytest Departments/Quality/assets/acceptance/REQ-007_v01` |
+| 3 | 커밋 전 검사 통과 | `python Departments/Development/assets/scripts/check_standard.py` 종료 코드 0 |
+| 4 | REQ 체크리스트 번호별 근거 확보 | 최종 판정서 「체크리스트 대조」 절 |

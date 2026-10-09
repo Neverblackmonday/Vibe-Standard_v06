@@ -8,10 +8,11 @@ author:
   model: "Claude Opus 5.5" # 실제 실행 모델
   effort: "medium (실행 명령 기준)" # 실행 명령 지시문의 effort 값과 출처. 얻을 수 없으면 "확인 불가"(Workflow/04_모델_운용 「모델 메타데이터 기록」)
 workflow:
-  # "<부서>: <단계명>"을 단계 순서대로 적는다(Workflow/03_라이프사이클 「원스톱 파이프라인」). Minor는 EC 작성·EC 판정이 없다. 실험 단계가 있으면 "<부서>: 실험"을 Critical·Major는 EC 작성 앞, Minor는 명세 앞에 적는다(Workflow/03_라이프사이클 「실험 단계」)
+  # "<부서>: <단계명>"을 단계 순서대로 적는다(Workflow/03_라이프사이클 「원스톱 파이프라인」). Minor는 EC 작성·EC 판정이 없다. 실험 단계가 있으면 "<부서>: 실험"을 Critical·Major는 EC 작성 앞, Minor는 명세 앞에 적는다(Workflow/03_라이프사이클 「실험 단계」). Critical·Major는 명세와 구현 사이에 "Quality: 인수 시험"을 늘 둔다(Workflow/03_라이프사이클 「시험실」)
   - "Design: EC 작성"
   - "Quality: EC 판정"
   - "Design: 명세"
+  - "Quality: 인수 시험"
   - "Development: 구현"
   - "Quality: 최종 판정"
 scope:
@@ -49,11 +50,12 @@ scope:
 | EC 작성 | 설계 | EC 작성 | `Departments/Design/docs/tad/EC-007_v01.md` |
 | EC 판정 | 품질 | EC 판정 | `Departments/Quality/results/RES-007-EC_v01.md` |
 | 명세 | 설계 | PRD·TAD 작성 | `Departments/Design/docs/prd/01_개요.md` |
+| 인수 시험 | 품질 | 인수 시험 작성과 구현 전 실행 | `Departments/Quality/assets/acceptance/REQ-007_v01/`, `Departments/Quality/results/ACC-007_v01.md` |
 | 구현 | 개발 | 구현과 단위 테스트 | `Departments/Development/assets/src/main.py` |
 | 최종 판정 | 품질 | 체크리스트 번호별 근거 대조 | `Departments/Quality/results/RES-007_v01.md` |
 
 ## 5. 검증 및 완료 기준 (체크리스트)
-> 작성 기준은 `Workflow/03_라이프사이클` 「REQ 작성 파이프라인」을 따른다. 항목마다 확인 방법을 한 줄로 적는다.
+> 작성 기준은 `Workflow/03_라이프사이클` 「REQ 작성 파이프라인」을 따른다. 항목마다 확인 방법을 한 줄로 적는다. 확인 방법이 명령·시험의 실행 결과인 항목은 Critical·Major에서 인수 시험의 대상이 된다(`Workflow/03_라이프사이클` 「시험실」).
 
 | 번호 | 요청 원문 항목 | 확인 방법 |
 | :---: | :--- | :--- |

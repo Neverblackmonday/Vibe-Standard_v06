@@ -23,6 +23,7 @@ author:
 | 항목 | 명령 | 시각 | 결과 원문 |
 | :--- | :--- | :--- | :--- |
 | 단위 테스트 | `python -m pytest Departments/Development/assets/tests` | YYYY-MM-DDTHH:MM:SS+09:00 | 실행 결과 원문 |
+| 인수 시험(인수 시험 단계가 있으면) | `python -m pytest Departments/Quality/assets/acceptance/REQ-007_v01` | YYYY-MM-DDTHH:MM:SS+09:00 | 실행 결과 원문 |
 | 커밋 전 검사 | `python Departments/Development/assets/scripts/check_standard.py` | YYYY-MM-DDTHH:MM:SS+09:00 | 실행 결과 원문 |
 
 ## 4. 적용본 (거버넌스 파일을 바꾼 경우만)
@@ -40,3 +41,10 @@ author:
 - **`Lab/` 경로**: `Lab/REQ-007_<주제>`
 - **요지**:
 - **정규 경로로 복사·이동하지 않았다는 확인**:
+
+## 7. 인수 시험 결함 보고 (있는 경우만)
+> 인수 시험을 고치지 않고 이 절에 적어 PM에 보고한다(`Workflow/03_라이프사이클` 「시험실」).
+
+| 번호 | 시험(파일·함수) | 결함으로 본 사유 | 체크리스트 번호 |
+| :---: | :--- | :--- | :---: |
+| 1 | `Departments/Quality/assets/acceptance/REQ-007_v01/test_req007.py::test_c1_<요지>` | 사유 | 1 |
