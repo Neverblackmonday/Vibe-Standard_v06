@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.py[cod]
+*.class
+.venv/
+venv/
+
+# Environment & Local Settings
+.env
+.claude/settings.local.json
+
+# Logs & Temporary
+*.log
+.DS_Store
+Thumbs.db
+
+# 자료실(Storage/)의 서버실과 패키지 자리: 내용은 커밋하지 않고 폴더 자리(.gitkeep)만 추적한다
+/Storage/server/*
+!/Storage/server/.gitkeep
+/Storage/package/sample/*
+!/Storage/package/sample/.gitkeep
+/Storage/package/update/*
+!/Storage/package/update/.gitkeep

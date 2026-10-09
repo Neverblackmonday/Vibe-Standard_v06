@@ -2,7 +2,7 @@
 *.cmd text eol=crlf
 .githooks/* text eol=lf
 
-# 배포본(git archive) 제외 규칙: 표준 개정 기록과 내부 작업물은 신규 프로젝트 배포본에 넣지 않는다
+# 배포본(git archive) 제외 규칙: 표준 개정 기록과 내부 작업물(실험실(Lab/)의 실험 파일 포함)은 신규 프로젝트 배포본에 넣지 않는다
 _archive/** export-ignore
 Audits/** export-ignore
 Audits/.gitkeep -export-ignore
@@ -15,3 +15,5 @@ Departments/*/workspace/.gitkeep -export-ignore
 Departments/Secretariat/assets/*/** export-ignore
 Departments/Secretariat/assets/*.* export-ignore
 Departments/Secretariat/assets/*/.gitkeep -export-ignore
+Lab/** export-ignore
+Lab/.gitkeep -export-ignore

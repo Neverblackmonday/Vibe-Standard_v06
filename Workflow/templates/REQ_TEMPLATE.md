@@ -8,14 +8,14 @@ author:
   model: "Claude Opus 5.5" # 실제 실행 모델
   effort: "medium (실행 명령 기준)" # 실행 명령 지시문의 effort 값과 출처. 얻을 수 없으면 "확인 불가"(Workflow/04_모델_운용 「모델 메타데이터 기록」)
 workflow:
-  # "<부서>: <단계명>"을 단계 순서대로 적는다(Workflow/03_라이프사이클 「원스톱 파이프라인」). Minor는 EC 작성·EC 판정이 없다
+  # "<부서>: <단계명>"을 단계 순서대로 적는다(Workflow/03_라이프사이클 「원스톱 파이프라인」). Minor는 EC 작성·EC 판정이 없다. 실험 단계가 있으면 "<부서>: 실험"을 Critical·Major는 EC 작성 앞, Minor는 명세 앞에 적는다(Workflow/03_라이프사이클 「실험 단계」)
   - "Design: EC 작성"
   - "Quality: EC 판정"
   - "Design: 명세"
   - "Development: 구현"
   - "Quality: 최종 판정"
 scope:
-  # 수정을 허용할 경로. 폴더는 끝에 / 없이 적는다. Critical·Major는 EC 경로를 포함한다
+  # 수정을 허용할 경로. 폴더는 끝에 / 없이 적는다. Critical·Major는 EC 경로를 포함한다. 실험 단계가 있으면 실험 폴더 Lab/<REQ 번호>_<주제>를 포함한다
   - Departments/Design/docs/tad/EC-007
   - Departments/Design/docs/prd/01_개요.md
   - Departments/Development/assets/src/main.py
@@ -42,6 +42,8 @@ scope:
 | D1 | 예: effort | `medium` | `high` | 대표님 직접 기재 또는 `Workflow/07_문서_서식_및_번호` 「승인 기록」 |
 
 ## 4. 실행 계획
+> 실험 단계가 있으면 표 첫 행에 실험 단계(부서, 실험 목적, 대상 `Lab/` 경로)를 적는다.
+
 | 단계 | 부서 | 작업 | 대상 경로 |
 | :--- | :--- | :--- | :--- |
 | EC 작성 | 설계 | EC 작성 | `Departments/Design/docs/tad/EC-007_v01.md` |

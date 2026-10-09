@@ -8,7 +8,8 @@ check_standard.py - 바이브 코딩 표준 v04 커밋 전 검사기
         python check_standard.py --staged   # 커밋 대상(index)만 검사한다 (pre-commit 훅)
 1. 초기 커밋 예외: .git이나 HEAD가 없으면 검사를 생략한다
 2. Git 조회 실패 시 차단한다
-3. CEO/ 아래 변경: 작업 트리 검사는 빼고, --staged 검사는 CEO/ 변경만 있으면 통과, 그 밖의 변경과 섞이면 차단한다
+3. CEO/ 아래 변경: 작업 트리 검사는 빼고, --staged 검사는 CEO/ 변경만 있으면 통과, 그 밖의 변경과 섞이면 차단한다.
+   Lab/ 아래 변경: 작업 트리 검사는 빼고, --staged 검사는 Lab/ 변경만 있으면 통과, 그 밖의 변경과 섞이면 Lab/ 경로도 4·5의 대조를 받는다
 4. scope 대조 제외 구역(WHITELIST_PREFIXES, 부서 직속 results/·workspace/)을 뺀다
 5. 남은 변경 파일 전체가 승인된 REQ(최신 버전) 하나 또는 확인된 HOTFIX(최신 버전) 하나의 scope에 들어가야 한다.
    HOTFIX로 통과하려면 남은 변경 파일이 HOTFIX_MAX_SCOPE개 이하여야 한다
@@ -35,9 +36,12 @@ ROOT_DIR = Path(__file__).resolve().parent.parent.parent.parent.parent
 WHITELIST_PREFIXES = (
     "Departments/Secretariat/docs/requests/REQ-",  # REQ 기록 (승인 전 초안 포함)
     "Departments/Secretariat/assets/",  # ORDER, 승인 기록, 조사 자료, 보고 자료
-    "Audits/",  # 외부 검토 보고서
+    "Audits/",  # 외부감사실(외부 보고서)
 )
 # _archive/(지난 버전 기록)는 제외하지 않는다. 읽기 전용 구역이므로 변경은 scope 대조에서 차단된다
+
+# 실험실 구역. 대조 제외 구역(WHITELIST_PREFIXES)이 아니다. 처리는 check_standard()의 순서 3을 따른다
+LAB_PREFIX = "Lab/"
 
 # 핫픽스 scope에 넣을 수 없는 경로 (AGENTS.md 「불변 원칙」 3항의 거버넌스 구역, CEO/, _archive/)
 GOVERNANCE_PATHS = (
@@ -314,6 +318,23 @@ def check_standard(staged=False):
         print("[PASS] 커밋 대상이 모두 CEO/ 아래 변경입니다(대표님 구역). scope 대조를 생략합니다.")
         return True
     files = others
+
+    # 파이프라인 밖 실험 커밋은 대조할 REQ가 없으므로 Lab/ 변경만 담은 커밋은 scope 대조 없이 통과시킨다.
+    # 실험 파일이 다른 안건 커밋에 섞이는 것은 섞인 커밋만 scope로 막는다: Lab/ 경로를 빼지 않고
+    # 순서 4·5로 넘겨 그 밖의 경로와 함께 승인된 REQ 하나의 scope 안에 있어야 통과하게 한다 (REQ-016).
+    # 작업 트리 검사에서 빼는 이유는 CEO/와 같다(커밋하지 않은 실험 파일 때문에 다른 안건의 검사가 멈추지 않게 한다)
+    lab = [f for f in files if f.startswith(LAB_PREFIX)]
+    if lab and not staged:
+        print("[INFO] Lab/ 아래 변경은 작업 트리 검사에서 뺍니다(실험실):")
+        for f in lab:
+            print(f"  - {f}")
+        files = [f for f in files if not f.startswith(LAB_PREFIX)]
+        if not files:
+            print("[PASS] CEO/·Lab/ 밖의 변경 파일이 없습니다.")
+            return True
+    elif lab and len(lab) == len(files):
+        print("[PASS] 커밋 대상이 모두 Lab/ 아래 변경입니다(실험실). scope 대조를 생략합니다.")
+        return True
 
     work_files = [f for f in files if not is_whitelisted(f)]
     if not work_files:
