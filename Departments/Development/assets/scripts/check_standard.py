@@ -4,20 +4,26 @@
 check_standard.py - 바이브 코딩 표준 v04 커밋 전 검사기
 
 검사 순서와 규칙의 설명은 Workflow/06_통제장치_및_배포 「커밋 전 검사」에 있다.
-사용법: python check_standard.py            # 작업 트리 전체(git status)를 검사한다
-        python check_standard.py --staged   # 커밋 대상(index)만 검사한다 (pre-commit 훅)
+사용법: python check_standard.py              # 작업 트리 전체(git status)를 검사한다
+        python check_standard.py --staged     # 커밋 대상(index)만 검사한다 (pre-commit 훅)
+        python check_standard.py --scan-all   # 다른 검사 없이 추적 파일 전체와 커밋 이력 전체에서 비밀정보를 찾는다
+                                              # (운영의 보안 점검용. Workflow/06 「보안 점검」)
 1. 초기 커밋 예외: .git이나 HEAD가 없으면 검사를 생략한다
 2. Git 조회 실패 시 차단한다
-3. CEO/ 아래 변경: 작업 트리 검사는 빼고, --staged 검사는 CEO/ 변경만 있으면 통과, 그 밖의 변경과 섞이면 차단한다.
-   Lab/ 아래 변경: 작업 트리 검사는 빼고, --staged 검사는 Lab/ 변경만 있으면 통과, 그 밖의 변경과 섞이면 Lab/ 경로도 4·5의 대조를 받는다
-4. scope 대조 제외 구역(WHITELIST_PREFIXES, 품질의 인수 시험·부적합 기록 경로, 부서 직속 results/·workspace/)을 뺀다
-5. 남은 변경 파일 전체가 승인된 REQ(최신 버전) 하나 또는 확인된 HOTFIX(최신 버전) 하나의 scope에 들어가야 한다.
+3. CEO/ 아래 변경: 작업 트리 검사는 빼고, --staged 검사는 CEO/ 변경만 있으면 통과(4~7 생략), 그 밖의 변경과 섞이면 차단한다.
+   Lab/ 아래 변경: 4의 검출을 받은 뒤, 작업 트리 검사는 빼고, --staged 검사는 Lab/ 변경만 있으면 통과(5~7 생략),
+   그 밖의 변경과 섞이면 Lab/ 경로도 5·6의 대조를 받는다
+4. 비밀정보 검출: 3의 CEO/ 처리 뒤 남은 경로(Lab/·대조 제외 경로 포함)의 내용에서 SECRET_RULES에 맞는 값을 찾으면
+   차단한다(예외 목록 SECRET_ALLOWLIST_REL에 등록된 검출 제외). 값은 출력하지 않는다
+5. scope 대조 제외 구역(WHITELIST_PREFIXES, 품질의 인수 시험·부적합 기록 경로, 부서 직속 results/·workspace/)을 뺀다
+6. 남은 변경 파일 전체가 승인된 REQ(최신 버전) 하나 또는 확인된 HOTFIX(최신 버전) 하나의 scope에 들어가야 한다.
    HOTFIX로 통과하려면 남은 변경 파일이 HOTFIX_MAX_SCOPE개 이하여야 한다
-6. 소스코드·테스트가 바뀌었으면 단위 테스트를 실행한다
+7. 소스코드·테스트가 바뀌었으면 단위 테스트를 실행한다
 """
 
 import os
 import re
+from collections import Counter
 from datetime import datetime
 import subprocess
 import sys
@@ -36,7 +42,7 @@ ROOT_DIR = Path(__file__).resolve().parent.parent.parent.parent.parent
 # 품질의 인수 시험·부적합 기록은 판정서(results/)처럼 안건 scope와 관계없이 커밋되어야 한다.
 # 그 안건의 scope:에 품질 폴더가 없거나, REQ 판정 fail로 생긴 부적합 기록이어도 막히지 않게 뺀다.
 # 인수 시험의 통과는 구현 단계와 최종 판정이 확인하므로 커밋 때 다시 실행하지 않는다
-# (이 경로는 순서 4에서 빠지므로 순서 6 run_tests()의 대상이 아니다) (REQ-017)
+# (이 경로는 순서 5에서 빠지므로 순서 7 run_tests()의 대상이 아니다) (REQ-017)
 WHITELIST_PREFIXES = (
     "Departments/Secretariat/docs/requests/REQ-",  # REQ 기록 (승인 전 초안 포함)
     "Departments/Secretariat/assets/",  # ORDER, 승인 기록, 조사 자료, 보고 자료
@@ -70,6 +76,34 @@ HOTFIX_MAX_SCOPE = 3
 RECORD_NAME = re.compile(r"^(REQ|HOTFIX)-(\d{3}(?:-\d+)?)_v(\d{2})\.md$")
 # 승인·확인 시각 형식: YYYY-MM-DDTHH:MM:SS+09:00 (Workflow/07 「머리말」)
 APPROVAL_TIME = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\+09:00$")
+
+# 비밀정보 검출 규칙(순서 4와 --scan-all). 규칙 목록의 원천은 이 상수다(Workflow/06 「비밀정보 검출」).
+# 이 검사는 사고 이력 없이 대표님 결정으로 넣은 예방 검사이며(근거 ORD-005_v04 원문 N),
+# AGENTS.md 「불변 원칙」 8항의 개별 예외다(REQ-018).
+# 형식이 알려진 키·토큰·개인 키와, 따옴표로 감싼 값을 비밀번호·토큰 이름에 대입한 줄만 잡는다.
+# 대입 규칙이 따옴표를 요구하는 이유는 표준 문서의 필드 이름 언급을 오탐하지 않기 위해서다.
+# 형식이 없는 비밀정보는 놓칠 수 있으며 그 범위는 운영의 보안 점검에서 사람이 확인한다.
+# 각 정규식 문자열은 자기 자신과 맞지 않게 작성했으므로 이 파일은 검출되지 않는다
+SECRET_RULES = (
+    ("private-key", re.compile(r"-----BEGIN [A-Z ]*PRIVATE KEY-----")),
+    ("aws-access-key-id", re.compile(r"\b(?:AKIA|ASIA)[0-9A-Z]{16}\b")),
+    ("github-token", re.compile(r"\bgh[pousr]_[A-Za-z0-9]{36,}|\bgithub_pat_[A-Za-z0-9_]{22,}")),
+    ("anthropic-api-key", re.compile(r"\bsk-ant-[A-Za-z0-9_-]{20,}")),
+    ("openai-api-key", re.compile(r"\bsk-(?!ant-)[A-Za-z0-9_-]{20,}")),
+    ("google-api-key", re.compile(r"\bAIza[0-9A-Za-z_-]{35}")),
+    ("slack-token", re.compile(r"\bxox[abposr]-[A-Za-z0-9-]{10,}")),
+    ("secret-assignment", re.compile(
+        r"""\b(?:password|passwd|pwd|secret|api[_-]?key|access[_-]?token|auth[_-]?token|client[_-]?secret)\b["']?\s*[:=]\s*["'][^"'\s]{8,}["']""",
+        re.IGNORECASE)),
+)
+SECRET_RULE_NAMES = {name for name, _ in SECRET_RULES}
+
+# 비밀정보 검출 예외 목록. 에이전트가 고칠 수 없는 거버넌스 구역(이 스크립트 폴더) 안에 두어
+# 에이전트가 검사를 스스로 풀지 못하게 한다. 등록은 대표님 직접 또는 REQ로만 한다.
+# 줄 번호가 아니라 경로와 규칙 이름으로 등록하는 이유는 문서를 고칠 때마다 줄 번호가 바뀌기 때문이다.
+# 승인 기록과 같이 작업 트리에서 읽어, 대표님이 등록한 뒤 커밋 전에도 반영되게 한다
+SECRET_ALLOWLIST_REL = "Departments/Development/assets/scripts/secret_allowlist.txt"
+SECRET_SOURCE = "Workflow/06_통제장치_및_배포 「비밀정보 검출」"
 
 
 def is_whitelisted(filepath):
@@ -264,6 +298,245 @@ def changed_files(staged):
     return result
 
 
+# ---------------------------------------------------------------- 비밀정보 검출 (순서 4, --scan-all)
+
+def load_secret_allowlist():
+    """예외 목록을 {(규칙 이름, 경로)} 집합으로 돌려준다. 형식 오류나 읽기 실패면 None을 돌려준다."""
+    path = ROOT_DIR / SECRET_ALLOWLIST_REL
+    if not path.is_file():
+        # 예외 없이 검사하는 쪽이 더 엄격하므로 실패로 처리하지 않는다
+        print(f"[INFO] 비밀정보 검출 예외 목록이 없어 예외 없이 검사합니다: {SECRET_ALLOWLIST_REL}")
+        return set()
+    try:
+        text = path.read_text(encoding="utf-8-sig")
+    except (OSError, UnicodeDecodeError) as e:
+        print(f"[FAIL] 비밀정보 검출 예외 목록을 읽을 수 없습니다: {SECRET_ALLOWLIST_REL}")
+        print(f"       원인: {type(e).__name__}: {e}")
+        print("       조치: 파일이 UTF-8 텍스트인지와 읽기 권한을 확인하고, 해결되지 않으면 대표님께 보고하십시오.")
+        return None
+    entries, problems = set(), []
+    for line_no, raw in enumerate(text.split("\n"), 1):
+        line = raw.strip()
+        if not line or line.startswith("#"):
+            continue
+        parts = line.split(None, 1)
+        rule = parts[0]
+        rel = parts[1].strip().replace("\\", "/") if len(parts) > 1 else ""
+        # 항목 내용은 출력하지 않는다. 잘못 적은 값이 비밀정보일 수 있기 때문이다
+        if rule not in SECRET_RULE_NAMES:
+            problems.append((line_no, "규칙 이름이 SECRET_RULES에 없습니다"))
+        elif not rel:
+            problems.append((line_no, "경로가 비어 있습니다"))
+        else:
+            entries.add((rule, rel))
+    if problems:
+        print(f"[FAIL] 비밀정보 검출 예외 목록에 잘못된 항목이 있습니다: {SECRET_ALLOWLIST_REL}")
+        for line_no, reason in problems:
+            print(f"  - {line_no}행: {reason}")
+        print("       원인: 항목 줄은 「<규칙 이름> <저장소 루트 기준 상대 경로>」 형식이어야 합니다.")
+        print(f"       조치: 예외 목록은 에이전트가 고치지 않습니다. 줄 번호를 대표님께 보고하십시오({SECRET_SOURCE}).")
+        return None
+    return entries
+
+
+def find_secrets(data):
+    """바이트 내용에서 (줄 번호, 규칙 이름)을 차례로 돌려준다. 한 줄에 여러 규칙이 맞으면 규칙마다 한 건이다."""
+    text = data.decode("utf-8", errors="replace")
+    # str.splitlines()는 \n 밖의 문자(\x0c 등)에서도 줄을 나눠 편집기의 줄 번호와 어긋나므로 \n으로만 나눈다
+    for line_no, line in enumerate(text.split("\n"), 1):
+        line = line.rstrip("\r")
+        for name, pattern in SECRET_RULES:
+            if pattern.search(line):
+                yield line_no, name
+
+
+def index_paths():
+    """index에 있는 경로 집합을 돌려준다. 조회에 실패하면 None을 돌려준다."""
+    cmd = ["git", "-c", "core.quotepath=false", "ls-files", "--cached", "-z"]
+    res = subprocess.run(cmd, cwd=ROOT_DIR, capture_output=True)
+    if res.returncode != 0:
+        print(f"[FAIL] 비밀정보 검출: 커밋 대상 목록을 조회할 수 없습니다 (종료 코드 {res.returncode}).")
+        print(f"       원인: {res.stderr.decode('utf-8', 'replace').strip()}")
+        print(f"       조치: {' '.join(cmd)}를 직접 실행해 오류를 해결한 뒤 다시 실행하십시오.")
+        return None
+    return {p for p in res.stdout.decode("utf-8", "replace").split("\0") if p}
+
+
+def read_content(rel, staged):
+    """대상 파일 내용을 bytes로 돌려준다. 읽기에 실패하면 원인을 출력하고 None을 돌려준다."""
+    if staged:
+        # 커밋되는 내용은 index이므로 작업 트리가 아니라 index의 blob을 읽는다
+        cmd = ["git", "-c", "core.quotepath=false", "cat-file", "blob", f":./{rel}"]
+        res = subprocess.run(cmd, cwd=ROOT_DIR, capture_output=True)
+        if res.returncode == 0:
+            return res.stdout
+        print(f"[FAIL] 비밀정보 검출: 커밋 대상의 내용을 읽을 수 없습니다: {rel} (종료 코드 {res.returncode})")
+        print(f"       원인: {res.stderr.decode('utf-8', 'replace').strip()}")
+        print(f"       조치: {' '.join(cmd)}를 직접 실행해 오류를 해결한 뒤 다시 커밋하십시오.")
+        return None
+    try:
+        return (ROOT_DIR / rel).read_bytes()
+    except OSError as e:
+        print(f"[FAIL] 비밀정보 검출: 파일을 읽을 수 없습니다: {rel}")
+        print(f"       원인: {type(e).__name__}: {e}")
+        print("       조치: 파일 권한과 잠금 상태를 확인한 뒤 다시 실행하십시오.")
+        return None
+
+
+def print_excluded(excluded):
+    for (rel, rule), n in sorted(excluded.items()):
+        print(f"[INFO] 예외 목록으로 뺀 검출: {rel} [{rule}] {n}건")
+
+
+def print_secret_failure(lines, target_desc):
+    print("[FAIL] 비밀정보로 보이는 값을 찾았습니다(값은 출력하지 않습니다).")
+    for line in lines:
+        print(f"  - {line}")
+    print(f"       원인: 검출 규칙에 맞는 값이 {target_desc}에 있습니다.")
+    print("       조치: 값을 지우고 비밀정보는 저장소 밖이나 .gitignore 대상 파일에 둔 뒤, 다시 스테이징하고 커밋하십시오.")
+    print("             오탐으로 보이면 값을 고치거나 예외를 등록하지 말고 커밋을 멈춘 뒤, "
+          f"대표님께 경로와 규칙 이름을 보고하십시오({SECRET_SOURCE}).")
+
+
+def check_secrets(files, staged):
+    """순서 4. 검출이 없으면 True, 검출이 있거나 읽기에 실패하면 False를 돌려준다."""
+    allow = load_secret_allowlist()
+    if allow is None:
+        return False
+    in_index = index_paths() if staged else None
+    if staged and in_index is None:
+        return False
+
+    findings, excluded, scanned = [], Counter(), 0
+    for rel in files:
+        # 지운 파일과 이름 변경의 원래 경로는 커밋될 내용이 없으므로 대상이 아니다
+        if staged and rel not in in_index:
+            continue
+        if not staged and not (ROOT_DIR / rel).is_file():
+            continue
+        data = read_content(rel, staged)
+        if data is None:
+            return False
+        if b"\0" in data:
+            print(f"[INFO] 비밀정보 검출: 이진 파일이어서 뺍니다: {rel}")
+            continue
+        scanned += 1
+        for line_no, rule in find_secrets(data):
+            if (rule, rel) in allow:
+                excluded[(rel, rule)] += 1
+            else:
+                findings.append(f"{rel}:{line_no} [{rule}]")
+
+    print_excluded(excluded)
+    if findings:
+        print_secret_failure(findings, "커밋 대상" if staged else "변경 파일")
+        return False
+    if scanned:
+        print(f"[PASS] 비밀정보 검출: 대상 파일 {scanned}개에서 검출 없음.")
+    else:
+        print("[PASS] 비밀정보 검출: 대상 파일 없음.")
+    return True
+
+
+def history_findings():
+    """커밋 이력 전체의 추가 줄에서 [(커밋 짧은 해시, 경로, 규칙 이름)]을 돌려준다. 조회 실패면 None."""
+    # \x01로 시작하는 줄을 커밋 머리로 쓴다. diff 본문 줄은 늘 +, -, 공백, \ 또는 머리 글자로 시작하므로 겹치지 않는다
+    cmd = ["git", "-c", "core.quotepath=false", "log", "--all", "-p", "--no-color", "--no-ext-diff",
+           "--no-textconv", "--format=%x01%h"]
+    res = subprocess.run(cmd, cwd=ROOT_DIR, capture_output=True)
+    if res.returncode != 0:
+        print(f"[FAIL] 비밀정보 검출: 커밋 이력을 조회할 수 없습니다 (종료 코드 {res.returncode}).")
+        print(f"       원인: {res.stderr.decode('utf-8', 'replace').strip()}")
+        print(f"       조치: {' '.join(cmd)}를 직접 실행해 오류를 해결한 뒤 다시 실행하십시오.")
+        return None
+    found, seen = [], set()
+    commit, path, in_hunk = None, None, False
+    for line in res.stdout.decode("utf-8", "replace").split("\n"):
+        if line.startswith("\x01"):
+            commit, path, in_hunk = line[1:].strip(), None, False
+            continue
+        if line.startswith("diff --git "):
+            path, in_hunk = None, False
+            continue
+        if not in_hunk:
+            if line.startswith("+++ "):
+                # 공백이 든 경로는 Git이 줄 끝에 탭을 붙이므로 뗀다
+                target = line[4:].rstrip("\t\r").strip('"')
+                path = None if target == "/dev/null" else (target[2:] if target.startswith("b/") else target)
+            elif line.startswith("@@"):
+                in_hunk = True
+            continue
+        if path and line.startswith("+"):
+            for _, rule in find_secrets(line[1:].encode("utf-8")):
+                key = (commit, path, rule)
+                if key not in seen:
+                    seen.add(key)
+                    found.append(key)
+    return found
+
+
+def scan_all():
+    """--scan-all. 추적 파일 전체(CEO/ 포함)와 커밋 이력 전체를 검출한다. 커밋을 막지 않는 점검용이다."""
+    allow = load_secret_allowlist()
+    if allow is None:
+        return False
+    cmd = ["git", "-c", "core.quotepath=false", "ls-files", "-z"]
+    res = subprocess.run(cmd, cwd=ROOT_DIR, capture_output=True)
+    if res.returncode != 0:
+        print(f"[FAIL] 비밀정보 검출: 추적 파일 목록을 조회할 수 없습니다 (종료 코드 {res.returncode}).")
+        print(f"       원인: {res.stderr.decode('utf-8', 'replace').strip()}")
+        print(f"       조치: {' '.join(cmd)}를 직접 실행해 오류를 해결한 뒤 다시 실행하십시오.")
+        return False
+    tracked = [p for p in res.stdout.decode("utf-8", "replace").split("\0") if p]
+
+    file_hits, excluded, scanned = [], Counter(), 0
+    for rel in tracked:
+        if not (ROOT_DIR / rel).is_file():
+            print(f"[INFO] 비밀정보 검출: 작업 트리에 없는 추적 파일이어서 뺍니다: {rel}")
+            continue
+        data = read_content(rel, staged=False)
+        if data is None:
+            return False
+        if b"\0" in data:
+            print(f"[INFO] 비밀정보 검출: 이진 파일이어서 뺍니다: {rel}")
+            continue
+        scanned += 1
+        for line_no, rule in find_secrets(data):
+            if (rule, rel) in allow:
+                excluded[(rel, rule)] += 1
+            else:
+                file_hits.append(f"{rel}:{line_no} [{rule}]")
+
+    history = history_findings()
+    if history is None:
+        return False
+    history_hits = []
+    for commit, rel, rule in history:
+        if (rule, rel) in allow:
+            excluded[(rel, rule)] += 1
+        else:
+            history_hits.append(f"{commit} {rel} [{rule}]")
+
+    print_excluded(excluded)
+    print(f"[INFO] 비밀정보 검출(--scan-all): 추적 파일 {scanned}개, 커밋 이력 전체를 검사했습니다.")
+    if file_hits or history_hits:
+        print(f"[FAIL] 비밀정보로 보이는 값을 찾았습니다(값은 출력하지 않습니다). "
+              f"추적 파일 {len(file_hits)}건, 커밋 이력 {len(history_hits)}건.")
+        if file_hits:
+            print("  추적 파일:")
+            for line in file_hits:
+                print(f"  - {line}")
+        if history_hits:
+            print("  커밋 이력:")
+            for line in history_hits:
+                print(f"  - {line}")
+        print("       원인: 검출 규칙에 맞는 값이 추적 파일 또는 커밋 이력에 있습니다.")
+        print(f"       조치: 보안 점검 결과서에 위험으로 적고 대표님의 조치 결정을 받으십시오({SECRET_SOURCE}).")
+        return False
+    print("[PASS] 비밀정보 검출(--scan-all): 검출 없음.")
+    return True
+
+
 def run_tests(work_files):
     if not any("assets/src/" in f or "assets/tests/" in f for f in work_files):
         print("[PASS] 소스코드·테스트 변경 없음: 단위 테스트를 생략합니다.")
@@ -298,7 +571,7 @@ def check_standard(staged=False):
 
     # 대표님이 CEO/를 커밋하지 않은 채 써도 파이프라인이 멈추지 않게 작업 트리 검사에서는 빼고,
     # 커밋 때는 CEO/ 변경과 다른 변경이 한 커밋에 섞이지 않게 막는다 (REQ-013).
-    # 섞임 판단은 대조 제외(순서 4)보다 먼저 해야 제외 구역 경로와 섞인 커밋도 막힌다.
+    # 섞임 판단은 대조 제외(순서 5)보다 먼저 해야 제외 구역 경로와 섞인 커밋도 막힌다.
     # 이름 변경은 changed_files()가 두 경로를 따로 돌려주므로 경로마다 판별된다
     ceo = [f for f in files if f.startswith("CEO/")]
     others = [f for f in files if not f.startswith("CEO/")]
@@ -327,20 +600,27 @@ def check_standard(staged=False):
 
     # 파이프라인 밖 실험 커밋은 대조할 REQ가 없으므로 Lab/ 변경만 담은 커밋은 scope 대조 없이 통과시킨다.
     # 실험 파일이 다른 안건 커밋에 섞이는 것은 섞인 커밋만 scope로 막는다: Lab/ 경로를 빼지 않고
-    # 순서 4·5로 넘겨 그 밖의 경로와 함께 승인된 REQ 하나의 scope 안에 있어야 통과하게 한다 (REQ-016).
-    # 작업 트리 검사에서 빼는 이유는 CEO/와 같다(커밋하지 않은 실험 파일 때문에 다른 안건의 검사가 멈추지 않게 한다)
+    # 순서 5·6으로 넘겨 그 밖의 경로와 함께 승인된 REQ 하나의 scope 안에 있어야 통과하게 한다 (REQ-016).
+    # 작업 트리 검사에서 빼는 이유는 CEO/와 같다(커밋하지 않은 실험 파일 때문에 다른 안건의 검사가 멈추지 않게 한다).
+    # Lab/ 처리는 비밀정보 검출 대상을 줄이지 않으므로, 통과와 경로 제외는 순서 4를 마친 뒤에 한다 (REQ-018)
     lab = [f for f in files if f.startswith(LAB_PREFIX)]
+    lab_only = bool(lab) and len(lab) == len(files)
     if lab and not staged:
         print("[INFO] Lab/ 아래 변경은 작업 트리 검사에서 뺍니다(실험실):")
         for f in lab:
             print(f"  - {f}")
-        files = [f for f in files if not f.startswith(LAB_PREFIX)]
-        if not files:
+
+    if not check_secrets(files, staged):
+        return False
+
+    if lab_only:
+        if staged:
+            print("[PASS] 커밋 대상이 모두 Lab/ 아래 변경입니다(실험실). scope 대조를 생략합니다.")
+        else:
             print("[PASS] CEO/·Lab/ 밖의 변경 파일이 없습니다.")
-            return True
-    elif lab and len(lab) == len(files):
-        print("[PASS] 커밋 대상이 모두 Lab/ 아래 변경입니다(실험실). scope 대조를 생략합니다.")
         return True
+    if lab and not staged:
+        files = [f for f in files if not f.startswith(LAB_PREFIX)]
 
     work_files = [f for f in files if not is_whitelisted(f)]
     if not work_files:
@@ -368,7 +648,13 @@ def check_standard(staged=False):
 
 
 if __name__ == "__main__":
-    if not check_standard(staged="--staged" in sys.argv[1:]):
+    args = sys.argv[1:]
+    if "--scan-all" in args:
+        if not scan_all():
+            sys.exit(1)
+        print("[SUCCESS] 비밀정보 검출(--scan-all) 통과.")
+        sys.exit(0)
+    if not check_standard(staged="--staged" in args):
         sys.exit(1)
     print("[SUCCESS] 바이브 표준 v04 커밋 전 검사 통과.")
     sys.exit(0)
