@@ -1,0 +1,59 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git status*)",
+      "Bash(git diff*)",
+      "Bash(git log*)",
+      "Bash(git show*)",
+      "Bash(git ls-files*)",
+      "Bash(wc *)",
+      "Bash(od *)",
+      "Bash(head *)",
+      "Bash(grep *)",
+      "Bash(date*)",
+      "Bash(tar --force-local -tf *)",
+      "Bash(python Departments/Development/assets/scripts/check_standard.py*)",
+      "Bash(python -m pytest*)",
+      "Bash(python Departments/*/workspace/*)",
+      "PowerShell(git status *)",
+      "PowerShell(git diff *)",
+      "PowerShell(git log *)",
+      "PowerShell(git show *)",
+      "PowerShell(git ls-files *)",
+      "PowerShell(python Departments/Development/assets/scripts/check_standard.py *)",
+      "PowerShell(python -m pytest *)"
+    ],
+    "deny": [
+      "Edit(CEO/**)",
+      "Write(CEO/**)",
+      "Edit(AGENTS.md)",
+      "Write(AGENTS.md)",
+      "Edit(CLAUDE.md)",
+      "Write(CLAUDE.md)",
+      "Edit(setup.cmd)",
+      "Write(setup.cmd)",
+      "Edit(.claude/**)",
+      "Write(.claude/**)",
+      "Edit(.githooks/**)",
+      "Write(.githooks/**)",
+      "Edit(Departments/Development/assets/scripts/**)",
+      "Write(Departments/Development/assets/scripts/**)",
+      "Edit(Workflow/**)",
+      "Write(Workflow/**)",
+      "Edit(.gitattributes)",
+      "Write(.gitattributes)",
+      "Edit(.gitignore)",
+      "Write(.gitignore)",
+      "Edit(_archive/**)",
+      "Write(_archive/**)"
+    ],
+    "ask": [
+      "Bash(rm *)",
+      "Bash(del *)",
+      "Bash(mv *)",
+      "Bash(move *)",
+      "Bash(git commit*)",
+      "Bash(git push*)"
+    ]
+  }
+}

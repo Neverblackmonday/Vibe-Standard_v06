@@ -14,7 +14,14 @@
       "Bash(tar --force-local -tf *)",
       "Bash(python Departments/Development/assets/scripts/check_standard.py*)",
       "Bash(python -m pytest*)",
-      "Bash(python Departments/*/workspace/*)"
+      "Bash(python Departments/*/workspace/*)",
+      "PowerShell(git status *)",
+      "PowerShell(git diff *)",
+      "PowerShell(git log *)",
+      "PowerShell(git show *)",
+      "PowerShell(git ls-files *)",
+      "PowerShell(python Departments/Development/assets/scripts/check_standard.py *)",
+      "PowerShell(python -m pytest *)"
     ],
     "deny": [
       "Edit(CEO/**)",

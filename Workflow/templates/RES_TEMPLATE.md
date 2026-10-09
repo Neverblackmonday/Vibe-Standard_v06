@@ -2,7 +2,7 @@
 task_id: "007"
 gate: "FINAL" # REQ | EC | FINAL (REQ 판정, EC 판정, 최종 판정)
 result: "" # pass | fail | rejected
-completed_at: "YYYY-MM-DDTHH:MM:SS+09:00"
+completed_at: "YYYY-MM-DDTHH:MM:SS+09:00" # 판정을 마친 시각. 조회하지 못했을 때의 처리는 Workflow/03_라이프사이클 「판정 세션의 명령 실행」
 auditor:
   agent: "Quality"
   model: "Claude Opus 5.5" # 실제 판정 모델. 다르면 무효(Workflow/04_모델_운용 「모델」)
@@ -37,6 +37,7 @@ auditor:
 | 커밋 전 검사 | `python Departments/Development/assets/scripts/check_standard.py` | YYYY-MM-DDTHH:MM:SS+09:00 | 결과 원문 |
 | 인수 시험 재실행(최종 판정, 인수 시험 단계가 있으면) | `python -m pytest Departments/Quality/assets/acceptance/REQ-007_v01` | YYYY-MM-DDTHH:MM:SS+09:00 | 결과 원문 |
 | 인수 시험 해시 대조(최종 판정, 인수 시험 단계가 있으면) | `git diff --no-index --full-index /dev/null <시험 파일>` | YYYY-MM-DDTHH:MM:SS+09:00 | 결과 원문 |
+| 대신한 명령(실행하지 못한 명령이 있으면) | 대신 실행한 명령 | YYYY-MM-DDTHH:MM:SS+09:00 | 실행하지 못한 명령과 메시지 원문, 대신한 명령의 결과 원문 |
 
 ## 5. 결함 목록과 반려 부서 (`fail`·`rejected`일 때만)
 | 번호 | 위치 | 결함 | 반려 부서 |
