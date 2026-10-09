@@ -3,6 +3,7 @@ created: "YYYY-MM-DD" # v01 작성 날짜. 파일명의 YYYYMMDD와 같다
 author:
   agent: "Secretariat" # 비서실. 작성한 서비스(코워크, Antigravity, 채팅 서비스)를 주석에 적는다
   model: "<작성한 모델>" # 확인할 수 없으면 "확인 불가"(Workflow/04_모델_운용 「모델 메타데이터 기록」의 모델 기준)
+  session: "<서비스>·<세션 이름>" # 작성 세션의 세션 식별자(Workflow/05_인수인계_및_실행명령 「비서실 동시 운용」)
 ---
 
 # 아이디어 백로그: <주제>

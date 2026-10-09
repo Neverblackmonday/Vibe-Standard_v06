@@ -5,6 +5,7 @@ author:
   agent: "Secretariat"
   model: "Claude Opus 5.5" # 실제 실행 모델
   effort: "medium" # 실제 적용 effort
+  session: "<서비스>·<세션 이름>" # 작성 세션의 세션 식별자(Workflow/05_인수인계_및_실행명령 「비서실 동시 운용」)
 confirmed: "" # 대표님 직접 기재 또는 Workflow/07_문서_서식_및_번호 「승인 기록」 절차. 형식 "YYYY-MM-DDTHH:MM:SS+09:00". 비어 있으면 커밋 불가
 scope:
   # 사전 승인된 대상 파일. 대상 조건은 Workflow/03_라이프사이클 「핫픽스 트랙」
