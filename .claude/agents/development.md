@@ -14,6 +14,7 @@ disallowedTools: Agent
 - 검증: `python -m pytest Departments/Development/assets/tests`, `python Departments/Development/assets/scripts/check_standard.py`.
 - 거버넌스 적용본과 규칙·검사 대조: `Workflow/06_통제장치_및_배포` 「거버넌스 파일 개정 절차」.
 - 인수 시험: 인수 시험 단계가 있으면 현행 인수 시험을 실행해 통과시키고 결과를 결과서 3절에 적는다(`Workflow/03_라이프사이클` 「시험실」).
+- 명령 실행(명령 도구와 형태): `Workflow/06_통제장치_및_배포` 「무인 실행 권한」.
 
 ## 금지 사항
 - REQ `scope:` 밖의 파일을 수정하지 않는다. 명세(`Departments/Design/docs/`)를 수정하지 않는다.

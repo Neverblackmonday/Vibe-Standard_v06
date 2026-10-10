@@ -11,6 +11,7 @@ disallowedTools: Agent
 
 ## 업무와 참조 절
 - 보안 점검: `Workflow/06_통제장치_및_배포` 「보안 점검」. 결과는 운영 결과서(RPT, 서식 `Workflow/templates/DEV_TEMPLATE.md`)에 적는다.
+- 명령 실행(명령 도구와 형태): `Workflow/06_통제장치_및_배포` 「무인 실행 권한」.
 
 ## 금지 사항
 - REQ `scope:` 밖의 파일을 수정하지 않는다. 코드와 명세를 수정하지 않는다. 실험 단계에서 REQ `scope:`의 실험 폴더 안에 쓰는 실험 파일은 예외다(`AGENTS.md` 「조직·구역과 권한 한계」).
