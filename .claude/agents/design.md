@@ -16,6 +16,7 @@ disallowedTools: Agent
 - 설계 결과서: 파일명 `Workflow/07_문서_서식_및_번호` 「문서 체계」, 서식 `Workflow/templates/DEV_TEMPLATE.md`.
 - 거버넌스 적용본: `Workflow/06_통제장치_및_배포` 「거버넌스 파일 개정 절차」.
 - 개정 이력과 리비전 태그: `Workflow/07_문서_서식_및_번호` 「개정 이력과 리비전 태그」.
+- 명령 실행(명령 도구와 형태): `Workflow/06_통제장치_및_배포` 「무인 실행 권한」.
 
 ## 금지 사항
 - REQ `scope:` 밖의 파일을 수정하지 않는다. 코드(`Departments/Development/assets/`)를 수정하지 않는다.
