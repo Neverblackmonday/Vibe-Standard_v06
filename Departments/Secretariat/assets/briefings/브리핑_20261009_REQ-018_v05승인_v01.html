@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>브리핑: REQ-018_v05 승인</title>
+<style>
+  body { margin: 0; padding: 24px; font-family: sans-serif; line-height: 1.6; color: #1f2328; background: #ffffff; }
+  main { max-width: 960px; margin: 0 auto; }
+  h1 { font-size: 1.5rem; margin: 0 0 16px; }
+  h2 { font-size: 1.15rem; margin: 24px 0 8px; }
+  .top { border: 2px solid #1f2328; border-radius: 8px; padding: 16px; margin-bottom: 24px; }
+  .top h2 { margin-top: 0; }
+  table { border-collapse: collapse; width: 100%; margin: 8px 0; }
+  th, td { border: 1px solid #d0d7de; padding: 6px 8px; text-align: left; vertical-align: top; }
+  th { background: #f6f8fa; }
+  code { font-family: monospace; background: #f6f8fa; padding: 0 4px; }
+  footer { margin-top: 32px; padding-top: 12px; border-top: 1px solid #d0d7de; font-size: 0.875rem; color: #57606a; }
+</style>
+</head>
+<body>
+<main>
+  <h1>브리핑: REQ-018_v05 승인</h1>
+  <section class="top">
+    <h2>결론</h2>
+    <p>REQ-018_v05는 승인된 v03에 인수 시험 단계를 더한 새 버전입니다. REQ 판정은 최초 <code>fail</code>(변경 목록 누락 1건) 뒤 재판정 1차에서 <code>pass</code>를 받았습니다. 결정 표 D1~D6의 정할 일·권고안·대안은 v03과 같습니다. 권고안대로 승인하시면 됩니다.</p>
+    <h2>대표님이 할 일</h2>
+    <ul>
+      <li>승인 문구: 「REQ-018_v05 승인, 전부 권고안」</li>
+      <li>승인 뒤 Antigravity에 「승인 기록」, 「PM 기동」 호출 문구 전달</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>1. 결정 표 비교(REQ 3절, v03과 같음)</h2>
+    <table>
+      <tr><th>번호</th><th>정할 일</th><th>권고안</th><th>대안과 영향</th></tr>
+      <tr><td>D1</td><td>자동 검출의 검사 대상</td><td>커밋할 변경분만 검사. <code>CEO/</code> 아래는 제외하고, scope 대조 제외 경로(부서 <code>results/</code>·<code>workspace/</code>, 비서실 <code>assets/</code>, 품질 기록 등)는 포함</td><td>(가) 추적 파일 전체: 기존 기록 오탐을 모두 예외 등록해야 커밋 가능 (나) <code>CEO/</code>도 검출: 대표님 원자료 커밋이 멈출 수 있음 (다) 제외 경로 빼기: 기록 문서의 비밀정보를 못 막음</td></tr>
+      <tr><td>D2</td><td>오탐 예외 등록</td><td>예외 목록은 검사 스크립트 폴더(거버넌스 구역)에 두고 대표님 직접 수정이나 REQ로만 등록. 에이전트는 등록 불가</td><td>(가) 운영이 등록: 빠르지만 에이전트가 검사를 스스로 풀 수 있음</td></tr>
+      <tr><td>D3</td><td>검출 때 처리</td><td>커밋 차단(종료 코드 1). 출력에 비밀정보 값은 넣지 않음</td><td>(가) 경고만: 경고를 놓치면 커밋됨</td></tr>
+      <tr><td>D4</td><td>「불변 원칙」 8항과의 관계</td><td>8항은 그대로 두고, 도입 근거를 <code>Workflow/06</code> 4절에 한 번 적어 개별 예외로 남김</td><td>(가) 8항에 일반 예외 문장 추가: 다른 규칙도 같은 이유로 늘어날 수 있음</td></tr>
+      <tr><td>D5</td><td>운영 정기 점검의 비밀정보 항목</td><td>유지. 자동 검출이 보지 않는 기존 파일·이력·<code>--no-verify</code> 커밋을 점검</td><td>(가) 삭제: 그 범위를 보는 곳이 없어짐</td></tr>
+      <tr><td>D6</td><td>effort</td><td><code>medium</code></td><td><code>high</code></td></tr>
+    </table>
+  </section>
+
+  <section>
+    <h2>2. 덮어쓰기 가능성이 있는 기존 파일(REQ <code>scope:</code>)</h2>
+    <table>
+      <tr><th>경로</th><th>비고</th></tr>
+      <tr><td><code>AGENTS.md</code></td><td>문서 지도 변경이 필요할 때만</td></tr>
+      <tr><td><code>Workflow/02_부서_구조_및_작업구역.md</code>, <code>Workflow/05_인수인계_및_실행명령.md</code>, <code>Workflow/06_통제장치_및_배포.md</code></td><td>운영 보안 책임, 보고, 커밋 전 검사 규정</td></tr>
+      <tr><td><code>.claude/agents/operations.md</code></td><td><code>description</code>에 보안</td></tr>
+      <tr><td><code>Departments/Development/assets/scripts/</code></td><td><code>check_standard.py</code> 자동 검출, 예외 목록 자리</td></tr>
+    </table>
+    <p>거버넌스 파일은 적용본으로 작성하고, 실제 덮어쓰기는 최종 판정서 승인 뒤에 합니다.</p>
+  </section>
+
+  <section>
+    <h2>3. 원천 문서</h2>
+    <ul>
+      <li>REQ: <code>Departments/Secretariat/docs/requests/REQ-018_v05.md</code>(직전 승인본 <code>REQ-018_v03.md</code>)</li>
+      <li>REQ 판정: <code>Departments/Quality/results/RES-018-REQ_v04.md</code>(<code>fail</code>), <code>RES-018-REQ_v05.md</code>(<code>pass</code>)</li>
+      <li>부적합 기록: <code>Departments/Quality/docs/nonconformance/NCR-018_01.md</code></li>
+      <li>ORDER: <code>Departments/Secretariat/assets/inbox/ORD-005_v04.md</code>, 새 버전 근거 <code>ORD-006_v06.md</code> 1절 경위의 원문 N 첫째·둘째 줄 항목</li>
+    </ul>
+  </section>
+
+  <footer>
+    <p>작성 날짜: 2026-10-09</p>
+    <p>작성 서비스·세션 식별자와 모델: 코워크·20261008T2222, Claude Opus 5.5(설정값 <code>claude-opus-5-5</code>)</p>
+    <p>원천 문서: <code>Departments/Secretariat/docs/requests/REQ-018_v05.md</code>, <code>Departments/Quality/results/RES-018-REQ_v05.md</code></p>
+  </footer>
+</main>
+</body>
+</html>

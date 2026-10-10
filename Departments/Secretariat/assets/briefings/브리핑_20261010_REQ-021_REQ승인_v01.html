@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>브리핑: ORD-006 요구 항목 2 REQ 승인(REQ-021)</title>
+<style>
+  body { margin: 0; padding: 24px; font-family: sans-serif; line-height: 1.6; color: #1f2328; background: #ffffff; }
+  main { max-width: 960px; margin: 0 auto; }
+  h1 { font-size: 1.5rem; margin: 0 0 16px; }
+  h2 { font-size: 1.15rem; margin: 24px 0 8px; }
+  .top { border: 2px solid #1f2328; border-radius: 8px; padding: 16px; margin-bottom: 24px; }
+  .top h2 { margin-top: 0; }
+  table { border-collapse: collapse; width: 100%; margin: 8px 0; }
+  th, td { border: 1px solid #d0d7de; padding: 6px 8px; text-align: left; vertical-align: top; }
+  th { background: #f6f8fa; }
+  code { font-family: monospace; background: #f6f8fa; padding: 0 4px; }
+  footer { margin-top: 32px; padding-top: 12px; border-top: 1px solid #d0d7de; font-size: 0.875rem; color: #57606a; }
+</style>
+</head>
+<body>
+<main>
+  <h1>브리핑: ORD-006 요구 항목 2 REQ 승인(REQ-021)</h1>
+  <section class="top">
+    <h2>결론</h2>
+    <p>PM이 ORD-006 요구 항목 2(설계 필수와 EC 적용 기준) 전담 안건으로 <code>REQ-021_v02.md</code>(Critical)를 작성했습니다. REQ 판정은 재판정 1차에서 <code>pass</code>(결함 0건, 문체 지적 0건)로 완료되었습니다. 모든 결정 항목(D1~D8)의 권고안대로 승인하시면 됩니다.</p>
+    <h2>대표님이 할 일</h2>
+    <ul>
+      <li>승인 문구 입력: <code>REQ-021_v02 승인, 전부 권고안</code></li>
+      <li>대안을 선택하시는 항목이 있으면 해당 번호와 대안을 함께 입력하십시오. (예: <code>REQ-021_v02 승인, D8은 high, 나머지 권고안</code>)</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>1. 결정 표 비교 (D1~D8)</h2>
+    <table>
+      <tr><th>번호</th><th>정할 일</th><th>권고안</th><th>대안과 영향</th></tr>
+      <tr>
+        <td>D1</td>
+        <td>설계 필수에 따른 Minor 단계의 변경</td>
+        <td>Minor를 포함한 모든 분류의 파이프라인에 설계 단계를 늘 둡니다. 설계 단계에서 늘 EC 필요 여부를 판단하며, Minor에서 명세 산출물이 불필요하면 사유만 기록합니다. 핫픽스는 설계 단계 없이 예외 처리합니다. (오탈자 수정에 명세 문서 강제 방지)</td>
+        <td>(가) Minor도 명세 산출물을 항상 작성: 설계 기록 형식은 통일되나 오탈자 수정 등에도 명세 문서가 강제 생성됩니다.</td>
+      </tr>
+      <tr>
+        <td>D2</td>
+        <td>설계의 EC 판단과 현행 「분류별 단계」 분리 방식</td>
+        <td>분류는 EC 유무를 정하지 않습니다. REQ 승인 후 설계 단계에서 EC 필요 여부를 판단하여 EC 작성·판정을 실행하거나 건너뜁니다. REQ는 어느 판단이 나와도 진행할 수 있도록 작성하며 판단 결과로 REQ를 재승인받지 않습니다.</td>
+        <td>(가) PM이 REQ 작성 단계에서 설계 판단을 받아 REQ에 고정: 승인 시점에 EC 유무를 확정하지만 REQ 작성에 설계 세션이 추가되고 실험 단계 전 판단이 이루어집니다.</td>
+      </tr>
+      <tr>
+        <td>D3</td>
+        <td>EC를 붙이는 기준의 범위</td>
+        <td>이미 승인되어 쓰이는 산출물의 동작·규칙·규격을 변경하는 경우에만 EC를 붙입니다. 동작 영향 없는 오탈자/표현 보완, 명세를 따르는 반복 작업, 기존 산출물을 바꾸지 않는 신설(새 기능 파일, 포맷 신설)에는 붙이지 않습니다.</td>
+        <td>(가) 포맷 신설 및 새 기능도 EC 적용: Critical·Major 구현 계획이 늘 EC에 남지만 「기존의 변경」이라는 EC 정의와 어긋납니다.</td>
+      </tr>
+      <tr>
+        <td>D4</td>
+        <td>거버넌스·보안 변경에 EC를 반드시 붙이는지</td>
+        <td>거버넌스 파일과 보안·권한 설정의 동작·규칙·설정을 바꾸는 변경에는 설계 판단과 무관하게 상시 EC를 필수로 적용합니다. (모든 안건에 영향을 주는 핵심 규칙이므로 판단 실수 방지)</td>
+        <td>(가) 거버넌스·보안도 D3 기준 설계 판단에 위임: 규칙은 단순해지나 판단 오류 시 규칙 변경이 변경점 평가 없이 진행될 위험이 있습니다.</td>
+      </tr>
+      <tr>
+        <td>D5</td>
+        <td>EC 판단 기록과 확인 판정</td>
+        <td>설계가 모든 REQ에서 EC 필요 여부와 사유를 기록합니다. EC를 붙이지 않은 판단은 그 뒤 첫 판정(Critical·Major는 D6 명세 판정, Minor는 최종 판정)에서 확인합니다. EC를 붙인 판단은 EC 판정에서 확인합니다.</td>
+        <td>(가) 판단을 따로 기록하지 않고 최종 판정 추정: 기록은 줄지만 추적성이 약화됩니다. (나) EC 판단 전용 판정 단계 신설: 빠른 확인이 가능하나 모든 안건에 판정 세션이 추가됩니다.</td>
+      </tr>
+      <tr>
+        <td>D6</td>
+        <td>EC가 없는 Critical·Major 안건의 구현 방법 정의 문서와 판정</td>
+        <td>명세 단계 산출물(PRD/TAD, 적용본, 결과서)이 구현 방법을 정하며, 품질이 명세 뒤·인수 시험 전에 명세를 판정(EC 판정 기준 준용)합니다. Critical·Major 신설 안건의 구현 전 품질 판정을 유지합니다.</td>
+        <td>(가) 별도 판정 없이 인수 시험과 최종 판정으로만 확인: 세션은 줄지만 구현 전 사전 판정 통제가 누락됩니다. (나) 별도 설계 계획 문서 작성 후 판정: 문서 종류가 늘고 명세와 중복됩니다.</td>
+      </tr>
+      <tr>
+        <td>D7</td>
+        <td>REQ-016 D7·D1 개정 여부와 범위</td>
+        <td>D7(실험 단계 위치)만 이 REQ에서 개정하여 분류와 관계없이 설계 단계 앞에 배치합니다. D1(실험 파일 커밋)은 추적성 REQ(순서 ⑦)에서 다룹니다.</td>
+        <td>(가) D7도 분류 재정의 REQ(순서 ④)에서 개정: 이 REQ 범위는 줄지만 다음 안건 커밋 전까지 실험 단계 위치 규정과 어긋납니다.</td>
+      </tr>
+      <tr>
+        <td>D8</td>
+        <td>effort</td>
+        <td><code>medium</code></td>
+        <td><code>high</code></td>
+      </tr>
+    </table>
+  </section>
+
+  <section>
+    <h2>2. 덮어쓰기·삭제 가능성이 있는 기존 경로 (REQ <code>scope:</code>)</h2>
+    <p>거버넌스 파일은 원본을 직접 수정하지 않고 적용본으로 작성하며, 최종 판정서 승인 뒤 비서실이 반영합니다. 신규 생성되는 <code>EC-021</code> 외 기존 파일 목록은 아래와 같습니다.</p>
+    <table>
+      <tr><th>구분</th><th>경로</th><th>개정 사유 요약</th></tr>
+      <tr><td>표준 매뉴얼</td><td><code>Workflow/01_표준_개요.md</code></td><td>EC 정의 및 설계 단계 용어 정리</td></tr>
+      <tr><td>표준 매뉴얼</td><td><code>Workflow/02_부서_구조_및_작업구역.md</code></td><td>설계 책무 및 산출물에 EC 판단 추가</td></tr>
+      <tr><td>표준 매뉴얼</td><td><code>Workflow/03_라이프사이클.md</code></td><td>D1~D7 반영 (분류별 단계, REQ/EC 작성 기준, 판정 기준, 실험 단계 위치)</td></tr>
+      <tr><td>표준 매뉴얼</td><td><code>Workflow/04_모델_운용.md</code></td><td>지시문 EC 경로 기술을 EC 없는 안건에도 부합하도록 조정</td></tr>
+      <tr><td>표준 매뉴얼</td><td><code>Workflow/05_인수인계_및_실행명령.md</code></td><td>1.1절 커밋 대상 판정서 목록에 D6 명세 판정서 반영</td></tr>
+      <tr><td>표준 매뉴얼</td><td><code>Workflow/06_통제장치_및_배포.md</code></td><td>통제 표 품질 판정 행에 D6 판정 반영</td></tr>
+      <tr><td>표준 매뉴얼</td><td><code>Workflow/07_문서_서식_및_번호.md</code></td><td>문서 체계 EC 설명 및 REQ scope 주석 조정</td></tr>
+      <tr><td>서식</td><td><code>Workflow/templates/REQ_TEMPLATE.md</code></td><td>workflow 및 scope 주석 조정</td></tr>
+      <tr><td>서식</td><td><code>Workflow/templates/EC_TEMPLATE.md</code></td><td>EC 판단 기록과의 관계 안내</td></tr>
+      <tr><td>서식</td><td><code>Workflow/templates/DEV_TEMPLATE.md</code></td><td>Minor 기술 조정</td></tr>
+      <tr><td>서식</td><td><code>Workflow/templates/RES_TEMPLATE.md</code></td><td>gate 안내 및 D6 판정 구분 반영</td></tr>
+      <tr><td>서식</td><td><code>Workflow/templates/ACC_TEMPLATE.md</code></td><td>입력 문서 EC 항목 기술 조정</td></tr>
+      <tr><td>에이전트 정의</td><td><code>.claude/agents/design.md</code></td><td>서브에이전트 책무 및 EC 판단 기술 반영</td></tr>
+      <tr><td>에이전트 정의</td><td><code>.claude/agents/development.md</code></td><td>구현 입력 및 범위 기술 조정</td></tr>
+      <tr><td>에이전트 정의</td><td><code>.claude/agents/quality.md</code></td><td>판정 대상 및 D6 명세 판정 책무 반영</td></tr>
+    </table>
+  </section>
+
+  <section>
+    <h2>3. 원천 문서</h2>
+    <ul>
+      <li>REQ: <code>Departments/Secretariat/docs/requests/REQ-021_v02.md</code></li>
+      <li>REQ 판정서: <code>Departments/Quality/results/RES-021-REQ_v02.md</code> (1차 판정서: <code>RES-021-REQ_v01.md</code>)</li>
+      <li>부적합 기록: <code>Departments/Quality/docs/nonconformance/NCR-021_01.md</code> (원인 C2, 제안 없음)</li>
+      <li>ORDER: <code>Departments/Secretariat/assets/inbox/ORD-006_v11.md</code></li>
+      <li>PM 실행 기록: <code>Departments/Secretariat/workspace/실행기록_REQ-021.md</code></li>
+    </ul>
+  </section>
+
+  <footer>
+    <p>작성 날짜: 2026-10-10</p>
+    <p>작성 서비스·세션 식별자와 모델: Antigravity·20261010T0900, Claude Opus 5.5(설정값 <code>claude-opus-5-5</code>)</p>
+    <p>원천 문서: <code>Departments/Secretariat/docs/requests/REQ-021_v02.md</code></p>
+  </footer>
+</main>
+</body>
+</html>

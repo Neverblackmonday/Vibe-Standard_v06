@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>브리핑: ORD-005 REQ 승인(REQ-016·017·018)</title>
+<style>
+  body { margin: 0; padding: 24px; font-family: sans-serif; line-height: 1.6; color: #1f2328; background: #ffffff; }
+  main { max-width: 960px; margin: 0 auto; }
+  h1 { font-size: 1.5rem; margin: 0 0 16px; }
+  h2 { font-size: 1.15rem; margin: 24px 0 8px; }
+  h3 { font-size: 1rem; margin: 18px 0 6px; }
+  .top { border: 2px solid #1f2328; border-radius: 8px; padding: 16px; margin-bottom: 24px; }
+  .top h2 { margin-top: 0; }
+  table { border-collapse: collapse; width: 100%; margin: 8px 0; }
+  th, td { border: 1px solid #d0d7de; padding: 6px 8px; text-align: left; vertical-align: top; }
+  th { background: #f6f8fa; }
+  code { font-family: monospace; background: #f6f8fa; padding: 0 4px; }
+  .note { color: #57606a; font-size: 0.9rem; }
+  footer { margin-top: 32px; padding-top: 12px; border-top: 1px solid #d0d7de; font-size: 0.875rem; color: #57606a; }
+</style>
+</head>
+<body>
+<main>
+  <h1>브리핑: ORD-005 REQ 승인(REQ-016·017·018)</h1>
+
+  <section class="top">
+    <h2>결론</h2>
+    <p>ORD-005를 목적별로 나눈 세 REQ가 모두 REQ 판정 <code>pass</code>입니다. ORDER 요구 항목 1~9, 확정 사항 1~8, 「REQ에서 정할 사항」 22건이 세 REQ에 빠짐없이 배정되었고 겹치는 항목은 없습니다. 비서실 검토에서 승인을 막을 결함은 찾지 못했습니다. 결정 표는 전부 권고안으로 승인하시기를 권합니다. 별도로 확인할 사항 세 가지는 아래 「비서실 검토 의견」에 적었습니다.</p>
+    <h2>대표님이 할 일</h2>
+    <ul>
+      <li>아래 결정 표를 보시고 승인 문구를 주십시오. 예: 「REQ-016_v03 승인, 전부 권고안」 「REQ-017_v03 승인, 전부 권고안」 「REQ-018_v01 승인, 전부 권고안」(대안을 고르시면 D번호별로 적어 주십시오).</li>
+      <li>승인 뒤 PM 기동은 REQ-016 하나만 먼저 합니다. REQ-017·018은 앞 안건의 최종 판정서 승인과 커밋을 마친 뒤 차례로 기동합니다(REQ-016 D1).</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>1. 세 REQ 요약</h2>
+    <table>
+      <tr><th>REQ</th><th>목적</th><th>ORDER 요구 항목</th><th>REQ 판정 경과</th><th>결정 항목</th></tr>
+      <tr><td><code>REQ-016_v03</code></td><td>구역 체계 정립: 조직·구역·기능 구분, 실험실 <code>Lab/</code> 신설, 외부감사실 명칭 통일, <code>Storage/</code> 신설과 패키지 폴더 이동</td><td>1·2·7·8·9</td><td>fail → fail → pass(재판정 2차, 문체 지적 없음)</td><td>D1~D13</td></tr>
+      <tr><td><code>REQ-017_v03</code></td><td>품질팀 책무 개편: 판정, 시험실(구현 전 인수 시험), 부적합 관리, 품질 권한 한계</td><td>3·4·5</td><td>fail → fail → pass(재판정 2차, 문체 지적 없음)</td><td>D1~D8</td></tr>
+      <tr><td><code>REQ-018_v01</code></td><td>운영팀 보안 담당 지정(점검 시점·항목, 보고 경로)</td><td>6</td><td>pass(최초 판정, 문체 지적 2건 이월)</td><td>D1~D6</td></tr>
+    </table>
+    <p class="note">세 REQ 모두 분류 Critical, 원스톱 단계는 EC 작성 → EC 판정 → 명세 → 구현 → 최종 판정입니다. 기준 커밋은 REQ-015 커밋 <code>610558b</code>이므로 REQ-015와의 범위 충돌은 없습니다.</p>
+  </section>
+
+  <section>
+    <h2>2. 결정 표 비교</h2>
+
+    <h3>REQ-016 구역 체계</h3>
+    <table>
+      <tr><th>번호</th><th>정할 일</th><th>권고안</th><th>대안과 그 영향</th></tr>
+      <tr><td>D1</td><td>REQ 분할과 처리 순서</td><td>세 REQ로 나눔. 016 → 017 → 018 순서로, 앞 안건 커밋 뒤 다음 안건 기동</td><td>(가) 하나로: 목적 셋이 한 REQ에 섞여 불변 원칙 8항과 어긋남 (나) 둘로. 대안을 고르면 PM이 REQ를 다시 작성</td></tr>
+      <tr><td>D2</td><td><code>Lab/</code> Git 추적</td><td>추적 안 함(<code>.gitkeep</code>만)</td><td>(가) 추적: 이력은 남지만 커밋 전 검사 예외와 배포본 제외 규칙이 추가로 필요</td></tr>
+      <tr><td>D3</td><td><code>Storage/</code> 한글 명칭</td><td>「창고」</td><td>(가) 「자료실」 (나) 한글 명칭 없이 <code>Storage/</code></td></tr>
+      <tr><td>D4</td><td>실험실 사용 주체와 불변 원칙 관계</td><td>대표님·비서실만 사용. PM·서브에이전트는 파이프라인에서 손대지 않음. <code>Lab/</code>을 불변 원칙 1·2항 적용 대상 밖으로 두고, 비서실 「코드를 작성하지 않는다」에 <code>Lab/</code> 예외 추가. 전역 지침의 삭제·덮어쓰기 승인, 커밋·푸시 규정은 그대로 적용</td><td>(가) PM도 사용: 파이프라인 밖 작업 규정과 권한 설정 추가 필요 (나) 비서실만 사용, 대표님 시안은 <code>CEO/</code>에만</td></tr>
+      <tr><td>D5</td><td>실험실 보관 기간·정리 책임</td><td>기간 없음. 정리 책임은 비서실이며, 지울 때는 경로 목록을 드리고 승인받음</td><td>(가) 보관 기간 설정(예: 30일)</td></tr>
+      <tr><td>D6</td><td>대표님 시안 위치</td><td>둘 다 허용: 대표님 혼자 만든 자료는 <code>CEO/</code>, AI와 함께 고치는 시안은 <code>Lab/</code>. 기존 파일은 옮기지 않음</td><td>(가) 모두 <code>Lab/</code> (나) <code>CEO/</code>에만(AI가 시안을 고칠 수 없음)</td></tr>
+      <tr><td>D7</td><td>실험실과 기획 트랙의 관계</td><td>기획 중에도 <code>Lab/</code>에서 시안 제작 가능. 기획안에 시안의 요지와 경로를 적음. 실험 결과는 기획 트랙 없이 바로 ORDER로도 넘길 수 있음</td><td>(가) 실험 결과는 반드시 기획안을 거침: 작은 실험도 기획안 필요</td></tr>
+      <tr><td>D8</td><td>외부감사실 보고서</td><td>하나로 두고 이름을 「외부 감사·검토 보고서」로 함</td><td>(가) 감사·검토로 분리: 서식과 문서 종류가 둘로 늘어남</td></tr>
+      <tr><td>D9</td><td>구분을 적을 위치</td><td>뜻은 <code>Workflow/01</code> 「용어」, 구역 목록·관리 책임은 <code>Workflow/02</code>, <code>AGENTS.md</code> 1절은 조직 표와 구역 표로 나눔</td><td>(가) <code>AGENTS.md</code> 표는 그대로 둠: 조직 표에 구역이 섞인 상태가 남음</td></tr>
+      <tr><td>D10</td><td>기존 「구역」 용어와의 관계</td><td>기존 용어 이름은 유지하고 「용어」에서 뜻을 구별</td><td>(가) 하나로 합침: 배포본 규칙까지 고쳐야 해 개정 범위가 커짐</td></tr>
+      <tr><td>D11</td><td>구역 목록</td><td><code>Workflow/</code>, <code>CEO/</code>, <code>_archive/</code>, <code>Audits/</code>, <code>Lab/</code>, <code>Storage/</code> 여섯 곳</td><td>(가) 새로 확정한 세 곳만: 관리 책임이 루트 일부에만 적용됨</td></tr>
+      <tr><td>D12</td><td>구역별 관리 책임 조직</td><td><code>CEO/</code>·<code>_archive/</code>·<code>Workflow/</code>: 대표실 / <code>Audits/</code>: 비서실 / <code>Storage/</code>: 운영</td><td>(가) <code>Workflow/</code>는 설계 (나) <code>Storage/</code>는 비서실(실제로 패키지를 채우고 비우는 주체)</td></tr>
+      <tr><td>D13</td><td>effort</td><td><code>medium</code></td><td><code>high</code>: 비용·시간 증가</td></tr>
+    </table>
+
+    <h3>REQ-017 품질팀 책무</h3>
+    <table>
+      <tr><th>번호</th><th>정할 일</th><th>권고안</th><th>대안과 그 영향</th></tr>
+      <tr><td>D1</td><td>인수 시험 시점과 적용 분류</td><td>명세 뒤·구현 전에 품질의 인수 시험 단계를 둠. Critical·Major에만, <code>workflow:</code>에 늘 넣음. 실행으로 확인할 항목이 없으면 「대상 없음」과 사유를 남김</td><td>(가) 명세 전: 시험을 다시 고쳐 쓸 수 있음 (나) Minor 포함: 단일 파일 수정에도 단계 추가 (다) 실행 항목이 없는 REQ는 PM이 단계를 뺌: 단계가 줄지만 뺄지 판단하는 기준을 REQ 판정이 따로 확인해야 함</td></tr>
+      <tr><td>D2</td><td>인수 시험과 단위 테스트</td><td>둘 다 둠. 개발은 인수 시험을 고치지 않고, 결함이 보이면 보고 → PM이 품질을 새로 기동해 수정</td><td>(가) 인수 시험이 단위 테스트를 대신함: 내부 동작은 시험되지 않음</td></tr>
+      <tr><td>D3</td><td>인수 시험 세션과 최종 판정 세션</td><td>나눔. 최종 판정은 인수 시험 자체(누락, 늘 통과하는 시험)도 판정</td><td>(가) 통과 여부만 봄: 인수 시험의 결함을 거르는 단계가 없음</td></tr>
+      <tr><td>D4</td><td>부적합 기록 대상</td><td>모든 판정의 <code>fail</code>, <code>rejected</code>, 중단 조건 1·3·5·6·7. 중단 조건 4와 문체 지적만 있는 <code>pass</code>는 제외</td><td>(가) 최종 판정 <code>fail</code>·<code>rejected</code>만: 지금까지의 <code>fail</code> 28건 가운데 26건이 빠짐</td></tr>
+      <tr><td>D5</td><td>소급 여부</td><td>소급 안 함(반영 뒤부터 기록)</td><td>(가) 소급: 작업량이 크게 늘고 당시 세션이 아닌 세션이 원인을 추정</td></tr>
+      <tr><td>D6</td><td>개정 제안 기준·경로</td><td>같은 원인 2건 이상이면 제안. 품질이 기록에 적음 → PM 보고 → 비서실 보고 → 대표님이 ORDER 발행 여부 결정</td><td>(가) 1건마다 제안 (나) 비서실이 주기적으로 모음: 비서실의 주기 작업이 새로 생김</td></tr>
+      <tr><td>D7</td><td>판정 없이 멈춘 중단의 기록 주체</td><td>PM이 멈추기 직전에 품질을 새로 기동해 기록만 작성</td><td>(가) 재개 뒤 첫 판정에서 기록: 재개되지 않으면 기록이 남지 않음</td></tr>
+      <tr><td>D8</td><td>effort</td><td><code>medium</code></td><td><code>high</code></td></tr>
+    </table>
+
+    <h3>REQ-018 운영팀 보안 담당</h3>
+    <table>
+      <tr><th>번호</th><th>정할 일</th><th>권고안</th><th>대안과 그 영향</th></tr>
+      <tr><td>D1</td><td>정기 점검 주기·항목</td><td>달력 주기 없음. 배포본·업데이트 패키지를 만들기 전과 대표님 요청 때 ORDER → REQ로 점검. 항목: 비밀정보 유출, <code>.gitignore</code>, 권한 설정, 키 보관·교체 절차</td><td>(가) 매월 점검: 빠지지 않지만 바뀐 것이 없는 달에도 안건이 생김</td></tr>
+      <tr><td>D2</td><td>점검 결과 전달</td><td>운영 결과서 → 최종 판정 → PM 완료 보고 → 비서실 보고. 위험이 있으면 「대표님이 할 일」에 조치 결정을 적음</td><td>(가) 보안 점검 브리핑 신설: 브리핑 종류와 비서실 작업이 늘어남</td></tr>
+      <tr><td>D3</td><td>비밀정보 자동 검출 도입</td><td>이번에는 넣지 않음. 키를 쓰는 프로젝트가 생길 때 그 ORDER로 넣음</td><td>(가) 이번에 넣음: 오탐 처리 규정과 검사 스크립트 개정이 필요</td></tr>
+      <tr><td>D4</td><td>운영 권한 한계 변경</td><td>변경 안 함. 키 관리는 키 값이 아니라 보관 위치·교체 절차를 관리하는 일로 정의</td><td>(가) 「비밀정보 값을 읽거나 기록하지 않는다」 추가: 전역 지침과 같은 규칙이 두 곳에 생김</td></tr>
+      <tr><td>D5</td><td>보안 정책 문서 작성 범위</td><td>별도 문서는 만들지 않고 표준에 책임·시점·항목·경로만 적음</td><td>(가) 정책 문서 작성: 대상 키·시스템이 없어 내용 대부분이 원칙을 되풀이함</td></tr>
+      <tr><td>D6</td><td>effort</td><td><code>medium</code></td><td><code>high</code></td></tr>
+    </table>
+  </section>
+
+  <section>
+    <h2>3. 비서실 검토 의견</h2>
+    <ol>
+      <li><strong>판정 세션의 셸 권한 거부</strong>: 판정서 세 건(<code>RES-016-REQ_v02</code>, <code>RES-017-REQ_v02</code>, <code>RES-018-REQ_v01</code>)의 <code>completed_at</code>이 「확인 불가」입니다. 품질 서브에이전트의 Bash·PowerShell 실행이 거부되었기 때문입니다. <code>settings.json</code> 허용 목록에 <code>Bash(date*)</code>가 있는데도 거부된 원인은 확인 불가입니다. REQ 판정은 열람으로 하므로 이번 판정 결과에는 영향이 없습니다. 다만 원스톱 파이프라인의 최종 판정은 <code>git status</code>와 <code>check_standard.py</code> 실행이 필요하므로, 같은 거부가 되풀이되면 REQ-016 진행이 막힐 수 있습니다. REQ-016 PM 기동 뒤 첫 판정서에서 이 문제를 확인하겠습니다.</li>
+      <li><strong>같은 원인의 결함 반복</strong>: REQ-016·017 모두 새 버전을 만들 때 6절 실행 명령의 파일 경로를 고치지 않아 재판정이 한 번씩 늘었습니다(<code>RES-016-REQ_v02</code>, <code>RES-017-REQ_v02</code>). REQ-017 D6 권고안의 「같은 원인 2건 이상」 기준에 해당하는 사례이므로, REQ-017 반영 뒤 첫 개정 제안 후보가 됩니다.</li>
+      <li><strong>옛 패키지 폴더</strong>: <code>Package_sample/</code>·<code>Package_update/</code>에는 <code>.gitkeep</code>만 있습니다(2026-10-09 PC 조회). REQ-016 결과서의 삭제 대상은 <code>.gitkeep</code> 두 개이며, 지운 뒤 빈 폴더가 PC에 남습니다. 최종 판정서 승인 때 빈 폴더 두 개의 삭제도 함께 승인 목록에 넣겠습니다.</li>
+    </ol>
+    <p class="note">그 밖의 사항: REQ-017·018 참고란은 분할 근거로 <code>REQ-016_v01</code> D1을 가리키지만 D1 내용은 v03까지 바뀌지 않았으므로 영향이 없습니다. REQ-018 문체 지적 S1·S2는 이월 대상이며, 「문체 반영」을 붙이지 않으셔도 됩니다(붙이면 PM의 반영본 작성과 대조 단계가 추가됩니다).</p>
+  </section>
+
+  <section>
+    <h2>4. 덮어쓰기·삭제 경로 목록(REQ <code>scope:</code> 가운데 기존 파일)</h2>
+    <p class="note">거버넌스 파일은 적용본으로 작성하고, 원본 반영은 최종 판정서 승인 뒤에 합니다. 실제 반영 대상은 결과서의 반영 명령 표로 최종 확정합니다.</p>
+    <table>
+      <tr><th>REQ</th><th>덮어쓰기 후보(기존 파일)</th><th>삭제 후보</th><th>새로 만드는 자리</th></tr>
+      <tr><td>016</td><td><code>AGENTS.md</code>, <code>Workflow/01·02·03·06·07</code>, <code>Workflow/templates/AUDIT_TEMPLATE.md</code>, <code>.gitignore</code>, <code>Departments/Development/assets/scripts/check_standard.py</code></td><td><code>Package_sample/.gitkeep</code>, <code>Package_update/.gitkeep</code></td><td><code>Lab/</code>, <code>Storage/server/</code>, <code>Storage/package/sample/</code>, <code>Storage/package/update/</code>, <code>EC-016</code></td></tr>
+      <tr><td>017</td><td><code>AGENTS.md</code>, <code>Workflow/01·02·03·05·06·07</code>, <code>Workflow/templates/</code> 안 기존 서식 13종 가운데 필요한 것, <code>.claude/agents/quality.md</code>, <code>.claude/agents/development.md</code>, <code>.gitattributes</code>, <code>check_standard.py</code></td><td>없음</td><td>품질 폴더 안 인수 시험·부적합 기록 자리(<code>Departments/Quality/assets</code>·<code>docs</code>. 지금은 <code>.gitkeep</code>만 있음), 신설 서식, <code>EC-017</code></td></tr>
+      <tr><td>018</td><td><code>AGENTS.md</code>(필요할 때만), <code>Workflow/02·05·06</code>, <code>.claude/agents/operations.md</code></td><td>없음</td><td><code>EC-018</code></td></tr>
+    </table>
+  </section>
+
+  <section>
+    <h2>5. 승인 뒤 진행</h2>
+    <ol>
+      <li>승인 문구를 이 비서실(코워크)에 주시면 「승인 기록」 절차로 세 REQ의 승인 기록을 작성하고 <code>approved:</code>와 「결정」 열을 대리 기재합니다.</li>
+      <li>REQ-016 PM 기동은 Antigravity에 아래 호출 문구로 전달하시면 됩니다(D13이 <code>high</code>이면 effort 두 곳을 <code>high</code>로 바꿉니다).<br>
+        <code>Workflow/05_인수인계_및_실행명령.md 「비서실 실행 절차」의 「PM 기동」 절차를 실행하라. PM 지시문: claude --model claude-opus-5-5 --effort medium --permission-mode acceptEdits "Departments/Secretariat/docs/requests/REQ-016_v03.md 원스톱 파이프라인을 실행하라. Workflow/03_라이프사이클.md 「원스톱 파이프라인」 절을 따른다. effort: medium"</code></li>
+      <li>REQ-016 최종 판정서 승인·커밋 뒤 REQ-017, 그 뒤 REQ-018을 같은 방식으로 기동합니다.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>6. 원천 문서</h2>
+    <ul>
+      <li>ORDER: <code>Departments/Secretariat/assets/inbox/ORD-005_v03.md</code></li>
+      <li>REQ: <code>Departments/Secretariat/docs/requests/REQ-016_v03.md</code>, <code>REQ-017_v03.md</code>, <code>REQ-018_v01.md</code></li>
+      <li>판정서: <code>Departments/Quality/results/RES-016-REQ_v01~v03.md</code>, <code>RES-017-REQ_v01~v03.md</code>, <code>RES-018-REQ_v01.md</code></li>
+      <li>PM 실행 기록: <code>Departments/Secretariat/workspace/실행기록_REQ-016.md</code>, <code>실행기록_REQ-017.md</code>, <code>실행기록_REQ-018.md</code></li>
+    </ul>
+  </section>
+
+  <footer>
+    <p>작성 날짜: 2026-10-09</p>
+    <p>작성 서비스·세션 식별자와 모델: 코워크·20261008T2222, Claude Opus 5.5(설정값 <code>claude-opus-5-5</code>)</p>
+    <p>원천 문서: <code>Departments/Secretariat/assets/inbox/ORD-005_v03.md</code>, <code>Departments/Secretariat/docs/requests/REQ-016_v03.md</code>, <code>REQ-017_v03.md</code>, <code>REQ-018_v01.md</code>, <code>Departments/Quality/results/RES-016-REQ_v03.md</code>, <code>RES-017-REQ_v03.md</code>, <code>RES-018-REQ_v01.md</code></p>
+  </footer>
+</main>
+</body>
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>브리핑: REQ-021 최종 승인(설계 필수와 EC 적용 기준)</title>
+<style>
+  body { margin: 0; padding: 24px; font-family: sans-serif; line-height: 1.6; color: #1f2328; background: #ffffff; }
+  main { max-width: 960px; margin: 0 auto; }
+  h1 { font-size: 1.5rem; margin: 0 0 16px; }
+  h2 { font-size: 1.15rem; margin: 24px 0 8px; }
+  .top { border: 2px solid #1f2328; border-radius: 8px; padding: 16px; margin-bottom: 24px; }
+  .top h2 { margin-top: 0; }
+  table { border-collapse: collapse; width: 100%; margin: 8px 0; }
+  th, td { border: 1px solid #d0d7de; padding: 6px 8px; text-align: left; vertical-align: top; }
+  th { background: #f6f8fa; }
+  code { font-family: monospace; background: #f6f8fa; padding: 0 4px; }
+  footer { margin-top: 32px; padding-top: 12px; border-top: 1px solid #d0d7de; font-size: 0.875rem; color: #57606a; }
+</style>
+</head>
+<body>
+<main>
+  <h1>브리핑: REQ-021 최종 승인(설계 필수와 EC 적용 기준)</h1>
+  <section class="top">
+    <h2>결론</h2>
+    <p>REQ-021 원스톱 파이프라인이 최종 판정 <code>pass</code>(<code>Departments/Quality/results/RES-021_v01.md</code>, 결함 0건)로 완료되었습니다. 거버넌스 파일 개정 15건(설계 12건, 개발 3건)의 적용본 작성이 완료되었으며, 대표님 최종 승인 후 비서실이 원본에 반영·정리·스테이징·검사·커밋을 진행합니다.</p>
+    <h2>대표님이 할 일</h2>
+    <ul>
+      <li><strong>최종 승인 문구 입력</strong>: <code>RES-021_v01 승인</code> (문체 지적 2건까지 반영하시려면 <code>RES-021_v01 승인, 문체 반영</code>)</li>
+      <li><strong>표준 개정 제안 검토</strong>: <code>NCR-021_02.md</code> (원인 C5, EC 작성 시 규정 지시어·조건문 단일 의미 점검 표준화 제안. 다음 ORDER 발행 여부 결정)</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>1. 결정 사항 반영 위치 (D1~D8)</h2>
+    <table>
+      <tr><th>번호</th><th>결정 내용</th><th>반영 위치 (적용본 기준)</th></tr>
+      <tr>
+        <td>D1</td>
+        <td>모든 분류 설계 단계 상시 배치, EC 필요 여부 판단, Minor 명세 산출물 불필요 시 사유 기록, 핫픽스 예외</td>
+        <td><code>Workflow/03_라이프사이클.md</code> 2절 표, 2.1절 5·6항, 9절(핫픽스 예외), <code>Workflow/01_표준_개요.md</code> 4절(설계 단계, EC 판단), <code>Workflow/templates/REQ_TEMPLATE.md</code> workflow 안내</td>
+      </tr>
+      <tr>
+        <td>D2</td>
+        <td>분류와 EC의 분리, REQ 승인 후 설계 단계에서 판단, 판단 결과로 REQ 재승인 없음</td>
+        <td><code>Workflow/03_라이프사이클.md</code> 2.1절 첫 문단·5·6항, 3절 1항, 4절 2항, <code>Workflow/07_문서_서식_및_번호.md</code> 3절 REQ 행, <code>Workflow/04_모델_운용.md</code> 3절 1항</td>
+      </tr>
+      <tr>
+        <td>D3</td>
+        <td>EC 적용 범위(기존 산출물 동작·규칙·규격 변경 시만 적용, 신설·단순보완 제외)</td>
+        <td><code>Workflow/03_라이프사이클.md</code> 2.1절 1·2·4항 (EC의 단일 원천 정의)</td>
+      </tr>
+      <tr>
+        <td>D4</td>
+        <td>거버넌스 및 보안·권한 변경 시 설계 판단 무관 상시 EC 필수</td>
+        <td><code>Workflow/03_라이프사이클.md</code> 2.1절 3항</td>
+      </tr>
+      <tr>
+        <td>D5</td>
+        <td>설계의 EC 판단 기록(설계 결과서 8절) 및 후속 첫 판정 대조</td>
+        <td><code>Workflow/03_라이프사이클.md</code> 2.1절 5·7·8항, 5절 표 EC판정·명세판정 행, 최종판정 기준 9, <code>Workflow/templates/DEV_TEMPLATE.md</code> 8절, <code>EC_TEMPLATE.md</code> 1절, <code>Workflow/02_부서_구조_및_작업구역.md</code> 2절 설계 행</td>
+      </tr>
+      <tr>
+        <td>D6</td>
+        <td>EC 없는 Critical·Major 신설 시 명세(PRD/TAD, 적용본, 결과서) 구현 방법 정의 및 품질의 명세 판정(gate: SPEC)</td>
+        <td><code>Workflow/03_라이프사이클.md</code> 3절 1항, 5절 표 명세판정 행, 5.1·5.2·7·8·12·13절, <code>Workflow/01_표준_개요.md</code> 4절 명세판정, <code>Workflow/05_인수인계_및_실행명령.md</code> 1.1절 커밋 판정서 목록, <code>Workflow/06_통제장치_및_배포.md</code> 1·5절, <code>Workflow/07_문서_서식_및_번호.md</code> 1·2·3절 (RES-xxx-SPEC, gate: SPEC), <code>RES_TEMPLATE.md</code>, <code>ACC_TEMPLATE.md</code></td>
+      </tr>
+      <tr>
+        <td>D7</td>
+        <td>실험 단계 위치 개정(분류 무관 설계 단계 앞, 실험 결과를 설계 산출물이 인용)</td>
+        <td><code>Workflow/03_라이프사이클.md</code> 11.2절 2·3·5·6항, 12절 1항, 2절 표, 1절 흐름도, <code>REQ_TEMPLATE.md</code> workflow 안내</td>
+      </tr>
+      <tr>
+        <td>D8</td>
+        <td>effort: medium</td>
+        <td>실행 명령 및 결과서 머리말 반영 (문서 개정 없음)</td>
+      </tr>
+    </table>
+  </section>
+
+  <section>
+    <h2>2. 덮어쓰기 원본 경로 목록 (반영 대상)</h2>
+    <p>최종 승인 시 비서실이 결과서 반영 명령에 따라 아래 15개 원본 파일에 적용본을 덮어씁니다.</p>
+    <table>
+      <tr><th>부서</th><th>적용본 경로</th><th>덮어쓸 원본 경로</th></tr>
+      <tr><td>설계</td><td><code>Departments/Design/workspace/REQ-021_적용본_v01/Workflow.적용본/01_표준_개요.md</code></td><td><code>Workflow/01_표준_개요.md</code></td></tr>
+      <tr><td>설계</td><td><code>Departments/Design/workspace/REQ-021_적용본_v01/Workflow.적용본/02_부서_구조_및_작업구역.md</code></td><td><code>Workflow/02_부서_구조_및_작업구역.md</code></td></tr>
+      <tr><td>설계</td><td><code>Departments/Design/workspace/REQ-021_적용본_v01/Workflow.적용본/03_라이프사이클.md</code></td><td><code>Workflow/03_라이프사이클.md</code></td></tr>
+      <tr><td>설계</td><td><code>Departments/Design/workspace/REQ-021_적용본_v01/Workflow.적용본/04_모델_운용.md</code></td><td><code>Workflow/04_모델_운용.md</code></td></tr>
+      <tr><td>설계</td><td><code>Departments/Design/workspace/REQ-021_적용본_v01/Workflow.적용본/05_인수인계_및_실행명령.md</code></td><td><code>Workflow/05_인수인계_및_실행명령.md</code></td></tr>
+      <tr><td>설계</td><td><code>Departments/Design/workspace/REQ-021_적용본_v01/Workflow.적용본/06_통제장치_및_배포.md</code></td><td><code>Workflow/06_통제장치_및_배포.md</code></td></tr>
+      <tr><td>설계</td><td><code>Departments/Design/workspace/REQ-021_적용본_v01/Workflow.적용본/07_문서_서식_및_번호.md</code></td><td><code>Workflow/07_문서_서식_및_번호.md</code></td></tr>
+      <tr><td>설계</td><td><code>Departments/Design/workspace/REQ-021_적용본_v01/Workflow.적용본/templates/REQ_TEMPLATE.md</code></td><td><code>Workflow/templates/REQ_TEMPLATE.md</code></td></tr>
+      <tr><td>설계</td><td><code>Departments/Design/workspace/REQ-021_적용본_v01/Workflow.적용본/templates/EC_TEMPLATE.md</code></td><td><code>Workflow/templates/EC_TEMPLATE.md</code></td></tr>
+      <tr><td>설계</td><td><code>Departments/Design/workspace/REQ-021_적용본_v01/Workflow.적용본/templates/DEV_TEMPLATE.md</code></td><td><code>Workflow/templates/DEV_TEMPLATE.md</code></td></tr>
+      <tr><td>설계</td><td><code>Departments/Design/workspace/REQ-021_적용본_v01/Workflow.적용본/templates/RES_TEMPLATE.md</code></td><td><code>Workflow/templates/RES_TEMPLATE.md</code></td></tr>
+      <tr><td>설계</td><td><code>Departments/Design/workspace/REQ-021_적용본_v01/Workflow.적용본/templates/ACC_TEMPLATE.md</code></td><td><code>Workflow/templates/ACC_TEMPLATE.md</code></td></tr>
+      <tr><td>개발</td><td><code>Departments/Development/workspace/REQ-021_적용본_v01/.claude.적용본/agents/design.md</code></td><td><code>.claude/agents/design.md</code></td></tr>
+      <tr><td>개발</td><td><code>Departments/Development/workspace/REQ-021_적용본_v01/.claude.적용본/agents/development.md</code></td><td><code>.claude/agents/development.md</code></td></tr>
+      <tr><td>개발</td><td><code>Departments/Development/workspace/REQ-021_적용본_v01/.claude.적용본/agents/quality.md</code></td><td><code>.claude/agents/quality.md</code></td></tr>
+    </table>
+    <p>※ 삭제 대상 파일: 없음 (최종 판정서 7절: 없음)</p>
+  </section>
+
+  <section>
+    <h2>3. 원천 문서</h2>
+    <ul>
+      <li>최종 판정서: <code>Departments/Quality/results/RES-021_v01.md</code> (pass)</li>
+      <li>설계 결과서: <code>Departments/Design/results/RPT-021_v01.md</code></li>
+      <li>개발 결과서: <code>Departments/Development/results/DEV-021_v01.md</code></li>
+      <li>인수 시험 결과서: <code>Departments/Quality/results/ACC-021_v01.md</code> (5 passed)</li>
+      <li>부적합 기록: <code>Departments/Quality/docs/nonconformance/NCR-021_02.md</code> (C5 표준 개정 제안)</li>
+      <li>엔지니어링 변경 계획서: <code>Departments/Design/docs/tad/EC-021_v02.md</code> (EC 판정 통과: <code>RES-021-EC_v02.md</code>)</li>
+      <li>승인된 REQ: <code>Departments/Secretariat/docs/requests/REQ-021_v02.md</code></li>
+      <li>PM 실행 기록: <code>Departments/Secretariat/workspace/실행기록_REQ-021.md</code></li>
+    </ul>
+  </section>
+
+  <footer>
+    <p>작성 날짜: 2026-10-10</p>
+    <p>작성 서비스·세션 식별자와 모델: Antigravity·20261010T0900, Claude Opus 5.5(설정값 <code>claude-opus-5-5</code>)</p>
+    <p>원천 문서: <code>Departments/Quality/results/RES-021_v01.md</code></p>
+  </footer>
+</main>
+</body>
+</html>

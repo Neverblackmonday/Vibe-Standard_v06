@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>브리핑: REQ-021_v02 승인</title>
+<style>
+  body { margin: 0; padding: 24px; font-family: sans-serif; line-height: 1.6; color: #1f2328; background: #ffffff; }
+  main { max-width: 960px; margin: 0 auto; }
+  h1 { font-size: 1.5rem; margin: 0 0 16px; }
+  h2 { font-size: 1.15rem; margin: 24px 0 8px; }
+  .top { border: 2px solid #1f2328; border-radius: 8px; padding: 16px; margin-bottom: 24px; }
+  .top h2 { margin-top: 0; }
+  table { border-collapse: collapse; width: 100%; margin: 8px 0; }
+  th, td { border: 1px solid #d0d7de; padding: 6px 8px; text-align: left; vertical-align: top; }
+  th { background: #f6f8fa; }
+  code { font-family: monospace; background: #f6f8fa; padding: 0 4px; }
+  footer { margin-top: 32px; padding-top: 12px; border-top: 1px solid #d0d7de; font-size: 0.875rem; color: #57606a; }
+</style>
+</head>
+<body>
+<main>
+  <h1>브리핑: REQ-021_v02 승인(설계 필수와 EC 적용 기준)</h1>
+
+  <section class="top">
+    <h2>결론</h2>
+    <p>REQ-021_v02는 REQ 판정 재판정 1차에서 <code>pass</code>(결함·문체 지적 없음)입니다. 대표님 원문 E·J(설계를 빼지 않는다, EC 여부는 설계가 정한다, EC는 기존 것을 바꿀 때)와 결정 D1~D8의 권고안이 맞습니다. 비서실은 전부 권고안으로 승인하기를 권고합니다.</p>
+    <h2>대표님이 할 일</h2>
+    <ul>
+      <li>승인 문구: 「REQ-021_v02 승인, 전부 권고안」(다른 결정을 고르시면 D 번호별로 적어 주십시오)</li>
+      <li>승인 뒤 원스톱 실행(호출 문구는 대화창 보고에 있습니다)</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>1. 결정 표 비교</h2>
+    <table>
+      <tr><th>번호</th><th>정할 일</th><th>권고안</th><th>대안</th><th>선택의 영향</th></tr>
+      <tr><td>D1</td><td>Minor 단계</td><td>모든 분류에 설계 단계를 늘 둔다. 명세 산출물이 필요 없는 Minor는 EC 판단과 사유만 기록한다. 핫픽스는 예외</td><td>(가) Minor도 명세 산출물을 늘 만든다</td><td>권고안은 오탈자 수정에도 설계 판단 기록이 남되 문서가 늘지 않습니다. 대안은 Minor 작업마다 명세 문서가 생깁니다</td></tr>
+      <tr><td>D2</td><td>EC 판단 시점</td><td>REQ 승인 뒤 설계 단계(실험 뒤)에서 판단하고, 결과에 따라 EC를 실행하거나 건너뛴다. REQ 재승인 없음</td><td>(가) REQ 작성 때 설계 판단을 받아 대표님이 승인 때 EC 유무를 함께 본다</td><td>권고안은 설계가 사실을 가장 많이 가진 때 판단합니다. 대표님은 승인 때 EC 유무를 보지 않지만 D4·D5가 보완합니다. 대안은 REQ 작성 단계에 설계 세션이 하나 더 붙습니다</td></tr>
+      <tr><td>D3</td><td>EC를 붙이는 범위</td><td>승인되어 쓰이는 산출물의 동작·규칙·규격을 바꿀 때만. 오탈자, 승인 포맷을 따르는 반복 작업, 기존을 바꾸지 않는 신설에는 붙이지 않음</td><td>(가) 신설·새 기능에도 붙인다</td><td>권고안은 원문 J 「기존의 설계나 코드를 변경할 때」와 같습니다. 대안은 EC 정의와 어긋납니다</td></tr>
+      <tr><td>D4</td><td>거버넌스·보안 변경</td><td>설계 판단과 관계없이 늘 EC를 붙인다(오탈자 제외)</td><td>(가) D3 판단에 맡긴다</td><td>권고안은 모든 안건이 따르는 규칙 변경을 반드시 변경점 평가에 올립니다. 이 저장소의 지금 작업 대부분이 여기에 해당합니다</td></tr>
+      <tr><td>D5</td><td>판단 기록과 확인</td><td>모든 REQ에서 판단과 사유를 기록하고, EC를 안 붙인 판단은 다음 판정(Critical·Major는 D6 판정, Minor는 최종 판정)이 대조한다</td><td>(가) 기록하지 않음 (나) 판단만 보는 판정 단계 신설</td><td>권고안은 새 판정 세션 없이 추적성을 남깁니다. (가)는 근거가 남지 않고, (나)는 모든 안건에 세션이 하나 늘어납니다</td></tr>
+      <tr><td>D6</td><td>EC 없는 Critical·Major의 구현 방법</td><td>명세 산출물이 구현 방법을 정하고, 품질이 명세 뒤·인수 시험 전에 EC 판정에 준해 판정한다</td><td>(가) 따로 판정하지 않음 (나) 별도 설계 계획 문서와 판정</td><td>권고안은 Critical·Major의 구현 전 판정을 유지합니다. (가)는 구현 전 판정이 빠지고, (나)는 문서 종류가 늘고 명세와 겹칩니다</td></tr>
+      <tr><td>D7</td><td>REQ-016 D7·D1 고쳐 쓰기</td><td>D7(실험 단계 위치)만 고친다. 실험은 분류와 관계없이 설계 단계 앞. D1은 추적성 REQ(순서 ⑦)에서</td><td>(가) D7도 분류 재정의 REQ(순서 ④)에서</td><td>권고안은 이 REQ 커밋 뒤 단계와 실험 위치 규정이 어긋나지 않습니다</td></tr>
+      <tr><td>D8</td><td>effort</td><td><code>medium</code></td><td><code>high</code></td><td>현행 기본값입니다</td></tr>
+    </table>
+    <p>이 REQ 자체는 현행 규정(Critical은 EC 필수)으로 진행하고, 바뀐 규정은 이 REQ 커밋 뒤의 REQ부터 적용합니다(REQ 3절 표 아래).</p>
+  </section>
+
+  <section>
+    <h2>2. 덮어쓰기 대상(REQ <code>scope:</code> 가운데 기존 파일)</h2>
+    <p>적용본으로 작성하고 최종 판정서 승인 뒤 반영합니다. 개정이 필요 없는 파일은 고치지 않습니다. <code>Departments/Design/docs/tad/EC-021</code>은 새 파일입니다. 삭제 대상은 없습니다.</p>
+    <ul>
+      <li><code>Workflow/01_표준_개요.md</code>, <code>02_부서_구조_및_작업구역.md</code>, <code>03_라이프사이클.md</code>, <code>04_모델_운용.md</code>, <code>05_인수인계_및_실행명령.md</code>, <code>06_통제장치_및_배포.md</code>, <code>07_문서_서식_및_번호.md</code></li>
+      <li><code>Workflow/templates/</code>의 <code>REQ_TEMPLATE.md</code>, <code>EC_TEMPLATE.md</code>, <code>DEV_TEMPLATE.md</code>, <code>RES_TEMPLATE.md</code>, <code>ACC_TEMPLATE.md</code></li>
+      <li><code>.claude/agents/</code>의 <code>design.md</code>, <code>development.md</code>, <code>quality.md</code></li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>3. 비서실 확인 사항</h2>
+    <ul>
+      <li>REQ 판정: 최초 <code>fail</code>(결함 1건: <code>Workflow/05</code>가 scope에서 빠짐, 부적합 기록 <code>NCR-021_01</code>, 표준 개정 제안 없음) → v02 재판정 1차 <code>pass</code>.</li>
+      <li>scope 밖으로 둔 <code>AGENTS.md</code>·<code>check_standard.py</code>: <code>AGENTS.md</code>에 「EC」 낱말이 없고, <code>check_standard.py</code>는 판정서 이름이나 분류를 검사하지 않습니다(이름 검사 정규식은 REQ·HOTFIX만 대상). D6으로 판정서 구분이 늘어도 검사에 걸리지 않을 것으로 봅니다.</li>
+      <li>참고: 재판정 판정서가 처음에 조회하지 않은 <code>completed_at</code> 값을 적었고, PM이 같은 판정 세션에 정정을 요청해 같은 파일에서 고쳤습니다(실행 기록 10:41 행). 판정 결과에는 영향이 없습니다. 판정 완료 시각 기재 문제는 ORD-006 요구 항목 12(추적성)의 범위입니다.</li>
+    </ul>
+  </section>
+
+  <footer>
+    <p>작성 날짜: 2026-10-10</p>
+    <p>작성 서비스·세션 식별자와 모델: 코워크·20261008T2222, Claude Opus 5.5</p>
+    <p>원천 문서: <code>Departments/Secretariat/docs/requests/REQ-021_v02.md</code>, <code>Departments/Quality/results/RES-021-REQ_v02.md</code>, <code>Departments/Quality/results/RES-021-REQ_v01.md</code>, <code>Departments/Quality/docs/nonconformance/NCR-021_01.md</code>, <code>Departments/Secretariat/workspace/실행기록_REQ-021.md</code></p>
+  </footer>
+</main>
+</body>
+</html>

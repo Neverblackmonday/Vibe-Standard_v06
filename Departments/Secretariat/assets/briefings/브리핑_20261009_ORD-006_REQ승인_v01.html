@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>브리핑: ORD-006 REQ 승인(REQ-019·020)</title>
+<style>
+  body { margin: 0; padding: 24px; font-family: sans-serif; line-height: 1.6; color: #1f2328; background: #ffffff; }
+  main { max-width: 960px; margin: 0 auto; }
+  h1 { font-size: 1.5rem; margin: 0 0 16px; }
+  h2 { font-size: 1.15rem; margin: 24px 0 8px; }
+  .top { border: 2px solid #1f2328; border-radius: 8px; padding: 16px; margin-bottom: 24px; }
+  .top h2 { margin-top: 0; }
+  table { border-collapse: collapse; width: 100%; margin: 8px 0; }
+  th, td { border: 1px solid #d0d7de; padding: 6px 8px; text-align: left; vertical-align: top; }
+  th { background: #f6f8fa; }
+  code { font-family: monospace; background: #f6f8fa; padding: 0 4px; }
+  footer { margin-top: 32px; padding-top: 12px; border-top: 1px solid #d0d7de; font-size: 0.875rem; color: #57606a; }
+</style>
+</head>
+<body>
+<main>
+  <h1>브리핑: ORD-006 REQ 승인(REQ-019·020)</h1>
+  <section class="top">
+    <h2>결론</h2>
+    <p>PM이 ORD-006 요구 항목 13개 가운데 8번(판정 세션 셸 권한)을 REQ-019(Critical), 9번(REQ-014 일회성 파일)을 REQ-020(Minor)으로 작성했습니다. 나머지 11개 항목은 REQ-019 D1에 따라 앞 REQ 커밋 뒤에 차례로 작성합니다. REQ 판정은 REQ-019가 재판정 2차에서, REQ-020이 최초 판정에서 <code>pass</code>입니다. 권고안대로 승인하시면 됩니다.</p>
+    <h2>대표님이 할 일</h2>
+    <ul>
+      <li>승인 문구: 「REQ-019_v03 승인, 전부 권고안」, 「REQ-020_v01 승인, 전부 권고안」</li>
+      <li>표준 개정 제안 C5(REQ 작성 기준의 조건 문장 명확화)를 다음 ORDER에 넣을지 결정</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>1. 결정 표 비교</h2>
+    <table>
+      <tr><th>REQ·번호</th><th>정할 일</th><th>권고안</th><th>대안과 영향</th></tr>
+      <tr><td>019 D1</td><td>ORD-006을 REQ로 나누는 방식과 순서</td><td>목적마다 REQ 하나. 순서: ①항목 8(REQ-019) ②항목 9(REQ-020) ③항목 2(설계 필수·EC) ④항목 10(분류·모델) ⑤항목 13(인수 시험 문서 이름) ⑥항목 11(재작업 태그) ⑦항목 12(추적성) ⑧항목 6(조직) ⑨항목 1·3·4·5·7(콘텐츠 제작 체계). ③~⑨는 앞 REQ 커밋 뒤에 작성</td><td>(가) 지금 모두 작성: 앞 REQ가 표준을 바꿀 때마다 뒤 REQ를 다시 쓰고 재승인 (나) ③·④를 하나로: 목적이 둘인 큰 REQ가 되어 판정이 길어짐</td></tr>
+      <tr><td>019 D2</td><td>판정 세션이 명령을 실행하지 못했을 때</td><td>같은 결과를 내는 다른 허용 명령으로 대신할 수 있으면 대신하고 판정서에 적은 뒤 계속. 대신할 수 없으면 판정서를 발행하지 않고 멈춤. <code>completed_at</code>에 「확인 불가」 금지</td><td>(가) 「확인 불가」로 계속: 근거 없는 <code>pass</code> 가능 (나) 늘 멈춤: 사소한 실패에도 멈춤</td></tr>
+      <tr><td>019 D3</td><td>「판정에 필요한 명령」의 범위</td><td>품질이 표준 절차에서 실행하는 명령 전부(시각, Git, 커밋 전 검사, pytest, 해시 조회)</td><td>(가) ORDER 괄호의 세 가지만: 인수 시험 세션의 막힘이 남음</td></tr>
+      <tr><td>019 D4</td><td>effort</td><td><code>medium</code></td><td><code>high</code></td></tr>
+      <tr><td>020 D1</td><td><code>REQ-014_*.py</code> 네 개</td><td>모두 지움(추적 중 2개는 Git 이력에 남음)</td><td>(가) 모두 보관 (나) 미추적 2개만 지움</td></tr>
+      <tr><td>020 D2</td><td>effort</td><td><code>medium</code></td><td><code>high</code></td></tr>
+    </table>
+  </section>
+
+  <section>
+    <h2>2. 덮어쓰기·삭제 가능성이 있는 기존 경로(REQ <code>scope:</code>)</h2>
+    <table>
+      <tr><th>REQ</th><th>경로</th></tr>
+      <tr><td>REQ-019</td><td><code>.claude/settings.json</code>, <code>.claude/agents/</code>, <code>Workflow/03_라이프사이클.md</code>, <code>Workflow/04_모델_운용.md</code>, <code>Workflow/06_통제장치_및_배포.md</code>, <code>Workflow/07_문서_서식_및_번호.md</code>, <code>Workflow/templates/RES_TEMPLATE.md</code>(거버넌스 파일은 적용본으로 작성하고 최종 승인 뒤 반영). 새 경로: <code>Lab/REQ-019_판정세션권한/</code>(실험 단계, REQ 승인이 실험실 사용 승인을 겸함)</td></tr>
+      <tr><td>REQ-020</td><td>삭제 예정: <code>Departments/Design/workspace/REQ-014_결과서차이_20261009b.py</code>, <code>REQ-014_복사_20261009a.py</code>(추적 중), <code>REQ-014_결과서갱신_20261009d.py</code>, <code>REQ-014_복사_20261009c.py</code>(미추적). 실제 삭제는 최종 판정서 승인 뒤</td></tr>
+    </table>
+  </section>
+
+  <section>
+    <h2>3. 원천 문서</h2>
+    <ul>
+      <li>REQ: <code>Departments/Secretariat/docs/requests/REQ-019_v03.md</code>, <code>REQ-020_v01.md</code></li>
+      <li>REQ 판정: <code>Departments/Quality/results/RES-019-REQ_v01~v03.md</code>, <code>RES-020-REQ_v01.md</code></li>
+      <li>부적합 기록: <code>Departments/Quality/docs/nonconformance/NCR-019_01.md</code>, <code>NCR-019_02.md</code>(표준 개정 제안 C5)</li>
+      <li>ORDER: <code>Departments/Secretariat/assets/inbox/ORD-006_v11.md</code></li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>4. 비서실 확인 사항</h2>
+    <table>
+      <tr><th>항목</th><th>내용</th><th>처리 권고</th></tr>
+      <tr><td>문체 지적 이월</td><td>RES-019-REQ S1(「이 버전」 주어), RES-020-REQ S1·S2(주석·배경 문장)</td><td>반영하지 않고 승인</td></tr>
+      <tr><td>판정 세션 명령 거부</td><td>이번 REQ 판정에서도 <code>;</code>·<code>&amp;&amp;</code>로 묶은 Bash 명령이 거부되고, 같은 명령을 하나씩 실행하면 통과했습니다</td><td>REQ-019 실험 단계의 원인 확인 대상입니다</td></tr>
+      <tr><td>표준 개정 제안 C5</td><td>REQ 조건 문장의 중의성(C5)이 두 기록에서 나와 처음으로 제안 기준(2건)에 닿았습니다</td><td>다음 ORDER(ORD-007) 후보에 넣기</td></tr>
+      <tr><td>처리 순서</td><td>REQ-019·020은 고치는 파일이 겹치지 않아 순서를 따지지 않습니다. ③~⑨는 9단계를 차례로 진행하므로 시간이 걸립니다</td><td>추적성(⑦)을 더 앞당기고 싶으시면 D1을 대안으로 정하십시오</td></tr>
+    </table>
+  </section>
+
+  <footer>
+    <p>작성 날짜: 2026-10-09</p>
+    <p>작성 서비스·세션 식별자와 모델: 코워크·20261008T2222, Claude Opus 5.5(설정값 <code>claude-opus-5-5</code>)</p>
+    <p>원천 문서: <code>Departments/Secretariat/docs/requests/REQ-019_v03.md</code>, <code>Departments/Secretariat/docs/requests/REQ-020_v01.md</code></p>
+  </footer>
+</main>
+</body>
+</html>

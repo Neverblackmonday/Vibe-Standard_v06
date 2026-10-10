@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>브리핑: REQ-016 최종 판정서 승인</title>
+<style>
+  body { margin: 0; padding: 24px; font-family: sans-serif; line-height: 1.6; color: #1f2328; background: #ffffff; }
+  main { max-width: 960px; margin: 0 auto; }
+  h1 { font-size: 1.5rem; margin: 0 0 16px; }
+  h2 { font-size: 1.15rem; margin: 24px 0 8px; }
+  .top { border: 2px solid #1f2328; border-radius: 8px; padding: 16px; margin-bottom: 24px; }
+  .top h2 { margin-top: 0; }
+  table { border-collapse: collapse; width: 100%; margin: 8px 0; }
+  th, td { border: 1px solid #d0d7de; padding: 6px 8px; text-align: left; vertical-align: top; }
+  th { background: #f6f8fa; }
+  code { font-family: monospace; background: #f6f8fa; padding: 0 4px; }
+  footer { margin-top: 32px; padding-top: 12px; border-top: 1px solid #d0d7de; font-size: 0.875rem; color: #57606a; }
+</style>
+</head>
+<body>
+<main>
+  <h1>브리핑: REQ-016 최종 판정서 승인</h1>
+  <section class="top">
+    <h2>결론</h2>
+    <p>REQ-016(구역 체계, 실험실 <code>Lab/</code>, 자료실 <code>Storage/</code>, 외부감사실·외부 보고서)의 최종 판정이 <code>pass</code>입니다(결함·문체 지적 없음). 체크리스트 1·2·7·8·9번 모두 PASS이고, 비서실 표본 대조에서도 어긋난 곳이 없습니다.</p>
+    <h2>대표님이 할 일</h2>
+    <ul>
+      <li>승인 문구: 「RES-016_v01 승인」(빈 폴더까지 지우려면 「RES-016_v01 승인. 빈 폴더 Package_sample/·Package_update/ 삭제 승인」)</li>
+      <li>승인 뒤 Antigravity에 「최종 승인 커밋」 호출 문구 전달</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>1. 결정별 반영 위치(최종 판정서 3절 「결정 열 대조」)</h2>
+    <table>
+      <tr><th>결정</th><th>반영 위치</th></tr>
+      <tr><td>D1 실험 파일 커밋</td><td><code>AGENTS.md</code> 2절 5항, 05 1.1절 6번 ⑥·8.3절 「요청 커밋」, 03 11.1절 7항·11.2절 8항, 06 4절</td></tr>
+      <tr><td>D2 커밋 전 검사</td><td>06 4절 순서 3, <code>check_standard.py</code> <code>Lab/</code> 처리</td></tr>
+      <tr><td>D3 배포본 제외</td><td><code>.gitattributes</code> <code>Lab/** export-ignore</code>, 06 6.1절</td></tr>
+      <tr><td>D4 규정 관계</td><td><code>AGENTS.md</code> 1·2절, 02 2.1절·4절, 서브에이전트 정의 3개(운영·마케팅·비주얼), 06 2절</td></tr>
+      <tr><td>D5 파이프라인 밖 승인</td><td>03 11.1절(실험 폴더 안 <code>실험승인.md</code>)</td></tr>
+      <tr><td>D6~D9 실험 단계</td><td>03 2·4·5절, 11.2절, <code>REQ_TEMPLATE.md</code>, <code>DEV_TEMPLATE.md</code> 6절</td></tr>
+      <tr><td>D10 대표님 직접 기재</td><td>07 3.1절 9항</td></tr>
+      <tr><td>D11 effort</td><td><code>medium</code>(문서 변경 없음)</td></tr>
+    </table>
+  </section>
+
+  <section>
+    <h2>2. 덮어쓰기·삭제 경로 목록</h2>
+    <table>
+      <tr><th>구분</th><th>경로</th></tr>
+      <tr><td>덮어쓰기(설계 결과서 RPT-016 8절)</td><td><code>AGENTS.md</code>, <code>Workflow/01·02·03·05·06·07</code>, <code>Workflow/templates/AUDIT_TEMPLATE.md</code>, <code>REQ_TEMPLATE.md</code>, <code>DEV_TEMPLATE.md</code></td></tr>
+      <tr><td>덮어쓰기(개발 결과서 DEV-016 4절)</td><td><code>.gitignore</code>, <code>.gitattributes</code>, <code>Departments/Development/assets/scripts/check_standard.py</code>, <code>.claude/agents/operations.md</code>, <code>marketing.md</code>, <code>visual.md</code></td></tr>
+      <tr><td>삭제(결과서)</td><td><code>Package_sample/.gitkeep</code>, <code>Package_update/.gitkeep</code>(추적 중)</td></tr>
+      <tr><td>삭제(최종 판정서 7절)</td><td>설계 <code>workspace/REQ-016_검사_20261009b.py</code>, <code>REQ-016_복사_20261009a.py</code> / 개발 <code>workspace/REQ-016_대조_20261009c.py</code>, <code>REQ-016_복사_20261009a.py</code>, <code>REQ-016_임시저장소시험_20261009b.py</code>, <code>REQ-016_임시저장소시험_20261009b.log</code>(모두 미추적)</td></tr>
+      <tr><td>삭제(목록 밖, 별도 승인 필요)</td><td>빈 폴더 <code>Package_sample/</code>, <code>Package_update/</code></td></tr>
+    </table>
+  </section>
+
+  <section>
+    <h2>3. 원천 문서</h2>
+    <ul>
+      <li>최종 판정서: <code>Departments/Quality/results/RES-016_v01.md</code></li>
+      <li>REQ: <code>Departments/Secretariat/docs/requests/REQ-016_v05.md</code>, 승인 기록 <code>Departments/Secretariat/assets/inbox/승인기록_20261009_REQ-016_v05.md</code></li>
+      <li>EC: <code>Departments/Design/docs/tad/EC-016_v03.md</code>(판정 <code>RES-016-EC_v03</code>)</li>
+      <li>결과서: <code>Departments/Design/results/RPT-016_v01.md</code>, <code>Departments/Development/results/DEV-016_v01.md</code></li>
+    </ul>
+  </section>
+
+  <footer>
+    <p>작성 날짜: 2026-10-09</p>
+    <p>작성 서비스·세션 식별자와 모델: 코워크·20261008T2222, Claude Opus 5.5(설정값 <code>claude-opus-5-5</code>)</p>
+    <p>원천 문서: <code>Departments/Quality/results/RES-016_v01.md</code>, <code>Departments/Design/results/RPT-016_v01.md</code>, <code>Departments/Development/results/DEV-016_v01.md</code></p>
+  </footer>
+</main>
+</body>
+</html>
