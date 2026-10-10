@@ -11,8 +11,9 @@ author:
 
 ## 1. 입력 문서
 - REQ: `Departments/Secretariat/docs/requests/REQ-007_v01.md`
-- EC: `Departments/Design/docs/tad/EC-007_v01.md` (Minor는 「해당 없음」)
+- EC: `Departments/Design/docs/tad/EC-007_v01.md` (EC가 없으면 「해당 없음」. EC의 유무는 `Workflow/03_라이프사이클` 「EC 적용 기준」 첫 문단)
 - 명세: 참조한 PRD·TAD 경로
+- 설계 결과서: `Departments/Design/results/RPT-007_vNN.md`(「EC 판단」 절. EC가 없는 Critical·Major이면 「구현 계획」 절 포함). 설계 결과서 자신이면 「해당 없음」
 
 ## 2. 변경 파일
 | 번호 | 경로 | 변경 내용 | 근거(EC 절 또는 REQ 체크리스트 번호) |
@@ -48,3 +49,22 @@ author:
 | 번호 | 시험(파일·함수) | 결함으로 본 사유 | 체크리스트 번호 |
 | :---: | :--- | :--- | :---: |
 | 1 | `Departments/Quality/assets/acceptance/REQ-007_v01/test_req007.py::test_c1_<요지>` | 사유 | 1 |
+
+## 8. EC 판단 (설계 결과서만)
+> 기준과 기록 규칙은 `Workflow/03_라이프사이클` 「EC 적용 기준」을 따른다. 같은 안건에서 이 결과서의 다음 버전을 쓰면 이 절을 그대로 옮긴다. 판단을 바꾸면 바꾼 판단과 근거 판정서 경로를 적는다.
+
+| 항목 | 기재 |
+| :--- | :--- |
+| 판단 | EC 있음 / EC 없음 |
+| 해당 기준 | 「EC 적용 기준」 2·3·4항 가운데 해당하는 항(4항은 ①~③ 번호까지) |
+| 사유 | 바꾸거나 만드는 산출물의 경로와, 그 동작·규칙·규격이 바뀌는지 |
+| 명세 산출물 | Minor이고 EC 없음이면 「필요」 또는 「필요 없음」과 사유. 그 밖은 「해당 없음」 |
+| 실험 결과 인용 | 실험 단계가 있고 EC 없음이면 실험 결과서 경로와 6절 요지. 그 밖은 「해당 없음」 |
+| 판단 변경 | 판단을 바꾸었으면 이전 판단과 근거 판정서 경로. 아니면 「해당 없음」 |
+
+## 9. 구현 계획 (EC가 없는 Critical·Major의 설계 결과서만)
+> 구현 방법은 이 절과 명세 산출물이 정한다(`Workflow/03_라이프사이클` 「REQ 작성 파이프라인」 1항). 명세 판정이 이 절을 판정한다.
+
+| 번호 | 구현 단계 작업 | 대상 경로 | 완료 기준 | 확인 방법 |
+| :---: | :--- | :--- | :--- | :--- |
+| 1 | 작업 내용 | `Departments/Development/assets/src/main.py` | 기준 | `python -m pytest Departments/Development/assets/tests` |

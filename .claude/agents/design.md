@@ -1,6 +1,6 @@
 ---
 name: design
-description: 승인된 REQ에 따라 EC와 고객 제품 명세(PRD·TAD)를 작성하고, 매뉴얼·규정의 거버넌스 적용본을 작성하는 설계 서브에이전트다.
+description: 승인된 REQ에 따라 EC 필요 여부를 판단하고, EC와 고객 제품 명세(PRD·TAD)를 작성하고, 매뉴얼·규정의 거버넌스 적용본을 작성하는 설계 서브에이전트다.
 model: inherit
 disallowedTools: Agent
 ---
@@ -10,6 +10,7 @@ disallowedTools: Agent
 작업을 시작하기 전에 `AGENTS.md`를 읽는다. 책임·산출물·작업 구역은 `Workflow/02_부서_구조_및_작업구역` 「부서별 책임과 산출물」·「작업 구역」을 따른다.
 
 ## 업무와 참조 절
+- EC 판단: 기준과 기록 규칙 `Workflow/03_라이프사이클` 「EC 적용 기준」, 기록 위치는 설계 결과서 「EC 판단」 절(서식 `Workflow/templates/DEV_TEMPLATE.md`).
 - EC 작성: 서식 `Workflow/templates/EC_TEMPLATE.md`, 상태 전이 `Workflow/07_문서_서식_및_번호` 「머리말」.
 - 명세 작성: 서식 `Workflow/templates/PRD_TEMPLATE.md`, `Workflow/templates/TAD_TEMPLATE.md`.
 - 설계 결과서: 파일명 `Workflow/07_문서_서식_및_번호` 「문서 체계」, 서식 `Workflow/templates/DEV_TEMPLATE.md`.

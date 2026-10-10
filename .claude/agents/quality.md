@@ -1,6 +1,6 @@
 ---
 name: quality
-description: REQ 판정, EC 판정, 최종 판정, 인수 시험의 작성과 실행, 부적합 기록을 수행하는 품질 서브에이전트다.
+description: REQ 판정, EC 판정, 명세 판정, 최종 판정, 인수 시험의 작성과 실행, 부적합 기록을 수행하는 품질 서브에이전트다.
 model: inherit
 disallowedTools: Agent
 ---
@@ -11,7 +11,7 @@ disallowedTools: Agent
 
 ## 업무와 참조 절
 - REQ 판정: `Workflow/03_라이프사이클` 「REQ 작성 파이프라인」의 판정 기준.
-- EC 판정과 최종 판정(범위 대조 포함): `Workflow/03_라이프사이클` 「단계별 통과 조건과 판정 기준」.
+- EC 판정, 명세 판정, 최종 판정(범위 대조 포함): `Workflow/03_라이프사이클` 「단계별 통과 조건과 판정 기준」.
 - 판정서 파일명: `Workflow/07_문서_서식_및_번호` 「문서 체계」. 서식 `Workflow/templates/RES_TEMPLATE.md`.
 - 머리말 `auditor`: `Workflow/04_모델_운용` 「모델 메타데이터 기록」.
 - 인수 시험과 인수 시험 수정: `Workflow/03_라이프사이클` 「시험실」. 서식 `Workflow/templates/ACC_TEMPLATE.md`.

@@ -8,15 +8,17 @@ author:
   model: "Claude Opus 5.5" # 실제 실행 모델
   effort: "medium (실행 명령 기준)" # 실행 명령 지시문의 effort 값과 출처. 얻을 수 없으면 "확인 불가"(Workflow/04_모델_운용 「모델 메타데이터 기록」)
 workflow:
-  # "<부서>: <단계명>"을 단계 순서대로 적는다(Workflow/03_라이프사이클 「원스톱 파이프라인」). Minor는 EC 작성·EC 판정이 없다. 실험 단계가 있으면 "<부서>: 실험"을 Critical·Major는 EC 작성 앞, Minor는 명세 앞에 적는다(Workflow/03_라이프사이클 「실험 단계」). Critical·Major는 명세와 구현 사이에 "Quality: 인수 시험"을 늘 둔다(Workflow/03_라이프사이클 「시험실」)
+  # "<부서>: <단계명>"을 단계 순서대로 적는다(Workflow/03_라이프사이클 「원스톱 파이프라인」). 단계는 분류마다 Workflow/03_라이프사이클 「분류별 단계」 표를 따르며, EC 작성·EC 판정·명세 판정과 Minor의 명세는 EC 판단 결과와 관계없이 적는다(실행 여부는 EC 판단으로 정한다. Workflow/03_라이프사이클 「EC 적용 기준」). 실험 단계가 있으면 "<부서>: 실험"을 "Design: EC 판단" 앞에 적는다(Workflow/03_라이프사이클 「실험 단계」). Critical·Major는 "Quality: 명세 판정"과 구현 사이에 "Quality: 인수 시험"을 늘 둔다(Workflow/03_라이프사이클 「시험실」)
+  - "Design: EC 판단"
   - "Design: EC 작성"
   - "Quality: EC 판정"
   - "Design: 명세"
+  - "Quality: 명세 판정"
   - "Quality: 인수 시험"
   - "Development: 구현"
   - "Quality: 최종 판정"
 scope:
-  # 수정을 허용할 경로. 폴더는 끝에 / 없이 적는다. Critical·Major는 EC 경로를 포함한다. 실험 단계가 있으면 실험 폴더 Lab/<REQ 번호>_<주제>를 포함한다
+  # 수정을 허용할 경로. 폴더는 끝에 / 없이 적는다. 모든 분류에서 EC 경로를 포함한다(EC 판단 결과와 관계없다). 실험 단계가 있으면 실험 폴더 Lab/<REQ 번호>_<주제>를 포함한다
   - Departments/Design/docs/tad/EC-007
   - Departments/Design/docs/prd/01_개요.md
   - Departments/Development/assets/src/main.py
@@ -43,13 +45,15 @@ scope:
 | D1 | 예: effort | `medium` | `high` | 대표님 직접 기재 또는 `Workflow/07_문서_서식_및_번호` 「승인 기록」 |
 
 ## 4. 실행 계획
-> 실험 단계가 있으면 표 첫 행에 실험 단계(부서, 실험 목적, 대상 `Lab/` 경로)를 적는다.
+> 실험 단계가 있으면 표 첫 행에 실험 단계(부서, 실험 목적, 대상 `Lab/` 경로)를 적는다. EC 작성·EC 판정·명세 판정 행은 EC 판단에 따라 실행하거나 건너뛰는 단계이며, 대상 경로는 실행할 때의 경로다(`Workflow/03_라이프사이클` 「EC 적용 기준」).
 
 | 단계 | 부서 | 작업 | 대상 경로 |
 | :--- | :--- | :--- | :--- |
+| EC 판단 | 설계 | EC 필요 여부 판단과 기록 | `Departments/Design/results/RPT-007_v01.md` |
 | EC 작성 | 설계 | EC 작성 | `Departments/Design/docs/tad/EC-007_v01.md` |
 | EC 판정 | 품질 | EC 판정 | `Departments/Quality/results/RES-007-EC_v01.md` |
 | 명세 | 설계 | PRD·TAD 작성 | `Departments/Design/docs/prd/01_개요.md` |
+| 명세 판정 | 품질 | 명세 판정 | `Departments/Quality/results/RES-007-SPEC_v01.md` |
 | 인수 시험 | 품질 | 인수 시험 작성과 구현 전 실행 | `Departments/Quality/assets/acceptance/REQ-007_v01/`, `Departments/Quality/results/ACC-007_v01.md` |
 | 구현 | 개발 | 구현과 단위 테스트 | `Departments/Development/assets/src/main.py` |
 | 최종 판정 | 품질 | 체크리스트 번호별 근거 대조 | `Departments/Quality/results/RES-007_v01.md` |
