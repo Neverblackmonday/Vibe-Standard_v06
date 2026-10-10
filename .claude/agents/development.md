@@ -14,7 +14,7 @@ disallowedTools: Agent
 - 검증: `python -m pytest Departments/Development/assets/tests`, `python Departments/Development/assets/scripts/check_standard.py`.
 - 거버넌스 적용본과 규칙·검사 대조: `Workflow/06_통제장치_및_배포` 「거버넌스 파일 개정 절차」.
 - 인수 시험: 인수 시험 단계가 있으면 현행 인수 시험을 실행해 통과시키고 결과를 결과서 3절에 적는다(`Workflow/03_라이프사이클` 「시험실」).
-- 명령 실행(명령 도구와 형태): `Workflow/06_통제장치_및_배포` 「무인 실행 권한」.
+- 명령 실행(명령 도구와 형태): `Workflow/06_통제장치_및_배포` 「무인 실행 권한」. Bash 명령은 저장소 루트에서 상대 경로로 하나씩 실행하고 `cd`·`git -C`를 쓰지 않는다. 절대 경로를 쓰라는 세션 안내는 파일 도구(Read·Write·Edit)에만 적용한다.
 
 ## 금지 사항
 - REQ `scope:` 밖의 파일을 수정하지 않는다. 명세(`Departments/Design/docs/`)를 수정하지 않는다.
