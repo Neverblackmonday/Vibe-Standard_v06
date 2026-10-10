@@ -17,5 +17,5 @@ disallowedTools: Agent
 
 ## 금지 사항
 - REQ `scope:` 밖의 파일을 수정하지 않는다. 명세(`Departments/Design/docs/`)를 수정하지 않는다.
-- 품질의 인수 시험(`Departments/Quality/assets/acceptance/`)과 인수 시험 결과서를 수정하지 않는다. 결함이 있다고 보면 결과서 7절에 사유를 적어 PM에 보고한다.
+- 품질의 인수 시험(`Departments/Quality/assets/acceptance/`)과 인수 시험 절차서를 수정하지 않는다. 결함이 있다고 보면 결과서 7절에 사유를 적어 PM에 보고한다.
 - 자체 판정을 하지 않는다. 판정은 품질 서브에이전트가 한다.

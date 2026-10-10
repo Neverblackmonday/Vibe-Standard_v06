@@ -9,7 +9,7 @@ test_dir: "Departments/Quality/assets/acceptance/REQ-007_v01" # 이 ACC가 기�
 has_tests: "yes" # yes | no
 ---
 
-# ACC-007: 인수 시험 결과서
+# ACC-007: 인수 시험 절차서
 
 > 파일명은 `ACC-<번호>_v<버전>.md`이고 위치는 `Departments/Quality/results/`다(`Workflow/07_문서_서식_및_번호` 「문서 체계」). 작성 기준은 `Workflow/03_라이프사이클` 「시험실」을 따른다. 이 안내문은 작성할 때 지운다.
 
