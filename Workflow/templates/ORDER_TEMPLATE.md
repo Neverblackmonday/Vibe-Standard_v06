@@ -2,7 +2,7 @@
 order_id: "001"
 created: "YYYY-MM-DD"
 ceo_checked_at: "" # 대표님이 이 ORDER 내용을 확인한 시각. 형식 "YYYY-MM-DDTHH:MM:SS+09:00". 승인 필드가 아니며 REQ 작성의 착수 조건이 아니다
-classification_proposal: "Major" # 비서실의 분류 제안. Critical | Major | Minor (Workflow/03_라이프사이클 「분류별 단계」). 확정은 PM이 REQ classification:에 한다
+classification_proposal: "Major" # 비서실의 분류 제안. Critical | Major | Minor (정의 기준: Workflow/03_라이프사이클 「분류별 단계」). 확정은 PM이 REQ classification:에 한다. 모델 등급은 적지 않는다(분류로 정해진다)
 related_req:
   # 이 ORDER로 작성한 REQ의 버전 없는 이름(예: - REQ-012). PM이 REQ를 처음 작성할 때 더한다. 이 필드 갱신은 버전을 올리지 않는다
 ---

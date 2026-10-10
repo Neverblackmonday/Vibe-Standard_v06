@@ -5,7 +5,7 @@ result: "" # pass | fail | rejected
 completed_at: "YYYY-MM-DDTHH:MM:SS+09:00" # 판정을 마친 시각. 조회하지 못했을 때의 처리는 Workflow/03_라이프사이클 「판정 세션의 명령 실행」
 auditor:
   agent: "Quality"
-  model: "Claude Opus 5.5" # 실제 판정 모델. 다르면 무효(Workflow/04_모델_운용 「모델」)
+  model: "Claude Opus 5.5" # 실제 판정 모델. 그 단계에 정해진 모델과 다르면 무효(Workflow/04_모델_운용 「단계별 모델」)
   effort: "medium (실행 명령 기준)" # 실행 명령 지시문의 effort 값과 출처. 얻을 수 없으면 "확인 불가"(Workflow/04_모델_운용 「모델 메타데이터 기록」)
 ---
 
