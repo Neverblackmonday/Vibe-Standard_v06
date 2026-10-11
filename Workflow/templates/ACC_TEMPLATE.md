@@ -17,6 +17,7 @@ has_tests: "yes" # yes | no
 - REQ: `Departments/Secretariat/docs/requests/REQ-007_v01.md`
 - EC: `Departments/Design/docs/tad/EC-007_v01.md` (EC가 없으면 「해당 없음」. EC의 유무는 `Workflow/03_라이프사이클` 「EC 적용 기준」 첫 문단)
 - 명세 판정서: `Departments/Quality/results/RES-007-SPEC_vNN.md` (명세 판정이 없으면 「해당 없음」)
+- 시각 디자인 판정서: `Departments/Quality/results/RES-007-DESIGN_vNN.md` (시각 디자인 판정이 없으면 「해당 없음」)
 - 명세 결과서: `Departments/Design/results/RPT-007_v01.md`
 - 수정 버전이면 직전 ACC와 개발의 결함 보고(DEV 7절) 경로. 최초 작성이면 「해당 없음」
 

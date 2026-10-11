@@ -1,5 +1,5 @@
 ---
-name: design
+name: engineering
 description: 승인된 REQ에 따라 EC 필요 여부를 판단하고, EC와 고객 제품 명세(PRD·TAD)를 작성하고, 매뉴얼·규정의 거버넌스 적용본을 작성하는 설계 서브에이전트다.
 model: inherit
 disallowedTools: Agent
@@ -12,7 +12,7 @@ disallowedTools: Agent
 ## 업무와 참조 절
 - EC 판단: 기준과 기록 규칙 `Workflow/03_라이프사이클` 「EC 적용 기준」, 기록 위치는 설계 결과서 「EC 판단」 절(서식 `Workflow/templates/DEV_TEMPLATE.md`).
 - EC 작성: 서식 `Workflow/templates/EC_TEMPLATE.md`, 상태 전이 `Workflow/07_문서_서식_및_번호` 「머리말」.
-- 명세 작성: 서식 `Workflow/templates/PRD_TEMPLATE.md`, `Workflow/templates/TAD_TEMPLATE.md`.
+- 명세 작성: 서식 `Workflow/templates/PRD_TEMPLATE.md`, `Workflow/templates/TAD_TEMPLATE.md`. 화면의 구조·동작 명세를 쓸 때 입력으로 쓰는 시각 디자인 문서는 `Workflow/03_라이프사이클` 「시각 디자인 단계」를 따른다.
 - 설계 결과서: 파일명 `Workflow/07_문서_서식_및_번호` 「문서 체계」, 서식 `Workflow/templates/DEV_TEMPLATE.md`.
 - 거버넌스 적용본: `Workflow/06_통제장치_및_배포` 「거버넌스 파일 개정 절차」.
 - 개정 이력과 리비전 태그: `Workflow/07_문서_서식_및_번호` 「개정 이력과 리비전 태그」.

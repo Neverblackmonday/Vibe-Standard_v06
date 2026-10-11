@@ -9,7 +9,7 @@ author:
   model: "Claude Opus 5.5" # 실제 실행 모델. REQ 작성 파이프라인의 모델은 Workflow/04_모델_운용 「단계별 모델」
   effort: "medium (실행 명령 기준)" # 실행 명령 지시문의 effort 값과 출처. 얻을 수 없으면 "확인 불가"(Workflow/04_모델_운용 「모델 메타데이터 기록」)
 workflow:
-  # "<부서>: <단계명>"을 단계 순서대로 적는다(Workflow/03_라이프사이클 「원스톱 파이프라인」). 단계는 분류마다 Workflow/03_라이프사이클 「분류별 단계」 표를 따르며, EC 작성·EC 판정·명세 판정과 Minor의 명세는 EC 판단 결과와 관계없이 적는다(실행 여부는 EC 판단으로 정한다. Workflow/03_라이프사이클 「EC 적용 기준」). 실험 단계가 있으면 "<부서>: 실험"을 "Design: EC 판단" 앞에 적는다(Workflow/03_라이프사이클 「실험 단계」). Critical·Major는 "Quality: 명세 판정"과 구현 사이에 "Quality: 인수 시험"을 늘 둔다(Workflow/03_라이프사이클 「시험실」)
+  # "<부서>: <단계명>"을 단계 순서대로 적는다(Workflow/03_라이프사이클 「원스톱 파이프라인」). 단계는 분류마다 Workflow/03_라이프사이클 「분류별 단계」 표를 따르며, EC 작성·EC 판정·명세 판정과 Minor의 명세는 EC 판단 결과와 관계없이 적는다(실행 여부는 EC 판단으로 정한다. Workflow/03_라이프사이클 「EC 적용 기준」). 실험 단계가 있으면 "<부서>: 실험"을 "Design: EC 판단" 앞에 적는다(Workflow/03_라이프사이클 「실험 단계」). Critical·Major는 "Quality: 명세 판정"과 구현 사이에 "Quality: 인수 시험"을 늘 둔다(Workflow/03_라이프사이클 「시험실」). 시각 디자인 문서를 처음 만들거나 바꾸면 "Marketing: 시각 디자인"과 "Quality: 시각 디자인 판정"을 명세 단계(명세 판정이 있으면 그 뒤) 뒤, 인수 시험(Minor는 구현) 앞에 적고 scope:에 시각 디자인 문서 경로를 넣는다(Workflow/03_라이프사이클 「시각 디자인 단계」)
   - "Design: EC 판단"
   - "Design: EC 작성"
   - "Quality: EC 판정"

@@ -14,6 +14,7 @@ author:
 - EC: `Departments/Design/docs/tad/EC-007_v01.md` (EC가 없으면 「해당 없음」. EC의 유무는 `Workflow/03_라이프사이클` 「EC 적용 기준」 첫 문단)
 - 명세: 참조한 PRD·TAD 경로
 - 설계 결과서: `Departments/Design/results/RPT-007_vNN.md`(「EC 판단」 절. EC가 없는 Critical·Major이면 「구현 계획」 절 포함). 설계 결과서 자신이면 「해당 없음」
+- 시각 디자인 문서: 입력으로 쓴 시각 디자인 문서 경로와 근거(그 안건의 시각 디자인 판정서 경로, 또는 HEAD 커밋 해시. `Workflow/03_라이프사이클` 「시각 디자인 단계」). 쓰지 않았으면 「해당 없음」
 
 ## 2. 변경 파일
 | 번호 | 경로 | 변경 내용 | 근거(EC 절 또는 REQ 체크리스트 번호) |

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>브리핑: REQ-027 최종 승인(조직 정리)</title>
+<style>
+  body { margin: 0; padding: 24px; font-family: sans-serif; line-height: 1.6; color: #1f2328; background: #ffffff; }
+  main { max-width: 960px; margin: 0 auto; }
+  h1 { font-size: 1.5rem; margin: 0 0 16px; }
+  h2 { font-size: 1.15rem; margin: 24px 0 8px; }
+  .top { border: 2px solid #1f2328; border-radius: 8px; padding: 16px; margin-bottom: 24px; }
+  .top h2 { margin-top: 0; }
+  table { border-collapse: collapse; width: 100%; margin: 8px 0; }
+  th, td { border: 1px solid #d0d7de; padding: 6px 8px; text-align: left; vertical-align: top; }
+  th { background: #f6f8fa; }
+  code { font-family: monospace; background: #f6f8fa; padding: 0 4px; }
+  footer { margin-top: 32px; padding-top: 12px; border-top: 1px solid #d0d7de; font-size: 0.875rem; color: #57606a; }
+</style>
+</head>
+<body>
+<main>
+  <h1>브리핑: REQ-027 최종 승인(조직 정리)</h1>
+
+  <section class="top">
+    <h2>결론</h2>
+    <p>REQ-027_v03 원스톱 파이프라인이 최종 판정 <code>pass</code>(<code>Departments/Quality/results/RES-027_v01.md</code>, 결함 0건, 문체 지적 0건)로 완료되었습니다. 거버넌스 파일 개정 15건(설계 적용본 11건, 개발 적용본 4건)의 적용본 작성이 완료되었으며 인수 시험 20건 전체 통과를 확인했습니다. 대표님 최종 승인 후 비서실이 원본 반영·정리·스테이징·커밋 전 검사·커밋을 진행합니다.</p>
+    <h2>대표님이 할 일</h2>
+    <ul>
+      <li><strong>최종 승인 문구 입력</strong>: <code>RES-027_v01 승인</code></li>
+      <li><strong>표준 개정 제안 검토</strong>: <code>NCR-027_01.md</code> (원인 C3 누적 2건, EC 작성 시 바꾸는 열거·번호의 거버넌스 파일 전체 검색 및 대조 표준화 제안. 추후 ORDER 발행 여부 결정)</li>
+      <li><strong>반영 시점 유의</strong>: 반영 시 <code>.claude/agents/design.md</code>가 삭제되고 <code>engineering.md</code>로 교체되므로, 실행 중인 다른 PM 세션이 없을 때 반영하는 것을 권고합니다.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>1. 결정 사항 반영 위치 (D1~D10)</h2>
+    <table>
+      <tr><th>번호</th><th>결정 내용</th><th>반영 위치 (적용본 기준)</th></tr>
+      <tr>
+        <td>D1</td>
+        <td>권고안: 선택 부서 체계 미도입 (프로젝트별 부서 선택 없음)</td>
+        <td><code>AGENTS.md.적용본</code> 1절 조직 표 마케팅 행 (<code>workflow:</code> 기재 시만 기동 유지)</td>
+      </tr>
+      <tr>
+        <td>D2</td>
+        <td>수정안: 품질 밖 부서에 파트를 두지 않는다고 단정하는 규정을 두지 않음</td>
+        <td><code>Workflow/02_부서_구조_및_작업구역.md</code> 2절 표 품질 행 (기존 문구 유지, 단정 규정 미신설)</td>
+      </tr>
+      <tr>
+        <td>D3</td>
+        <td>권고안: 비주얼 부서를 마케팅의 기능(시각 디자인)으로 통합</td>
+        <td><code>AGENTS.md.적용본</code> 1절 조직 표, <code>Workflow/01_표준_개요.md</code> 4절 「조직」·「시각 디자인」, <code>Workflow/02_부서_구조_및_작업구역.md</code> 2절 표·「기능」 항목, <code>Workflow/03_라이프사이클.md</code> 2·5·5.4·11.2절, <code>Workflow/07_문서_서식_및_번호.md</code> 1절 RPT 행, <code>.claude/agents/marketing.md</code></td>
+      </tr>
+      <tr>
+        <td>D4</td>
+        <td>권고안: 브랜드 자산·화면 시각 규칙은 마케팅, 화면 구조·동작 명세는 설계 담당</td>
+        <td><code>Workflow/02_부서_구조_및_작업구역.md</code> 2절 표 마케팅·설계 행 책임 칸, <code>Workflow/01_표준_개요.md</code> 4절 「시각 디자인」 행</td>
+      </tr>
+      <tr>
+        <td>D5</td>
+        <td>권고안: 설계 서브에이전트 정의 파일 <code>engineering.md</code> 및 이름 <code>engineering</code> 변경</td>
+        <td><code>.claude/agents/engineering.md</code> 신설, <code>.claude/agents/design.md</code> 삭제 대상 지정, <code>Workflow/02_부서_구조_및_작업구역.md</code> 2절 표 설계 행 서브에이전트 열</td>
+      </tr>
+      <tr>
+        <td>D6</td>
+        <td>권고안: 부서 폴더(<code>Departments/Design/</code>) 및 부서 표기(<code>Design</code>) 유지</td>
+        <td><code>Departments/Design/</code> 및 <code>Design:</code> 표기 유지 (기존 399개 추적 기록 경로 보존)</td>
+      </tr>
+      <tr>
+        <td>D7</td>
+        <td>권고안: 시각 디자인 문서 <code>DESIGN.md</code> 위치(<code>Departments/Marketing/docs/</code>)·작성 부서(마케팅) 규정 (파일 미생성, 서식 미신설)</td>
+        <td><code>Workflow/07_문서_서식_및_번호.md</code> 1절 문서 체계 표 시각 디자인 문서 행, 2절 「PRD·TAD·시각 디자인 문서」 항, 3절 머리말 예외, 4절 「대상」</td>
+      </tr>
+      <tr>
+        <td>D8</td>
+        <td>수정안: 구현 전 품질 판정 및 개발 입력 활용, 설계는 직전 커밋된 문서만 입력 활용</td>
+        <td><code>Workflow/03_라이프사이클.md</code> 5.5절 「시각 디자인 단계」 1~5항, 5절 표 「시각 디자인」·「시각 디자인 판정」 행 및 「구현」 행 입력, <code>.claude/agents/</code>(engineering, marketing, quality, development)</td>
+      </tr>
+      <tr>
+        <td>D9</td>
+        <td>권고안: 새 에이전트 이름 및 조직 규정의 적용 시점 (REQ-027 커밋 뒤 기동 PM 세션부터, 기존 기록 미수정)</td>
+        <td><code>Workflow/02_부서_구조_및_작업구역.md</code> 2절 표 아래 적용 시점 항목, <code>Workflow/03_라이프사이클.md</code> 5.5절 6항</td>
+      </tr>
+      <tr>
+        <td>D10</td>
+        <td>권고안: effort <code>medium</code></td>
+        <td>실행 명령 및 메타데이터 반영 (문서 개정 없음)</td>
+      </tr>
+    </table>
+  </section>
+
+  <section>
+    <h2>2. 덮어쓰기 원본 및 삭제 대상 목록</h2>
+    <p>최종 판정서 승인 시 비서실이 결과서 반영 명령에 따라 아래 15개 원본 파일에 적용본을 덮어씁니다 (또는 신규 생성합니다).</p>
+    <table>
+      <tr><th>구분</th><th>적용본 경로</th><th>덮어쓸(생성할) 원본 경로</th></tr>
+      <tr><td>설계</td><td><code>Departments/Design/workspace/REQ-027_적용본_v01/AGENTS.md.적용본</code></td><td><code>AGENTS.md</code></td></tr>
+      <tr><td>설계</td><td><code>Departments/Design/workspace/REQ-027_적용본_v01/Workflow.적용본/01_표준_개요.md</code></td><td><code>Workflow/01_표준_개요.md</code></td></tr>
+      <tr><td>설계</td><td><code>Departments/Design/workspace/REQ-027_적용본_v01/Workflow.적용본/02_부서_구조_및_작업구역.md</code></td><td><code>Workflow/02_부서_구조_및_작업구역.md</code></td></tr>
+      <tr><td>설계</td><td><code>Departments/Design/workspace/REQ-027_적용본_v01/Workflow.적용본/03_라이프사이클.md</code></td><td><code>Workflow/03_라이프사이클.md</code></td></tr>
+      <tr><td>설계</td><td><code>Departments/Design/workspace/REQ-027_적용본_v01/Workflow.적용본/05_인수인계_및_실행명령.md</code></td><td><code>Workflow/05_인수인계_및_실행명령.md</code></td></tr>
+      <tr><td>설계</td><td><code>Departments/Design/workspace/REQ-027_적용본_v01/Workflow.적용본/06_통제장치_및_배포.md</code></td><td><code>Workflow/06_통제장치_및_배포.md</code></td></tr>
+      <tr><td>설계</td><td><code>Departments/Design/workspace/REQ-027_적용본_v01/Workflow.적용본/07_문서_서식_및_번호.md</code></td><td><code>Workflow/07_문서_서식_및_번호.md</code></td></tr>
+      <tr><td>설계</td><td><code>Departments/Design/workspace/REQ-027_적용본_v01/Workflow.적용본/templates/ACC_TEMPLATE.md</code></td><td><code>Workflow/templates/ACC_TEMPLATE.md</code></td></tr>
+      <tr><td>설계</td><td><code>Departments/Design/workspace/REQ-027_적용본_v01/Workflow.적용본/templates/DEV_TEMPLATE.md</code></td><td><code>Workflow/templates/DEV_TEMPLATE.md</code></td></tr>
+      <tr><td>설계</td><td><code>Departments/Design/workspace/REQ-027_적용본_v01/Workflow.적용본/templates/REQ_TEMPLATE.md</code></td><td><code>Workflow/templates/REQ_TEMPLATE.md</code></td></tr>
+      <tr><td>설계</td><td><code>Departments/Design/workspace/REQ-027_적용본_v01/Workflow.적용본/templates/RES_TEMPLATE.md</code></td><td><code>Workflow/templates/RES_TEMPLATE.md</code></td></tr>
+      <tr><td>개발</td><td><code>Departments/Development/workspace/REQ-027_적용본_v01/.claude.적용본/agents/engineering.md</code></td><td><code>.claude/agents/engineering.md</code> (신규 생성)</td></tr>
+      <tr><td>개발</td><td><code>Departments/Development/workspace/REQ-027_적용본_v01/.claude.적용본/agents/marketing.md</code></td><td><code>.claude/agents/marketing.md</code></td></tr>
+      <tr><td>개발</td><td><code>Departments/Development/workspace/REQ-027_적용본_v01/.claude.적용본/agents/quality.md</code></td><td><code>.claude/agents/quality.md</code></td></tr>
+      <tr><td>개발</td><td><code>Departments/Development/workspace/REQ-027_적용본_v01/.claude.적용본/agents/development.md</code></td><td><code>.claude/agents/development.md</code></td></tr>
+    </table>
+
+    <p>반영 후 아래 10개 파일을 삭제합니다 (결과서 9절 추적 파일 8개 및 최종 판정서 7절 미추적 파일 2개).</p>
+    <ul>
+      <li><code>.claude/agents/design.md</code> (추적, <code>git rm</code>)</li>
+      <li><code>.claude/agents/visual.md</code> (추적, <code>git rm</code>)</li>
+      <li><code>Departments/Visual/assets/fonts/.gitkeep</code> (추적, <code>git rm</code>)</li>
+      <li><code>Departments/Visual/assets/icons/.gitkeep</code> (추적, <code>git rm</code>)</li>
+      <li><code>Departments/Visual/assets/images/.gitkeep</code> (추적, <code>git rm</code>)</li>
+      <li><code>Departments/Visual/docs/.gitkeep</code> (추적, <code>git rm</code>)</li>
+      <li><code>Departments/Visual/results/.gitkeep</code> (추적, <code>git rm</code>)</li>
+      <li><code>Departments/Visual/workspace/.gitkeep</code> (추적, <code>git rm</code>)</li>
+      <li><code>Departments/Design/workspace/REQ-027_copy_ec_v02.py</code> (미추적)</li>
+      <li><code>Departments/Design/workspace/REQ-027_copy_spec_v01.py</code> (미추적)</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>3. 원천 문서 경로</h2>
+    <ul>
+      <li>출처 ORDER: <code>Departments/Secretariat/assets/inbox/ORD-006_v12.md</code></li>
+      <li>요청서(REQ): <code>Departments/Secretariat/docs/requests/REQ-027_v03.md</code></li>
+      <li>엔지니어링 변경문(EC): <code>Departments/Design/docs/tad/EC-027_v02.md</code></li>
+      <li>설계 결과서: <code>Departments/Design/results/RPT-027_v02.md</code></li>
+      <li>인수 시험 절차서: <code>Departments/Quality/results/ACC-027_v01.md</code></li>
+      <li>개발 결과서: <code>Departments/Development/results/DEV-027_v01.md</code></li>
+      <li>최종 판정서: <code>Departments/Quality/results/RES-027_v01.md</code></li>
+      <li>부적합 기록: <code>Departments/Quality/docs/nonconformance/NCR-027_01.md</code></li>
+    </ul>
+  </section>
+
+  <footer>
+    <p>작성 날짜: 2026-10-12</p>
+    <p>작성 서비스·세션 식별자와 모델: Antigravity, 세션 식별자 <code>cbd79453</code>, 모델 확인 불가</p>
+    <p>원천 문서: <code>Departments/Secretariat/docs/requests/REQ-027_v03.md</code>, <code>Departments/Quality/results/RES-027_v01.md</code>, <code>Departments/Design/results/RPT-027_v02.md</code>, <code>Departments/Development/results/DEV-027_v01.md</code></p>
+  </footer>
+</main>
+</body>
+</html>
