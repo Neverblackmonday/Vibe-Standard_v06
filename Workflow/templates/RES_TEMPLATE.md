@@ -2,7 +2,7 @@
 task_id: "007"
 gate: "FINAL" # REQ | EC | SPEC | FINAL (REQ 판정, EC 판정, 명세 판정, 최종 판정)
 result: "" # pass | fail | rejected
-completed_at: "YYYY-MM-DDTHH:MM:SS+09:00" # 판정을 마친 시각. 조회하지 못했을 때의 처리는 Workflow/03_라이프사이클 「판정 세션의 명령 실행」
+completed_at: "YYYY-MM-DDTHH:MM:SS+09:00" # 판정을 마칠 때 조회한 시각을 결과 그대로 적는다. 조회·기재 방법과 조회하지 못했을 때의 처리는 Workflow/03_라이프사이클 「판정 세션의 명령 실행」
 auditor:
   agent: "Quality"
   model: "Claude Opus 5.5" # 실제 판정 모델. 그 단계에 정해진 모델과 다르면 무효(Workflow/04_모델_운용 「단계별 모델」)
@@ -25,6 +25,8 @@ auditor:
 | 1 | 판정 기준 1 | PASS | 근거 |
 
 ## 3. 체크리스트 대조 (최종 판정만)
+> 번호는 REQ 체크리스트 번호(요구 항목 번호)를 그대로 쓴다(`Workflow/07_문서_서식_및_번호` 「문서 체계」 추적 식별자).
+
 | REQ 체크리스트 번호 | 요청 원문 항목 | 결과 | 근거(파일·절·검증 결과) |
 | :---: | :--- | :---: | :--- |
 | 1 | 요청 원문 1번 | PASS | 근거 |
@@ -32,6 +34,7 @@ auditor:
 ## 4. 검증 기록
 | 항목 | 명령 | 시각 | 결과 원문 |
 | :--- | :--- | :--- | :--- |
+| 완료 시각 조회 | `date -Iseconds` | 결과 원문과 같다 | 결과 원문(머리말 `completed_at`과 같다) |
 | 범위 대조 | `git status --porcelain -uall` | YYYY-MM-DDTHH:MM:SS+09:00 | 결과 원문 |
 | 변경 규모(최종 판정만) | `git diff --stat` | YYYY-MM-DDTHH:MM:SS+09:00 | 결과 원문 |
 | 커밋 전 검사 | `python Departments/Development/assets/scripts/check_standard.py` | YYYY-MM-DDTHH:MM:SS+09:00 | 결과 원문 |

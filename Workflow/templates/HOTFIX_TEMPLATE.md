@@ -6,6 +6,7 @@ author:
   model: "Claude Opus 5.5" # 실제 실행 모델
   effort: "medium" # 실제 적용 effort
   session: "<서비스>·<세션 이름>" # 작성 세션의 세션 식별자(Workflow/05_인수인계_및_실행명령 「비서실 동시 운용」)
+origin: "" # 결함을 들여온 안건의 기록 이름과 버전(예: "REQ-024_v03", "HOTFIX-005_v01"). 알 수 없으면 "확인 불가". 근거는 1절 「원인 안건 근거」(Workflow/07_문서_서식_및_번호 「머리말」)
 confirmed: "" # 대표님 직접 기재 또는 Workflow/07_문서_서식_및_번호 「승인 기록」 절차. 형식 "YYYY-MM-DDTHH:MM:SS+09:00". 비어 있으면 커밋 불가
 scope:
   # 사전 승인된 대상 파일. 대상 조건은 Workflow/03_라이프사이클 「핫픽스 트랙」
@@ -28,6 +29,7 @@ scope:
 
 - **현상**: 관찰한 결함 증상과 재현 방법
 - **위험도**: 영향 범위와 고치지 않을 때의 위험
+- **원인 안건 근거**: 머리말 `origin`을 정한 근거(예: 결함이 든 줄을 바꾼 커밋의 `git log` 결과와 그 커밋의 근거 줄). 「확인 불가」이면 찾아본 방법
 
 ## 2. 수정 내역
 ### 2.1 `Departments/Development/assets/src/main.py`
@@ -55,4 +57,4 @@ scope:
 
 ## 5. 대표님 사후 확인
 - 대표님이 2~4절을 확인한 뒤 `confirmed:`를 적거나 `Workflow/07_문서_서식_및_번호` 「승인 기록」대로 기재하게 한다. 대표님 확인이 독립 판정을 대신한다.
-- 커밋 메시지: `fix: [HOTFIX-003] 요약`
+- 커밋 메시지: 제목 줄 `fix: [HOTFIX-003] 요약`, 근거 줄 `Confirmed-HOTFIX: Departments/Secretariat/results/HOTFIX-003_v01.md`. 비서실이 「요청 커밋」으로 커밋하면 `Request-Record: <요청 기록 경로>`를 더한다(`Workflow/07_문서_서식_및_번호` 「번호와 버전」의 「커밋 메시지」)
