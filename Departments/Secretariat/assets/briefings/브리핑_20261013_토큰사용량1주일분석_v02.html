@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>브리핑: 토큰 사용량 1주일 분석</title>
+<style>
+  /* 배치: 맨 위 결론 카드 → 핵심 수치 → 문제점 → 원인 → 개선안 → 비포·애프터 → 보고서 수치 정정 → 작성 정보 */
+  :root {
+    color-scheme: light;
+    --bg: #f9f9f7;
+    --surface: #fcfcfb;
+    --ink: #0b0b0b;
+    --ink-2: #52514e;
+    --muted: #898781;
+    --grid: #e1e0d9;
+    --axis: #c3c2b7;
+    --ring: rgba(11,11,11,0.10);
+    --s1: #2a78d6;   /* 현재·기본 */
+    --s2: #eb6834;   /* 문제 강조 */
+    --s3: #1baf7a;   /* 개선 후 */
+    --s1-wash: rgba(42,120,214,0.10);
+    --s2-wash: rgba(235,104,52,0.10);
+    --s3-wash: rgba(27,175,122,0.12);
+    --good-ink: #006300;
+    --font: system-ui, -apple-system, "Segoe UI", "Malgun Gothic", "Apple SD Gothic Neo", sans-serif;
+    --mono: ui-monospace, "Cascadia Mono", Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --bg: #0d0d0d; --surface: #1a1a19; --ink: #f0efec; --ink-2: #c3c2b7; --muted: #898781;
+      --grid: #2c2c2a; --axis: #383835; --ring: rgba(255,255,255,0.10);
+      --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+      --s1-wash: rgba(57,135,229,0.16); --s2-wash: rgba(217,89,38,0.16); --s3-wash: rgba(25,158,112,0.18);
+      --good-ink: #0ca30c;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #0d0d0d; --surface: #1a1a19; --ink: #f0efec; --ink-2: #c3c2b7; --muted: #898781;
+    --grid: #2c2c2a; --axis: #383835; --ring: rgba(255,255,255,0.10);
+    --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+    --s1-wash: rgba(57,135,229,0.16); --s2-wash: rgba(217,89,38,0.16); --s3-wash: rgba(25,158,112,0.18);
+    --good-ink: #0ca30c;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font); line-height: 1.6; font-size: 15px; }
+  main { max-width: 1040px; margin: 0 auto; padding-inline: 16px; padding-block: 28px 48px; display: grid; gap: 36px; }
+  h1 { font-size: 1.6rem; margin: 0; text-wrap: balance; letter-spacing: -0.01em; }
+  h2 { font-size: 1.2rem; margin: 0; text-wrap: balance; }
+  h3 { font-size: 1rem; margin: 0; }
+  p { margin: 0; }
+  .eyebrow { font-size: 0.75rem; letter-spacing: 0.06em; color: var(--muted); font-weight: 600; }
+  .sub { color: var(--ink-2); }
+  .small { font-size: 0.85rem; color: var(--ink-2); }
+  code { font-family: var(--mono); font-size: 0.85em; background: var(--grid); padding: 0 4px; border-radius: 3px; overflow-wrap: anywhere; }
+  section { display: grid; gap: 16px; min-width: 0; }
+  .head { display: grid; gap: 6px; }
+
+  .top { background: var(--surface); border: 2px solid var(--ink); border-radius: 10px; padding: 20px; display: grid; gap: 14px; }
+  .top ol, .top ul { margin: 0; padding-left: 1.3em; display: grid; gap: 6px; }
+
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+  .tile { background: var(--surface); border: 1px solid var(--ring); border-radius: 8px; padding: 14px 16px; display: grid; gap: 2px; align-content: start; }
+  .tile .k { font-size: 0.8rem; color: var(--ink-2); }
+  .tile .v { font-size: 1.7rem; font-weight: 700; line-height: 1.2; }
+  .tile .n { font-size: 0.8rem; color: var(--muted); }
+  .tile.after .v { color: var(--good-ink); }
+
+  .grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 16px; }
+  @media (max-width: 520px) { .grid2 { grid-template-columns: 1fr; } }
+  .card { background: var(--surface); border: 1px solid var(--ring); border-radius: 8px; padding: 16px; display: grid; gap: 10px; min-width: 0; align-content: start; }
+  .card .note { font-size: 0.82rem; color: var(--ink-2); }
+  .chart { width: 100%; overflow-x: auto; }
+  .chart svg { display: block; width: 100%; height: auto; }
+  .chart.wide svg { min-width: 640px; }
+  svg text { font-family: var(--font); }
+  .t-label { fill: var(--ink); font-size: 12.5px; }
+  .t-value { fill: var(--ink); font-size: 12.5px; font-weight: 600; }
+  .t-muted { fill: var(--muted); font-size: 11px; }
+  .gridline { stroke: var(--grid); stroke-width: 1; }
+  .baseline { stroke: var(--axis); stroke-width: 1; }
+  .bar { transition: opacity .15s; }
+  .bar:hover { opacity: 0.8; }
+
+  .legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 0.82rem; color: var(--ink-2); }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .sw { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+
+  .causes { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; }
+  .cause { background: var(--surface); border: 1px solid var(--ring); border-radius: 8px; padding: 14px; display: grid; gap: 6px; align-content: start; }
+  .cause .tag { font-size: 0.75rem; font-weight: 700; color: var(--s2); letter-spacing: 0.04em; }
+  .cause .big { font-size: 1.25rem; font-weight: 700; }
+
+  .fixes { display: grid; gap: 12px; }
+  .fix { background: var(--surface); border: 1px solid var(--ring); border-radius: 8px; padding: 14px 16px; display: grid; grid-template-columns: 2.2rem 1fr auto; gap: 4px 14px; align-items: start; }
+  .fix .no { font-size: 1.3rem; font-weight: 800; color: var(--s1); line-height: 1.2; }
+  .fix .body { display: grid; gap: 4px; min-width: 0; }
+  .fix .save { text-align: right; font-weight: 700; color: var(--good-ink); white-space: nowrap; }
+  .fix .save small { display: block; font-weight: 400; color: var(--muted); font-size: 0.75rem; white-space: normal; max-width: 15rem; }
+  .pill { display: inline-block; font-size: 0.72rem; font-weight: 700; border-radius: 999px; padding: 1px 8px; border: 1px solid currentColor; }
+  .q-low { color: var(--good-ink); }
+  .q-mid { color: var(--s2); }
+  @media (max-width: 560px) { .fix { grid-template-columns: 2rem 1fr; } .fix .save { grid-column: 2; text-align: left; } }
+
+  .ba { display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 12px; }
+  @media (max-width: 460px) { .ba { grid-template-columns: 1fr; } }
+  .ba .card h3 { font-size: 0.95rem; }
+
+  .tablewrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--ring); border-radius: 8px; }
+  table { border-collapse: collapse; width: 100%; font-size: 0.9rem; }
+  th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--grid); vertical-align: top; }
+  th { color: var(--ink-2); font-weight: 600; font-size: 0.8rem; }
+  tr:last-child td { border-bottom: 0; }
+  td.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .x { color: var(--s2); font-weight: 600; }
+  .o { color: var(--good-ink); font-weight: 600; }
+
+  #tip { position: fixed; pointer-events: none; background: var(--ink); color: var(--bg); font-size: 12px; padding: 6px 9px; border-radius: 6px; max-width: 260px; z-index: 10; }
+  footer { border-top: 1px solid var(--grid); padding-top: 14px; font-size: 0.85rem; color: var(--ink-2); display: grid; gap: 4px; }
+  @media (prefers-reduced-motion: reduce) { .bar { transition: none; } }
+</style>
+</head>
+<body>
+<main>
+  <header class="head">
+    <div class="eyebrow">조사 브리핑 · 2026-10-13</div>
+    <h1>브리핑: 토큰 사용량 1주일 분석</h1>
+    <p class="sub">Claude Code 전체 기록(10-06 00:38 ~ 10-13 09:57)과 코워크 사용 근거로 본 문제점, 원인, 개선안, 비포·애프터 (v02: 코워크 추가)</p>
+  </header>
+
+  <section class="top" aria-label="결론과 대표님이 할 일">
+    <h2>결론</h2>
+    <ol>
+      <li>Claude Code는 1주일 동안 <b>$931.76</b>(API 환산)를 썼고, 사실상 전부 Opus였습니다. 비용의 60%가 서브에이전트에서 나왔습니다.</li>
+      <li><b>코워크도 Claude Code와 비슷하거나 더 많이 썼을 수 있습니다.</b> 10-12 크레딧 $200 가운데 Claude Code는 $67.40이고 나머지 약 $132.60(66%)이 코워크 몫으로 추정됩니다. 이번 주 사용량 화면에서도 코워크가 57%입니다. 코워크 세션은 기동 맥락이 11.5만 토큰으로 Claude Code 본 세션(약 4.9만)의 2.3배입니다.</li>
+      <li>Claude Code 개선안 다섯 가지를 함께 적용하면 Claude Code 비용을 <b>약 30~34%</b>(주 $280~315) 줄일 수 있다고 추정합니다. 코워크는 세션을 작업 단위로 끊고 문서 분량을 줄이는 개선안(C1~C4)을 제안하며, 절감액은 실측 뒤 정합니다.</li>
+    </ol>
+    <h2>대표님이 할 일</h2>
+    <ul>
+      <li>개선안 1(작성은 Sonnet, 판정은 Opus)의 비교 실험을 ORDER로 발행할지 결정</li>
+      <li>이 결과(코워크 비서실 운영 규칙 포함)를 v05 마이그레이션 개정안에 반영할지 결정</li>
+      <li>필요하면 지금 열려 있는 코워크 세션마다 <code>/explain-usage</code>를 실행해 세션별 사용량 확인</li>
+    </ul>
+  </section>
+
+  <section aria-label="핵심 수치">
+    <div class="tiles">
+      <div class="tile"><span class="k">Claude Code 1주일(API 환산)</span><span class="v">$931.76</span><span class="n">호출 9,982회, Opus 99.96%</span></div>
+      <div class="tile"><span class="k">코워크 비중(두 구간 추정)</span><span class="v">57~66%</span><span class="n">세션별 기록 없음</span></div>
+      <div class="tile"><span class="k">코워크 기동 맥락</span><span class="v">11.5만</span><span class="n">Claude Code 본 세션 약 4.9만</span></div>
+      <div class="tile after"><span class="k">Claude Code 개선 후 추정</span><span class="v">$617~652</span><span class="n">같은 작업량 기준 30~34% 절감</span></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="s-problem">
+    <div class="head">
+      <div class="eyebrow">문제점</div>
+      <h2 id="s-problem">어디에 썼는가(Claude Code)</h2>
+    </div>
+    <div class="grid2">
+      <div class="card">
+        <h3>작업 종류별 금액</h3>
+        <div class="chart" id="c-work"></div>
+        <p class="note">v04 원스톱과 Antigravity-index 운영 세션 2개가 70%를 차지합니다. 재현 시험은 1회성이라 반복 절감 대상에서 뺐습니다.</p>
+      </div>
+      <div class="card">
+        <h3>날짜별 금액</h3>
+        <div class="chart" id="c-day"></div>
+        <p class="note">10-11의 $265.65 가운데 $154.46은 Antigravity-index의 데스크톱 세션 하나(「운영 9차 진행」, 1,461회)에서 나왔습니다. 10-13은 09:57까지입니다.</p>
+      </div>
+      <div class="card">
+        <h3>호출 시 맥락 크기별 금액</h3>
+        <div class="chart" id="c-ctx"></div>
+        <p class="note">맥락이 20만 토큰을 넘는 호출이 금액의 32.5%입니다. 호출마다 그때까지의 맥락 전체를 다시 읽기 때문입니다.</p>
+      </div>
+      <div class="card">
+        <h3>응답 시간: 출력 양에 따른 호출 지연(중앙값)</h3>
+        <div class="chart" id="c-lat"></div>
+        <p class="note">v04 호출 7,078회 기준. 지연은 맥락 크기와 거의 관계가 없고, 출력 1천 토큰당 약 7.1초씩 늘었습니다. 원스톱 안건 21건의 API 시간은 중앙값 44.2분입니다.</p>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="s-cowork">
+    <div class="head">
+      <div class="eyebrow">문제점 · 코워크</div>
+      <h2 id="s-cowork">코워크는 얼마나, 왜 썼는가</h2>
+      <p class="small">코워크 세션은 클라우드에서 실행되어 PC에 사용 기록이 남지 않습니다(PC와 연결된 코워크 세션 94개, v04 연결 12개). 아래는 추정 근거와 이 브리핑을 만든 코워크 세션의 실측입니다.</p>
+    </div>
+    <div class="grid2">
+      <div class="card">
+        <h3>10-12 크레딧 구간(00:26~09:47) $200의 사용처</h3>
+        <div class="legend"><span><i class="sw" style="background:var(--s1)"></i>Claude Code(기록)</span><span><i class="sw" style="background:var(--s2)"></i>코워크(추정)</span></div>
+        <div class="chart" id="c-cw-window"></div>
+        <p class="note">전제: 구간 내내 플랜 한도를 이미 다 썼고, 구매 직전 잔액이 0에 가까웠고, 채팅 등 다른 사용처가 없었다. 세 전제 모두 확인 불가입니다.</p>
+      </div>
+      <div class="card">
+        <h3>본 세션 기동 맥락(첫 호출, 토큰)</h3>
+        <div class="chart" id="c-cw-entry"></div>
+        <p class="note">코워크는 이 세션 실측, Claude Code는 v04 본 세션 107개의 중앙값입니다.</p>
+      </div>
+      <div class="card">
+        <h3>본 세션 호출 1회 평균 금액</h3>
+        <div class="chart" id="c-cw-call"></div>
+        <p class="note">서브에이전트까지 포함하면 코워크 $0.133, Claude Code v04 $0.088입니다.</p>
+      </div>
+      <div class="card">
+        <h3>10-12 크레딧 구간의 비서실 코워크 세션</h3>
+        <div class="tablewrap"><table>
+          <thead><tr><th>세션</th><th>저장한 문서</th></tr></thead>
+          <tbody>
+            <tr><td>코워크·20261011T1048</td><td>ORD-010 v04·v05, ORD-011 v01·v02, 조사 자료</td></tr>
+            <tr><td>코워크·20261008T2222</td><td>ORD-006 v13(51,130자)</td></tr>
+            <tr><td>코워크·20261010T1647</td><td>ORD-008 v03→v06(24,530→37,406자)</td></tr>
+          </tbody>
+        </table></div>
+        <p class="note">10건, 약 25.6만 자. 세션 이름상 10-08~10-11에 시작돼 며칠째 이어진 세션입니다. 이 세션 하나도 3시간 만에 맥락이 51.9만 토큰까지 커졌습니다.</p>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="s-cause">
+    <div class="head">
+      <div class="eyebrow">원인</div>
+      <h2 id="s-cause">왜 비용이 커졌는가</h2>
+    </div>
+    <div class="causes">
+      <div class="cause"><span class="tag">원인 ①</span><span class="big">모든 단계가 Opus</span><p class="small">에이전트 정의가 모두 <code>model: inherit</code>라서 메인 세션의 Opus를 그대로 물려받습니다. 작성 단계(설계·개발·범용)만 $299.7입니다.</p></div>
+      <div class="cause"><span class="tag">원인 ②</span><span class="big">기동 4만 토큰</span><p class="small">서브에이전트가 일을 시작하기 전에 스킬 목록, 도구 목록, 전역 지침, <code>AGENTS.md</code>를 먼저 싣습니다. 데스크톱 세션에서 띄우면 6.4만~7.3만입니다.</p></div>
+      <div class="cause"><span class="tag">원인 ③</span><span class="big">맥락 최대 96만</span><p class="small">Antigravity-index 운영을 데스크톱 세션 하나로 10시간 가까이 진행했습니다. 세션 2개가 1주일 금액의 23.7%입니다.</p></div>
+      <div class="cause"><span class="tag">원인 ④</span><span class="big">문서 읽기 35%</span><p class="small">v04 금액의 35%($217.5)가 작업 중 문서 읽기입니다. 매뉴얼은 45%를 파일 통째로 읽었고, 같은 파일 재읽기가 377회입니다.</p></div>
+    </div>
+    <div class="grid2">
+      <div class="card">
+        <h3>서브에이전트 종류별 금액</h3>
+        <div class="legend"><span><i class="sw" style="background:var(--s2)"></i>작성 파트(Sonnet 전환 후보)</span><span><i class="sw" style="background:var(--s1)"></i>판정·그 밖(Opus 유지)</span></div>
+        <div class="chart" id="c-agent"></div>
+      </div>
+      <div class="card">
+        <h3>서브에이전트 기동 맥락의 구성</h3>
+        <p class="small">10-12 품질 서브에이전트 실측. 첫 호출 40,352토큰 = 공유 캐시 10,658 + 새로 쓰기 29,694. 아래는 새로 쓰는 부분의 글자 수입니다.</p>
+        <div class="chart" id="c-entry"></div>
+        <p class="note">스킬 목록이 가장 큽니다. 마이그레이션 보고서가 지목한 「<code>AGENTS.md</code> 이중 로드」는 실측에서 재읽기가 0.05%뿐이었습니다.</p>
+      </div>
+      <div class="card">
+        <h3>v04 문서 읽기 비용(종류별)</h3>
+        <div class="chart" id="c-read"></div>
+        <p class="note">매뉴얼 $62.8 가운데 <code>Workflow/03_라이프사이클</code> 한 파일이 $30.2입니다. 같은 파일 재읽기는 약 $30.3입니다.</p>
+      </div>
+      <div class="card">
+        <h3>금액 구성</h3>
+        <div class="chart" id="c-mix"></div>
+        <p class="note">처음 읽는 내용이 캐시에 쓰일 때(캐시 쓰기)가 가장 비쌉니다. 기동 맥락과 문서 읽기를 줄이면 캐시 쓰기와 읽기가 함께 줄어듭니다.</p>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="s-fix">
+    <div class="head">
+      <div class="eyebrow">개선안</div>
+      <h2 id="s-fix">품질을 유지하면서 줄이는 방법</h2>
+      <p class="small">1~6은 Claude Code, C1~C4는 코워크 개선안입니다. 1~5의 절감액은 Claude Code 1주일 실측에 그 항목만 적용했을 때의 추정입니다. 합계는 겹치는 부분을 뺀 값입니다.</p>
+    </div>
+    <div class="fixes">
+      <div class="fix"><span class="no">1</span><div class="body"><h3>작성은 Sonnet, 판정은 Opus</h3><p class="small">설계·개발·범용 등 작성하는 파트는 Sonnet, DQA·FQC 등 판정하는 파트와 Critical 안건은 Opus. 에이전트 정의의 <code>model:</code>은 별칭(<code>sonnet</code>/<code>opus</code>)으로 지정합니다.</p><p class="small">품질 영향 <span class="pill q-mid">중간</span> 작성 품질이 떨어지면 판정 <code>fail</code>과 재작업이 늘 수 있어, REQ 2~3건으로 비교 실험한 뒤 확정합니다.</p></div><div class="save">최대 $150<small>주 16%</small></div></div>
+      <div class="fix"><span class="no">2</span><div class="body"><h3>기동 맥락 다이어트(4만 → 1.5만)</h3><p class="small">파이프라인 실행 환경에서 쓰지 않는 스킬·커넥터를 빼고, 전역 <code>CLAUDE.md</code>는 코드 작업용 축소본을 쓰고, <code>AGENTS.md</code>를 핵심 헌법과 역할 카드로 나눕니다.</p><p class="small">품질 영향 <span class="pill q-low">낮음</span> 불변 예외(보안, 삭제·덮어쓰기 승인, 커밋·푸시 제한, 지침 수정 승인)는 핵심 헌법에 그대로 둡니다.</p></div><div class="save">약 $79<small>주 8%</small></div></div>
+      <div class="fix"><span class="no">3</span><div class="body"><h3>장기 세션 맥락 상한</h3><p class="small">맥락이 20만 토큰 안팎이 되면 인계 요약을 남기고 새 세션으로 넘깁니다. 10시간짜리 단일 세션을 작업 단위로 나눕니다.</p><p class="small">품질 영향 <span class="pill q-low">낮음</span> 인계 요약에 결정 사항과 남은 일을 빠짐없이 적습니다.</p></div><div class="save">약 $55~65<small>주 6~7%</small></div></div>
+      <div class="fix"><span class="no">4</span><div class="body"><h3>매뉴얼 대신 역할 카드(v05 슬라이싱의 핵심)</h3><p class="small">파트마다 필요한 규정만 담은 역할 카드를 매뉴얼에서 생성해 읽게 합니다. 매뉴얼은 원천으로 남깁니다.</p><p class="small">품질 영향 <span class="pill q-mid">낮음~중간</span> 판정 파트는 필요하면 원문 절을 열 수 있게 둡니다.</p></div><div class="save">약 $45~50<small>주 5%</small></div></div>
+      <div class="fix"><span class="no">5</span><div class="body"><h3>인계 패킷으로 같은 문서 재읽기 줄이기</h3><p class="small">앞 파트가 「읽을 문서 목록과 리비전」, 「핵심 요약」을 넘깁니다.</p><p class="small">품질 영향 <span class="pill q-low">낮음</span></p></div><div class="save">약 $20<small>주 2%</small></div></div>
+      <div class="fix"><span class="no">6</span><div class="body"><h3>출력 줄이기(응답 시간)</h3><p class="small">판정서·결과서·REQ 서식을 짧게 하고, 개정 이력은 별도 파일로 옮기고, Minor와 기계적 단계는 effort를 낮춥니다.</p><p class="small">품질 영향 <span class="pill q-low">낮음</span> 판정 근거 항목은 줄이지 않습니다.</p></div><div class="save">응답 시간<small>출력 1천 토큰당 약 7초</small></div></div>
+      <div class="fix"><span class="no">C1</span><div class="body"><h3>비서실 코워크 세션을 작업 단위로 끊기</h3><p class="small">며칠씩 이어 쓰지 않고, 작업 하나가 끝나면 인계 요약을 프로젝트 문서에 남기고 새 세션을 엽니다. 맥락이 30만 토큰 안팎이면 작업 중이라도 넘깁니다.</p><p class="small">품질 영향 <span class="pill q-mid">낮음~중간</span> 인계 요약에 결정 사항·근거 경로·남은 일을 빠짐없이 적습니다.</p></div><div class="save">실측 필요<small>이 세션 기준 캐시 읽기 약 20% 감소(재시작 비용 제외 전)</small></div></div>
+      <div class="fix"><span class="no">C2</span><div class="body"><h3>ORDER·조사 자료 분량 줄이기</h3><p class="small">대표님 원문과 경위는 별도 파일로 분리하고, 새 버전에서는 바뀐 절만 고칩니다. ORDER 본문 분량에 상한을 둡니다.</p><p class="small">품질 영향 <span class="pill q-low">낮음</span> 추적성은 개정 이력과 별도 원문 파일로 유지합니다.</p></div><div class="save">실측 필요<small>크레딧 구간 문서 약 25.6만 자</small></div></div>
+      <div class="fix"><span class="no">C3</span><div class="body"><h3>저장소 작업은 Claude Code로</h3><p class="small">저장소 파일을 많이 읽고 쓰는 비서실 작업은 기동 맥락이 작은 Claude Code 세션에서 하고, 코워크는 대화·조사·브리핑에 씁니다. 대기 중인 ORD-011과 같은 방향입니다.</p><p class="small">품질 영향 <span class="pill q-low">낮음</span></p></div><div class="save">실측 필요<small>호출 1회 $0.152 → $0.093(본 세션 기준)</small></div></div>
+      <div class="fix"><span class="no">C4</span><div class="body"><h3>코워크 커넥터·스킬 정리</h3><p class="small">비서실 업무에 쓰지 않는 커넥터와 스킬을 끕니다. 메모리는 세션 간 맥락 공유에 필요하므로 유지합니다.</p><p class="small">품질 영향 <span class="pill q-low">낮음</span></p></div><div class="save">작음<small>스킬 목록 17,293자 등</small></div></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="s-ba">
+    <div class="head">
+      <div class="eyebrow">비포 · 애프터</div>
+      <h2 id="s-ba">적용하면 무엇이 달라지는가</h2>
+    </div>
+    <div class="card">
+      <h3>Claude Code 1주일 금액: 현재 → 개선 후(추정)</h3>
+      <div class="legend"><span><i class="sw" style="background:var(--s1)"></i>현재</span><span><i class="sw" style="background:var(--s3)"></i>절감</span><span><i class="sw" style="background:var(--s2)"></i>인계·재작업 여유</span></div>
+      <div class="chart wide" id="c-wf"></div>
+      <p class="note">2~5의 절감(약 $200~215)을 먼저 빼고, 남은 작성 파트 비용(약 $228)에 개선안 1을 적용했습니다(약 $114). 인계 요약과 재작업 가능성을 고려해 여유를 더했습니다. 결과 범위는 $617~652입니다. 코워크는 포함하지 않았습니다.</p>
+    </div>
+    <div class="ba">
+      <div class="card">
+        <h3>서브에이전트 기동 맥락(토큰)</h3>
+        <div class="chart" id="c-ba-entry"></div>
+      </div>
+      <div class="card">
+        <h3>세션 하나의 최대 맥락(토큰)</h3>
+        <div class="chart" id="c-ba-ctx"></div>
+      </div>
+      <div class="card">
+        <h3>모델 배정(1주일 서브에이전트 금액 기준)</h3>
+        <div class="chart" id="c-ba-model"></div>
+        <p class="note">개선 후 금액은 1번만 적용한 단순 환산입니다.</p>
+      </div>
+      <div class="card">
+        <h3>매뉴얼 읽기 비용(v04, 1주일)</h3>
+        <div class="chart" id="c-ba-manual"></div>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="s-fixreport">
+    <div class="head">
+      <div class="eyebrow">마이그레이션 보고서 대조</div>
+      <h2 id="s-fixreport">보고서 수치와 실측</h2>
+    </div>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>보고서 주장</th><th>실측</th><th>판단</th></tr></thead>
+        <tbody>
+          <tr><td>10-12 오전 1,799회, $914</td><td>10-12 하루 전체 754회, $75.27</td><td class="x">틀림</td></tr>
+          <tr><td>Opus 출력 $75/MTok</td><td>공식 가격 $20/MTok, Sonnet은 Opus의 절반</td><td class="x">틀림</td></tr>
+          <tr><td>기동 500~800토큰, 85% 절감</td><td>기본 프롬프트만 약 1.07만 토큰. 총액 기준 절감 추정 30~34%</td><td class="x">불가능</td></tr>
+          <tr><td><code>AGENTS.md</code> 이중 로드</td><td>서브에이전트의 재읽기는 읽은 양의 0.05%</td><td class="x">틀림</td></tr>
+          <tr><td>원인 분석 범위(Claude Code만)</td><td>코워크가 두 구간 추정으로 전체의 57~66%</td><td class="x">누락</td></tr>
+          <tr><td>전부 Opus, 기동 3.5만~4만, 품질이 최대 소비처</td><td>Opus 99.96%, 기동 약 4만, 품질 $238.1(서브에이전트 1위)</td><td class="o">맞음</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="small">확인하지 못한 것: 코워크 세션별·날짜별 실제 사용량, 10-12 크레딧 구간 추정의 세 가지 전제, 사용량 화면 비율과 금액 비율이 같은지, CPU·메모리 사용량, Antigravity 사용량, 재실행 사유 일부, 개선안의 실제 품질 영향과 절감액, 요금제 기준 실제 청구액.</p>
+  </section>
+
+  <footer>
+    <p>작성 날짜: 2026-10-13</p>
+    <p>작성 서비스·세션 식별자와 모델: <code>코워크·20261013T0935</code>, <code>claude-opus-5-5</code>(설정 모델. 실제 서빙 모델은 확인 불가)</p>
+    <p>원천 문서: <code>Departments/Secretariat/assets/research/조사_20261013_토큰사용량1주일분석_v02.md</code></p>
+  </footer>
+</main>
+<div id="tip" hidden></div>
+<script>
+(function () {
+  var tip = document.getElementById('tip');
+  function showTip(e, text) { tip.textContent = text; tip.hidden = false; moveTip(e); }
+  function moveTip(e) {
+    var x = e.clientX + 12, y = e.clientY + 12;
+    var w = tip.offsetWidth, h = tip.offsetHeight;
+    if (x + w > window.innerWidth - 8) x = e.clientX - w - 12;
+    if (y + h > window.innerHeight - 8) y = e.clientY - h - 12;
+    tip.style.left = x + 'px'; tip.style.top = y + 'px';
+  }
+  function hideTip() { tip.hidden = true; }
+  var NS = 'http://www.w3.org/2000/svg';
+  function el(tag, attrs, parent) {
+    var n = document.createElementNS(NS, tag);
+    for (var k in attrs) n.setAttribute(k, attrs[k]);
+    if (parent) parent.appendChild(n);
+    return n;
+  }
+  function txt(parent, x, y, s, cls, anchor) {
+    var t = el('text', { x: x, y: y, 'class': cls, 'text-anchor': anchor || 'start', 'dominant-baseline': 'middle' }, parent);
+    t.textContent = s; return t;
+  }
+  function bind(node, text) {
+    node.addEventListener('mouseenter', function (e) { showTip(e, text); });
+    node.addEventListener('mousemove', moveTip);
+    node.addEventListener('mouseleave', hideTip);
+  }
+  // 수평 막대: rows = [{label, value, color, valueText, tip}]
+  function hbar(id, rows, opt) {
+    opt = opt || {};
+    var W = opt.W || 560, labelW = opt.labelW || 190, valW = opt.valW || 88, rowH = 30, barH = 16, top = 6;
+    var H = top + rows.length * rowH + 4;
+    var max = opt.max || Math.max.apply(null, rows.map(function (r) { return r.value; }));
+    var plotW = W - labelW - valW;
+    var svg = el('svg', { viewBox: '0 0 ' + W + ' ' + H, role: 'img', 'aria-label': opt.aria || '' });
+    el('line', { x1: labelW, x2: labelW, y1: top, y2: H - 4, 'class': 'baseline' }, svg);
+    rows.forEach(function (r, i) {
+      var cy = top + i * rowH + rowH / 2;
+      var w = Math.max(2, r.value / max * plotW);
+      txt(svg, labelW - 10, cy, r.label, 't-label', 'end');
+      var g = el('g', {}, svg);
+      el('rect', { x: labelW, y: cy - rowH / 2, width: plotW + valW, height: rowH, fill: 'transparent' }, g);
+      el('rect', { x: labelW, y: cy - barH / 2, width: w, height: barH, rx: 4, fill: r.color || 'var(--s1)', 'class': 'bar' }, g);
+      el('rect', { x: labelW, y: cy - barH / 2, width: Math.min(4, w), height: barH, fill: r.color || 'var(--s1)' }, g);
+      txt(svg, labelW + w + 8, cy, r.valueText, 't-value');
+      bind(g, r.tip || (r.label + ': ' + r.valueText));
+    });
+    document.getElementById(id).appendChild(svg);
+  }
+  // 수직 막대: rows = [{label, value, color, valueText, tip}]
+  function vbar(id, rows, opt) {
+    opt = opt || {};
+    var W = 560, H = 240, left = 8, right = 8, top = 24, bottom = 34;
+    var max = opt.max || Math.max.apply(null, rows.map(function (r) { return r.value; }));
+    var plotH = H - top - bottom, plotW = W - left - right;
+    var slot = plotW / rows.length, bw = Math.min(46, slot * 0.6);
+    var svg = el('svg', { viewBox: '0 0 ' + W + ' ' + H, role: 'img', 'aria-label': opt.aria || '' });
+    (opt.ticks || []).forEach(function (t) {
+      var y = top + plotH - t / max * plotH;
+      el('line', { x1: left, x2: W - right, y1: y, y2: y, 'class': 'gridline' }, svg);
+      txt(svg, W - right, y - 7, opt.tickFmt ? opt.tickFmt(t) : t, 't-muted', 'end');
+    });
+    el('line', { x1: left, x2: W - right, y1: top + plotH, y2: top + plotH, 'class': 'baseline' }, svg);
+    rows.forEach(function (r, i) {
+      var cx = left + slot * i + slot / 2;
+      var h = Math.max(2, r.value / max * plotH);
+      var g = el('g', {}, svg);
+      el('rect', { x: cx - slot / 2, y: top, width: slot, height: plotH, fill: 'transparent' }, g);
+      el('rect', { x: cx - bw / 2, y: top + plotH - h, width: bw, height: h, rx: 4, fill: r.color || 'var(--s1)', 'class': 'bar' }, g);
+      el('rect', { x: cx - bw / 2, y: top + plotH - Math.min(4, h), width: bw, height: Math.min(4, h), fill: r.color || 'var(--s1)' }, g);
+      txt(svg, cx, top + plotH - h - 10, r.valueText, 't-value', 'middle');
+      txt(svg, cx, H - bottom + 16, r.label, 't-label', 'middle');
+      bind(g, r.tip || (r.label + ': ' + r.valueText));
+    });
+    document.getElementById(id).appendChild(svg);
+  }
+  function usd(v) { return '$' + v.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
+  function usd1(v) { return '$' + v.toFixed(1); }
+  var S1 = 'var(--s1)', S2 = 'var(--s2)', S3 = 'var(--s3)';
+
+  hbar('c-work', [
+    { label: 'v04 원스톱', value: 431.88, valueText: '$431.88', color: S2, tip: 'v04 원스톱: $431.88 (46.4%), 세션 34개, 안건 21건' },
+    { label: 'Antigravity-index 운영', value: 220.46, valueText: '$220.46', color: S2, tip: 'Antigravity-index 운영: $220.46 (23.7%), 데스크톱 세션 2개' },
+    { label: 'v04 REQ 작성', value: 143.72, valueText: '$143.72', tip: 'v04 REQ 작성: $143.72 (15.4%), 세션 18개' },
+    { label: '그 밖 프로젝트(v02·v03)', value: 53.25, valueText: '$53.25', tip: '그 밖 프로젝트: $53.25 (5.7%)' },
+    { label: 'REQ-019 재현 시험', value: 49.31, valueText: '$49.31', tip: 'REQ-019 재현 시험(1회성): $49.31 (5.3%), 세션 183개' },
+    { label: 'v04 그 밖', value: 33.13, valueText: '$33.13', tip: 'v04 그 밖(대화형 등): $33.13 (3.6%)' }
+  ], { aria: '작업 종류별 금액 막대 그래프' });
+
+  vbar('c-day', [
+    { label: '10-06', value: 53.25, valueText: '$53' , tip: '10-06: $53.25, 655회' },
+    { label: '10-07', value: 32.48, valueText: '$32', tip: '10-07: $32.48, 471회' },
+    { label: '10-08', value: 62.18, valueText: '$62', tip: '10-08: $62.18, 739회' },
+    { label: '10-09', value: 206.82, valueText: '$207', tip: '10-09: $206.82, 2,301회' },
+    { label: '10-10', value: 186.79, valueText: '$187', tip: '10-10: $186.79, 1,979회' },
+    { label: '10-11', value: 265.65, valueText: '$266', color: S2, tip: '10-11: $265.65, 2,695회 (장기 세션 하나가 $154.46)' },
+    { label: '10-12', value: 75.27, valueText: '$75', tip: '10-12: $75.27, 754회' },
+    { label: '10-13', value: 49.31, valueText: '$49', tip: '10-13(09:57까지): $49.31, 388회' }
+  ], { max: 300, ticks: [100, 200, 300], tickFmt: function (t) { return '$' + t; }, aria: '날짜별 금액 막대 그래프' });
+
+  vbar('c-ctx', [
+    { label: '5만 이하', value: 106.24, valueText: '$106', tip: '맥락 5만 이하: $106.24 (11.4%), 836회' },
+    { label: '5만~10만', value: 178.53, valueText: '$179', tip: '맥락 5만 초과~10만 이하: $178.53 (19.2%), 2,413회' },
+    { label: '10만~20만', value: 344.61, valueText: '$345', tip: '맥락 10만 초과~20만 이하: $344.61 (37.0%), 4,488회' },
+    { label: '20만~40만', value: 176.64, valueText: '$177', color: S2, tip: '맥락 20만 초과~40만 이하: $176.64 (19.0%), 1,576회' },
+    { label: '40만 초과', value: 125.74, valueText: '$126', color: S2, tip: '맥락 40만 초과: $125.74 (13.5%), 669회' }
+  ], { max: 400, ticks: [100, 200, 300, 400], tickFmt: function (t) { return '$' + t; }, aria: '맥락 크기별 금액 막대 그래프' });
+
+  vbar('c-lat', [
+    { label: '0.5천 미만', value: 2.2, valueText: '2.2초', tip: '출력 0.5천 토큰 미만: 지연 중앙값 2.2초' },
+    { label: '0.5천~2천', value: 5.8, valueText: '5.8초', tip: '출력 0.5천~2천 토큰: 지연 중앙값 5.8초' },
+    { label: '2천~8천', value: 23.1, valueText: '23.1초', tip: '출력 2천~8천 토큰: 지연 중앙값 23.1초' },
+    { label: '8천 초과', value: 101, valueText: '약 101초', color: S2, tip: '출력 8천 토큰 초과: 지연 중앙값 약 101초' }
+  ], { max: 120, ticks: [30, 60, 90, 120], tickFmt: function (t) { return t + '초'; }, aria: '출력 양별 호출 지연 막대 그래프' });
+
+  hbar('c-agent', [
+    { label: '품질(판정)', value: 238.1, valueText: '$238.1', tip: '품질 172개: $238.1 (판정, Opus 유지)' },
+    { label: '설계(작성)', value: 178.8, valueText: '$178.8', color: S2, tip: '설계 76개: $178.8 (작성, Sonnet 전환 후보)' },
+    { label: '범용(작성)', value: 67.2, valueText: '$67.2', color: S2, tip: '범용 36개: $67.2 (작성, Sonnet 전환 후보)' },
+    { label: '개발(작성)', value: 53.7, valueText: '$53.7', color: S2, tip: '개발 29개: $53.7 (작성, Sonnet 전환 후보)' },
+    { label: '비서실', value: 13.8, valueText: '$13.8', tip: '비서실 19개: $13.8' },
+    { label: '그 밖', value: 8.5, valueText: '$8.5', tip: '그 밖 7개: $8.5' }
+  ], { labelW: 120, aria: '서브에이전트 종류별 금액' });
+
+  hbar('c-entry', [
+    { label: '스킬 목록', value: 19791, valueText: '19,791자', color: S2, tip: '스킬 목록 19,791자: 파이프라인에서 쓰지 않는 스킬까지 실림' },
+    { label: '전역 CLAUDE.md', value: 8587, valueText: '8,587자', tip: '전역 CLAUDE.md 8,587자' },
+    { label: 'AGENTS.md', value: 7642, valueText: '7,642자', tip: 'AGENTS.md 7,642자' },
+    { label: '도구 이름 목록', value: 6500, valueText: '약 6,500자', color: S2, tip: '지연 로드 도구 이름 목록 약 6,500자(MCP 150개, 내장 8개). 데스크톱에서는 291개, 약 1.4만 자' },
+    { label: '그 밖', value: 6100, valueText: '약 6,100자', tip: '세션 정보·시스템 프롬프트 조각 등 약 6,100자' }
+  ], { labelW: 130, aria: '서브에이전트 기동 맥락 구성' });
+
+  hbar('c-read', [
+    { label: '매뉴얼', value: 62.8, valueText: '$62.8', color: S2, tip: '매뉴얼 $62.8 (Workflow/03 한 파일 $30.2)' },
+    { label: 'EC', value: 40.5, valueText: '$40.5' },
+    { label: 'REQ', value: 37.7, valueText: '$37.7' },
+    { label: '판정서·결과서', value: 32.1, valueText: '$32.1' },
+    { label: '그 밖', value: 28.4, valueText: '$28.4' },
+    { label: 'ORDER', value: 9.9, valueText: '$9.9' },
+    { label: '서식', value: 6.2, valueText: '$6.2' }
+  ], { labelW: 120, aria: '문서 종류별 읽기 비용' });
+
+  hbar('c-mix', [
+    { label: '캐시 쓰기', value: 393.76, valueText: '$393.76', color: S2, tip: '캐시 쓰기 $393.76 (42%): 새로 읽은 내용을 캐시에 넣을 때' },
+    { label: '캐시 읽기', value: 329.00, valueText: '$329.00', tip: '캐시 읽기 $329.00 (35%): 호출마다 맥락 전체를 다시 읽을 때' },
+    { label: '출력', value: 208.92, valueText: '$208.92', tip: '출력 $208.92 (22%): 사고 토큰 포함' }
+  ], { labelW: 100, aria: '금액 구성' });
+
+  // 폭포 그래프
+  (function () {
+    var steps = [
+      { label: '현재', type: 'total', value: 931.76, text: '$931.76' },
+      { label: '2 기동', type: 'down', value: 79, text: '-$79' },
+      { label: '3 맥락 상한', type: 'down', value: 60, text: '-$55~65' },
+      { label: '4 역할 카드', type: 'down', value: 47.5, text: '-$45~50' },
+      { label: '5 인계 패킷', type: 'down', value: 20, text: '-$20' },
+      { label: '1 Sonnet 작성', type: 'down', value: 114, text: '-$114' },
+      { label: '여유', type: 'up', value: 23, text: '+$5~35' },
+      { label: '개선 후', type: 'total2', value: 634.26, text: '$617~652' }
+    ];
+    var W = 960, H = 300, left = 56, right = 8, top = 28, bottom = 40, max = 1000;
+    var plotH = H - top - bottom, plotW = W - left - right, slot = plotW / steps.length, bw = Math.min(50, slot * 0.62);
+    var svg = el('svg', { viewBox: '0 0 ' + W + ' ' + H, role: 'img', 'aria-label': '1주일 금액 폭포 그래프' });
+    function Y(v) { return top + plotH - v / max * plotH; }
+    [250, 500, 750, 1000].forEach(function (t) {
+      el('line', { x1: left, x2: W - right, y1: Y(t), y2: Y(t), 'class': 'gridline' }, svg);
+      txt(svg, left - 8, Y(t), '$' + t, 't-muted', 'end');
+    });
+    el('line', { x1: left, x2: W - right, y1: Y(0), y2: Y(0), 'class': 'baseline' }, svg);
+    var run = 0;
+    steps.forEach(function (s, i) {
+      var cx = left + slot * i + slot / 2, y0, y1, color;
+      if (s.type === 'total') { y0 = 0; y1 = s.value; run = s.value; color = S1; }
+      else if (s.type === 'total2') { y0 = 0; y1 = s.value; color = S3; }
+      else if (s.type === 'down') { y1 = run; y0 = run - s.value; run = y0; color = S3; }
+      else { y0 = run; y1 = run + s.value; run = y1; color = S2; }
+      var g = el('g', {}, svg);
+      el('rect', { x: cx - slot / 2, y: top, width: slot, height: plotH, fill: 'transparent' }, g);
+      el('rect', { x: cx - bw / 2, y: Y(y1), width: bw, height: Math.max(2, Y(y0) - Y(y1)), rx: 4, fill: color, 'class': 'bar' }, g);
+      txt(svg, cx, Y(y1) - 10, s.text, 't-value', 'middle');
+      txt(svg, cx, H - bottom + 16, s.label, 't-label', 'middle');
+      if (i < steps.length - 1 && s.type !== 'total2') {
+        var nx = left + slot * (i + 1) + slot / 2 - bw / 2;
+        el('line', { x1: cx + bw / 2, x2: nx, y1: Y(run), y2: Y(run), stroke: 'var(--axis)', 'stroke-dasharray': '3 3' }, svg);
+      }
+      bind(g, s.label + ': ' + s.text);
+    });
+    document.getElementById('c-wf').appendChild(svg);
+  })();
+
+  hbar('c-ba-entry', [
+    { label: '현재(CLI)', value: 40352, valueText: '약 4.0만', tip: '현재 CLI에서 띄운 서브에이전트: 40,352토큰(10-12 실측)' },
+    { label: '현재(데스크톱)', value: 73321, valueText: '약 7.3만', color: S2, tip: '현재 데스크톱 세션에서 띄운 서브에이전트: 73,321토큰(10-13 실측)' },
+    { label: '개선 후 목표', value: 15000, valueText: '약 1.5만', color: S3, tip: '개선 후 목표: 약 1.5만 토큰(기본 프롬프트 약 1.07만 포함)' }
+  ], { W: 380, labelW: 100, valW: 64, aria: '기동 맥락 비포 애프터' });
+
+  hbar('c-ba-ctx', [
+    { label: '현재 최대', value: 960187, valueText: '96만', color: S2, tip: '현재: Antigravity-index 세션 맥락 최대 960,187토큰' },
+    { label: '개선 후 상한', value: 200000, valueText: '약 20만', color: S3, tip: '개선 후: 20만 토큰 안팎에서 인계 요약 후 새 세션' }
+  ], { W: 380, labelW: 100, valW: 64, aria: '세션 최대 맥락 비포 애프터' });
+
+  hbar('c-ba-model', [
+    { label: '현재(전부 Opus)', value: 560.0, valueText: '$560.0', tip: '현재 서브에이전트 $560.0, 전부 Opus' },
+    { label: '개선 후(1번 적용)', value: 410.1, valueText: '약 $410', color: S3, tip: '작성 파트 $299.7을 Sonnet으로: 약 $150 절감 → 약 $410' }
+  ], { W: 380, labelW: 118, valW: 64, max: 600, aria: '모델 배정 비포 애프터' });
+
+  hbar('c-cw-window', [
+    { label: 'Claude Code', value: 67.40, valueText: '$67.40 (34%)', tip: 'Claude Code 기록: $67.40, 662회' },
+    { label: '코워크(추정)', value: 132.60, valueText: '약 $132.60 (66%)', color: S2, tip: '$200 - Claude Code $67.40 = 약 $132.60 (추정)' }
+  ], { W: 420, labelW: 100, valW: 120, max: 140, aria: '10-12 크레딧 사용처' });
+
+  hbar('c-cw-entry', [
+    { label: '코워크', value: 115219, valueText: '115,219', color: S2, tip: '코워크 세션 첫 호출 115,219토큰(이 세션 실측)' },
+    { label: 'Claude Code', value: 49483, valueText: '49,483', tip: 'Claude Code v04 본 세션 107개의 첫 호출 중앙값 49,483토큰' }
+  ], { W: 420, labelW: 100, valW: 80, aria: '본 세션 기동 맥락 비교' });
+
+  hbar('c-cw-call', [
+    { label: '코워크', value: 0.152, valueText: '$0.152', color: S2, tip: '코워크 본 세션 호출 1회 평균 $0.152(147회, $22.29)' },
+    { label: 'Claude Code v04', value: 0.093, valueText: '$0.093', tip: 'Claude Code v04 본 세션 호출 1회 평균 $0.093' }
+  ], { W: 420, labelW: 120, valW: 70, max: 0.17, aria: '호출 1회 평균 금액 비교' });
+
+  hbar('c-ba-manual', [
+    { label: '현재', value: 62.8, valueText: '$62.8', tip: '현재 매뉴얼 읽기 $62.8(전체 읽기 45%)' },
+    { label: '개선 후(역할 카드)', value: 15, valueText: '약 $13~19', color: S3, tip: '개선 후: 매뉴얼 읽기의 70~80% 감소 → 약 $13~19' }
+  ], { W: 380, labelW: 118, valW: 72, max: 70, aria: '매뉴얼 읽기 비포 애프터' });
+})();
+</script>
+</body>
+</html>

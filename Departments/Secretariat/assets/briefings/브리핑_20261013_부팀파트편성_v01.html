@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>브리핑: 부·팀·파트 편성과 업무 절차 파이프라인</title>
+<style>
+  /* 배치: 맨 위 결론 카드 → 핵심 수치 → 변경 조직도 → 업무 절차 파이프라인 → 지침 계층 → 편성 기준 → 규정 개정 → 확인하지 못한 항목 → 작성 정보 */
+  :root {
+    color-scheme: light;
+    --bg: #f9f9f7; --surface: #fcfcfb; --ink: #0b0b0b; --ink-2: #52514e; --muted: #898781;
+    --grid: #e1e0d9; --axis: #c3c2b7; --ring: rgba(11,11,11,0.10);
+    --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a;
+    --s1-wash: rgba(42,120,214,0.10); --s2-wash: rgba(235,104,52,0.10); --s3-wash: rgba(27,175,122,0.12);
+    --lane: rgba(11,11,11,0.025);
+    --good-ink: #006300;
+    --font: system-ui, -apple-system, "Segoe UI", "Malgun Gothic", "Apple SD Gothic Neo", sans-serif;
+    --mono: ui-monospace, "Cascadia Mono", Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --bg: #0d0d0d; --surface: #1a1a19; --ink: #f0efec; --ink-2: #c3c2b7; --muted: #898781;
+      --grid: #2c2c2a; --axis: #383835; --ring: rgba(255,255,255,0.10);
+      --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+      --s1-wash: rgba(57,135,229,0.16); --s2-wash: rgba(217,89,38,0.16); --s3-wash: rgba(25,158,112,0.18);
+      --lane: rgba(255,255,255,0.03);
+      --good-ink: #0ca30c;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #0d0d0d; --surface: #1a1a19; --ink: #f0efec; --ink-2: #c3c2b7; --muted: #898781;
+    --grid: #2c2c2a; --axis: #383835; --ring: rgba(255,255,255,0.10);
+    --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+    --s1-wash: rgba(57,135,229,0.16); --s2-wash: rgba(217,89,38,0.16); --s3-wash: rgba(25,158,112,0.18);
+    --lane: rgba(255,255,255,0.03);
+    --good-ink: #0ca30c;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font); line-height: 1.6; font-size: 15px; }
+  main { max-width: 1040px; margin: 0 auto; padding-inline: 16px; padding-block: 28px 48px; display: grid; gap: 36px; }
+  h1 { font-size: 1.6rem; margin: 0; text-wrap: balance; letter-spacing: -0.01em; }
+  h2 { font-size: 1.2rem; margin: 0; text-wrap: balance; }
+  h3 { font-size: 1rem; margin: 0; }
+  p { margin: 0; }
+  ul, ol { margin: 0; padding-left: 1.3em; display: grid; gap: 4px; }
+  .eyebrow { font-size: 0.75rem; letter-spacing: 0.06em; color: var(--muted); font-weight: 600; }
+  .sub { color: var(--ink-2); }
+  .small { font-size: 0.85rem; color: var(--ink-2); }
+  code { font-family: var(--mono); font-size: 0.85em; background: var(--grid); padding: 0 4px; border-radius: 3px; overflow-wrap: anywhere; }
+  section { display: grid; gap: 16px; min-width: 0; }
+  .head { display: grid; gap: 6px; }
+
+  .top { background: var(--surface); border: 2px solid var(--ink); border-radius: 10px; padding: 20px; display: grid; gap: 14px; }
+  .top ol, .top ul { gap: 6px; }
+
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+  .tile { background: var(--surface); border: 1px solid var(--ring); border-radius: 8px; padding: 14px 16px; display: grid; gap: 2px; align-content: start; }
+  .tile .k { font-size: 0.8rem; color: var(--ink-2); }
+  .tile .v { font-size: 1.6rem; font-weight: 700; line-height: 1.2; font-variant-numeric: tabular-nums; }
+  .tile .n { font-size: 0.8rem; color: var(--muted); }
+  .tile.after .v { color: var(--good-ink); }
+
+  .card { background: var(--surface); border: 1px solid var(--ring); border-radius: 8px; padding: 16px; display: grid; gap: 10px; min-width: 0; align-content: start; }
+  .note { font-size: 0.82rem; color: var(--ink-2); }
+
+  /* 조직도 */
+  .ceo { justify-self: center; background: var(--ink); color: var(--bg); border-radius: 8px; padding: 6px 18px; font-weight: 700; }
+  .org { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; }
+  .dept { background: var(--surface); border: 1px solid var(--ring); border-top: 4px solid var(--s1); border-radius: 8px; padding: 12px 14px; display: grid; gap: 10px; align-content: start; }
+  .dept.idle { border-top-color: var(--axis); }
+  .dept > h3 { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+  .dept > h3 small { font-weight: 400; font-size: 0.75rem; color: var(--muted); }
+  .team { display: grid; gap: 6px; }
+  .team-h { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: 0.85rem; font-weight: 600; }
+  .badge { font-size: 0.68rem; font-weight: 700; border-radius: 999px; padding: 0 7px; border: 1px solid currentColor; white-space: nowrap; }
+  .badge.layer { color: var(--s1); }
+  .badge.disp { color: var(--muted); }
+  .parts { display: flex; flex-wrap: wrap; gap: 6px; }
+  .part { font-size: 0.8rem; border-radius: 6px; padding: 2px 8px; background: var(--s1-wash); border: 1px solid transparent; }
+  .part b { font-family: var(--mono); font-size: 0.78rem; margin-right: 4px; }
+  .part.stb { background: transparent; border: 1px dashed var(--axis); color: var(--ink-2); }
+  .legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 0.82rem; color: var(--ink-2); }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .sw { width: 14px; height: 12px; border-radius: 3px; display: inline-block; }
+  .sw.act { background: var(--s1-wash); border: 1px solid var(--s1); }
+  .sw.cond { background: var(--surface); border: 1.5px solid var(--s1); }
+  .sw.stb { border: 1px dashed var(--muted); }
+  .sw.ceo { background: var(--ink); }
+  .sw.now { background: var(--s1); }
+  .sw.tgt { background: var(--s3); }
+
+  /* 다이어그램·차트 */
+  .chart { width: 100%; overflow-x: auto; }
+  .chart svg { display: block; width: 100%; height: auto; }
+  .chart.swim svg { min-width: 760px; max-width: 900px; margin: 0 auto; }
+  .chart.bars svg { min-width: 560px; max-width: 900px; }
+  svg text { font-family: var(--font); }
+  .t-lane { fill: var(--ink); font-size: 13px; font-weight: 700; }
+  .t-sect { fill: var(--muted); font-size: 11px; font-weight: 600; }
+  .t-node { fill: var(--ink); font-size: 12px; font-weight: 600; }
+  .t-node .pid { font-family: var(--mono); font-size: 11px; fill: var(--ink-2); }
+  .t-sub { fill: var(--ink-2); font-size: 10.5px; }
+  .t-label { fill: var(--ink); font-size: 12.5px; }
+  .t-value { fill: var(--ink); font-size: 12px; font-weight: 600; }
+  .t-muted { fill: var(--muted); font-size: 11px; }
+  .lane-alt { fill: var(--lane); }
+  .gridline { stroke: var(--grid); stroke-width: 1; }
+  .baseline { stroke: var(--axis); stroke-width: 1; }
+  .divider { stroke: var(--axis); stroke-width: 1; stroke-dasharray: 4 4; }
+  .conn { fill: none; stroke: var(--axis); stroke-width: 1.5; }
+  .arrhead { fill: var(--axis); }
+  .node rect { stroke-width: 1.5; }
+  .n-act rect { fill: var(--s1-wash); stroke: var(--s1); }
+  .n-cond rect { fill: var(--surface); stroke: var(--s1); }
+  .n-stb rect { fill: var(--surface); stroke: var(--muted); stroke-dasharray: 4 3; }
+  .n-ceo rect { fill: var(--ink); stroke: var(--ink); }
+  .n-ceo .t-node { fill: var(--bg); }
+  .n-stb .t-node { fill: var(--ink-2); }
+  .bar:hover path { opacity: 0.8; }
+
+  .grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; }
+
+  .tablewrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--ring); border-radius: 8px; }
+  table { border-collapse: collapse; width: 100%; font-size: 0.88rem; }
+  th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--grid); vertical-align: top; }
+  th { color: var(--ink-2); font-weight: 600; font-size: 0.8rem; }
+  tr:last-child td { border-bottom: 0; }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  tr.sum td { font-weight: 700; }
+  table.cmp td:first-child { white-space: nowrap; }
+  .dim { color: var(--muted); }
+
+  .rules { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+  .rule { background: var(--surface); border: 1px solid var(--ring); border-radius: 8px; padding: 14px; display: grid; gap: 6px; align-content: start; }
+  .rule .no { font-size: 0.75rem; font-weight: 700; color: var(--s1); letter-spacing: 0.04em; }
+
+  footer { border-top: 1px solid var(--grid); padding-top: 14px; font-size: 0.85rem; color: var(--ink-2); display: grid; gap: 4px; }
+  @media (max-width: 520px) { .tile .v { font-size: 1.35rem; } }
+</style>
+</head>
+<body>
+<main>
+  <header class="head">
+    <p class="eyebrow">조사 브리핑 · 2026-10-13 · 비서실</p>
+    <h1>부·팀·파트 편성과 업무 절차 파이프라인</h1>
+    <p class="sub">공정 지도와 계층형 지침(v02 가확정)을 전제로, 부·팀·파트를 몇 개, 어느 단위로 둘지 검토한 결과입니다.</p>
+  </header>
+
+  <section class="top" aria-label="결론과 대표님이 할 일">
+    <h2>결론</h2>
+    <ol>
+      <li><b>6부, 8팀, 24파트(활성 17, 대기 7)를 권고합니다.</b> 파트 하나를 지금 따로 실행하는 공정 단계 하나에 맞춥니다. 실행 횟수는 그대로이고, 실행마다 싣는 지침만 줄어듭니다.</li>
+      <li><b>별도 팀 지침은 비서팀·PM팀·판정팀 3개만 둡니다.</b> 나머지 팀은 부 지침에 합치고 조직도에만 표시합니다. 에이전트 하나가 싣는 지침은 지금 약 1.8만~5.1만 자에서 3,000~6,500자로 줄어듭니다.</li>
+      <li><b>절감액은 1주일 약 $103~115로 추정합니다(Claude Code의 약 11~12%).</b> 적용하려면 매뉴얼 절 재구성을 포함한 규정 개정 여섯 건이 필요하며, 하나의 Critical 안건 규모입니다.</li>
+    </ol>
+    <h2>대표님이 할 일</h2>
+    <ul>
+      <li>이 편성안(조직도와 파이프라인)을 확인해 주십시오.</li>
+      <li>「공정 지도와 파트 카드 생성」 ORDER 초안 작성을 지시할지 정해 주십시오.</li>
+    </ul>
+  </section>
+
+  <section>
+    <div class="head">
+      <h2>조사 질문과 조사 자료</h2>
+    </div>
+    <div class="card">
+      <p><b>조사 질문</b>: 「v02 가확정인데, 여기서 부, 팀, 파트를 얼마나, 어느수준으로 정할지도 검토해봐라.」(대표님, 2026-10-13 코워크 비서실 대화)</p>
+      <p><b>조사 자료</b>: <code>Departments/Secretariat/assets/research/조사_20261013_부팀파트편성검토_v01.md</code></p>
+      <p class="note">근거: 2026-10-06 ~ 10-13 Claude Code 기록(v04 서브에이전트 275개, 본 세션 107개), v04 매뉴얼 <code>Workflow/01</code>~<code>07</code>과 <code>AGENTS.md</code>(2026-10-13 사본), 마이그레이션 자료의 21개 파트 매트릭스. 조사 자료는 판정 1회와 변경분 재판정 1회를 거쳤고, 지적은 모두 반영했습니다.</p>
+    </div>
+  </section>
+
+  <section aria-label="핵심 수치">
+    <div class="tiles">
+      <div class="tile"><span class="k">부</span><span class="v">6</span><span class="n">비서실·설계·개발·품질·운영·마케팅</span></div>
+      <div class="tile"><span class="k">팀</span><span class="v">8</span><span class="n">별도 팀 지침은 3개</span></div>
+      <div class="tile"><span class="k">파트</span><span class="v">24</span><span class="n">활성 17 · 대기 7</span></div>
+      <div class="tile after"><span class="k">에이전트당 지침(목표)</span><span class="v">3천~6.5천 자</span><span class="n">지금 약 1.8만~5.1만 자</span></div>
+      <div class="tile after"><span class="k">1주일 절감(추정)</span><span class="v">$103~115</span><span class="n">Claude Code $931.76의 약 11~12%</span></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="head">
+      <h2>변경 조직도</h2>
+      <p class="sub">부·팀 이름은 현행 조직명(<code>AGENTS.md</code> 1절)을 그대로 썼습니다. 대기 파트는 공정 지도에 등록만 하고, 제품·콘텐츠 안건을 시작할 때 씁니다.</p>
+    </div>
+    <div class="legend" aria-label="범례">
+      <span><i class="sw act"></i>활성 파트</span>
+      <span><i class="sw stb"></i>대기 파트</span>
+      <span><span class="badge layer">팀 지침</span>별도 팀 지침 있음</span>
+      <span><span class="badge disp">표시용</span>부 지침에 합침</span>
+    </div>
+    <div class="ceo">대표님</div>
+    <div class="org">
+      <article class="dept">
+        <h3>비서실 <small>파트 6</small></h3>
+        <div class="team">
+          <div class="team-h">비서팀 <span class="badge layer">팀 지침</span> <span class="dim small">코워크</span></div>
+          <div class="parts">
+            <span class="part"><b>S1</b>접수·ORDER·승인 기록</span>
+            <span class="part"><b>S2</b>조사·브리핑·외부 보고서</span>
+            <span class="part"><b>S3</b>핫픽스</span>
+            <span class="part"><b>S4</b>판정서 대조·반영·커밋</span>
+          </div>
+        </div>
+        <div class="team">
+          <div class="team-h">PM팀 <span class="badge layer">팀 지침</span> <span class="dim small">Claude Code 본 세션</span></div>
+          <div class="parts">
+            <span class="part"><b>P1</b>REQ 작성 파이프라인</span>
+            <span class="part"><b>P2</b>원스톱 지휘·실행 기록</span>
+          </div>
+        </div>
+      </article>
+      <article class="dept">
+        <h3>설계 <small>파트 4</small></h3>
+        <div class="team">
+          <div class="team-h">설계팀 <span class="badge disp">표시용</span></div>
+          <div class="parts">
+            <span class="part"><b>E1</b>EC 판단</span>
+            <span class="part"><b>E2</b>EC 작성</span>
+            <span class="part"><b>E3</b>명세: 거버넌스 적용본</span>
+            <span class="part stb"><b>E4</b>명세: 제품 PRD·TAD</span>
+          </div>
+        </div>
+      </article>
+      <article class="dept">
+        <h3>개발 <small>파트 2</small></h3>
+        <div class="team">
+          <div class="team-h">개발팀 <span class="badge disp">표시용</span></div>
+          <div class="parts">
+            <span class="part"><b>V1</b>구현·대조</span>
+            <span class="part stb"><b>V2</b>구현: 제품 화면</span>
+          </div>
+        </div>
+      </article>
+      <article class="dept">
+        <h3>품질 <small>파트 7</small></h3>
+        <div class="team">
+          <div class="team-h">판정팀 <span class="badge layer">팀 지침</span></div>
+          <div class="parts">
+            <span class="part"><b>Q1</b>REQ 판정</span>
+            <span class="part"><b>Q2</b>EC 판정</span>
+            <span class="part"><b>Q3</b>명세 판정</span>
+            <span class="part stb"><b>Q4</b>시각 디자인 판정</span>
+            <span class="part"><b>Q5</b>최종 판정</span>
+            <span class="part"><b>Q6</b>중단 부적합 기록</span>
+          </div>
+        </div>
+        <div class="team">
+          <div class="team-h">시험팀 <span class="badge disp">표시용</span> <span class="dim small">시험실</span></div>
+          <div class="parts">
+            <span class="part"><b>Q7</b>인수 시험</span>
+          </div>
+        </div>
+      </article>
+      <article class="dept idle">
+        <h3>운영 <small>파트 2 · 대기</small></h3>
+        <div class="team">
+          <div class="team-h">운영팀 <span class="badge disp">표시용</span></div>
+          <div class="parts">
+            <span class="part stb"><b>O1</b>런타임 파라미터·배포</span>
+            <span class="part stb"><b>O2</b>보안 점검</span>
+          </div>
+        </div>
+      </article>
+      <article class="dept idle">
+        <h3>마케팅 <small>파트 2 · 대기</small></h3>
+        <div class="team">
+          <div class="team-h">마케팅팀 <span class="badge disp">표시용</span></div>
+          <div class="parts">
+            <span class="part stb"><b>M1</b>시각 디자인</span>
+            <span class="part stb"><b>M2</b>홍보·콘텐츠</span>
+          </div>
+        </div>
+      </article>
+    </div>
+    <div class="card">
+      <p><b>공통 파트 X1 실험 단계</b>: 실험은 「REQ가 정한 부서」가 합니다(<code>Workflow/03</code> 5절 표). 그래서 특정 부에 두지 않고, 부마다 「그 부의 부 지침 + X1 카드」를 미리 생성해 둡니다.</p>
+    </div>
+
+    <div class="tablewrap">
+      <table class="cmp">
+        <caption class="small" style="text-align:left; padding:10px 12px 0;">v04와 무엇이 달라지나</caption>
+        <thead><tr><th>항목</th><th>v04(현행)</th><th>편성안</th></tr></thead>
+        <tbody>
+          <tr><td>실행 단위</td><td>부서마다 서브에이전트 정의 1개. 품질 1개가 판정·시험실·부적합을 모두 맡음</td><td>파트마다 정의 1개(공정 단계 하나 = 파트 하나). 실행 횟수는 같음</td></tr>
+          <tr><td>싣는 지침</td><td>전역 지침 + <code>AGENTS.md</code> 전체(약 1.7만 자) + 작업 중 매뉴얼 읽기</td><td>전역 1,000 + 표준 1,000 + 부 + (팀) + 파트 카드 = 3,000~6,500자</td></tr>
+          <tr><td>품질 조직</td><td>「세 책무를 파트로 나누지 않는다」(<code>Workflow/02</code> 2절)</td><td>판정팀(Q1~Q6)과 시험팀(Q7)으로 나눔</td></tr>
+          <tr><td>비서실</td><td>비서실과 PM이 한 부서 안의 두 주체</td><td>같은 부 안의 비서팀·PM팀. 실행 환경과 권한이 달라 팀 지침을 따로 둠</td></tr>
+          <tr><td>모델</td><td>분류별(Critical·Major 고급, Minor 중급), 정의 파일은 <code>model: inherit</code></td><td>바꾸지 않음. 같은 파트도 안건 분류에 따라 다른 등급으로 실행</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="head">
+      <h2>업무 절차 파이프라인(공정 지도 초안)</h2>
+      <p class="sub">위에서 아래로 진행합니다. 칸은 담당 부, 상자는 파트입니다. 단계 순서는 <code>Workflow/03</code> 2절의 Critical·Major 단계를 따랐습니다.</p>
+    </div>
+    <div class="legend" aria-label="범례">
+      <span><i class="sw ceo"></i>대표님 결정</span>
+      <span><i class="sw act"></i>항상 실행</span>
+      <span><i class="sw cond"></i>조건에 따라 실행</span>
+      <span><i class="sw stb"></i>대기·선택</span>
+    </div>
+    <div class="card">
+      <div class="chart swim"><svg viewBox="0 0 900 1130" role="img" aria-labelledby="swim-t swim-d"><title id="swim-t">업무 절차 파이프라인(부별 스윔레인)</title><desc id="swim-d">대표님 요청부터 비서실 반영·커밋까지 단계별 담당 부와 파트를 위에서 아래 순서로 보인다.</desc>
+<defs><marker id="arr" viewBox="0 0 8 8" refX="6" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L8,4 L0,8 z" class="arrhead"/></marker></defs>
+<text x="75.0" y="24" text-anchor="middle" class="t-lane">대표님</text>
+<rect x="150" y="0" width="150" height="1130" class="lane-alt"/>
+<text x="225.0" y="24" text-anchor="middle" class="t-lane">비서실</text>
+<text x="375.0" y="24" text-anchor="middle" class="t-lane">설계</text>
+<rect x="450" y="0" width="150" height="1130" class="lane-alt"/>
+<text x="525.0" y="24" text-anchor="middle" class="t-lane">개발</text>
+<text x="675.0" y="24" text-anchor="middle" class="t-lane">품질</text>
+<rect x="750" y="0" width="150" height="1130" class="lane-alt"/>
+<text x="825.0" y="24" text-anchor="middle" class="t-lane">운영·마케팅</text>
+<line x1="0" y1="36" x2="900" y2="36" class="baseline"/>
+<line x1="0" y1="342.0" x2="900" y2="342.0" class="divider"/>
+<text x="6" y="58" class="t-sect">REQ 작성 파이프라인(P1 지휘)</text>
+<text x="6" y="356.0" class="t-sect">원스톱 파이프라인(P2 지휘)</text>
+<path d="M75.0,106 V113.0 H225.0 V116" class="conn" marker-end="url(#arr)"/>
+<path d="M225.0,160 V170" class="conn" marker-end="url(#arr)"/>
+<path d="M225.0,214 V221.0 H675.0 V224" class="conn" marker-end="url(#arr)"/>
+<path d="M675.0,268 V275.0 H75.0 V278" class="conn" marker-end="url(#arr)"/>
+<path d="M75.0,322 V344.0 H375.0 V362" class="conn" marker-end="url(#arr)"/>
+<path d="M375.0,406 V416" class="conn" marker-end="url(#arr)"/>
+<path d="M375.0,460 V470" class="conn" marker-end="url(#arr)"/>
+<path d="M375.0,514 V521.0 H675.0 V524" class="conn" marker-end="url(#arr)"/>
+<path d="M675.0,568 V575.0 H375.0 V578" class="conn" marker-end="url(#arr)"/>
+<path d="M375.0,622 V629.0 H675.0 V632" class="conn" marker-end="url(#arr)"/>
+<path d="M675.0,676 V683.0 H825.0 V686" class="conn" marker-end="url(#arr)"/>
+<path d="M825.0,730 V737.0 H675.0 V740" class="conn" marker-end="url(#arr)"/>
+<path d="M675.0,784 V794" class="conn" marker-end="url(#arr)"/>
+<path d="M675.0,838 V845.0 H525.0 V848" class="conn" marker-end="url(#arr)"/>
+<path d="M525.0,892 V899.0 H825.0 V902" class="conn" marker-end="url(#arr)"/>
+<path d="M825.0,946 V953.0 H675.0 V956" class="conn" marker-end="url(#arr)"/>
+<path d="M675.0,1000 V1007.0 H75.0 V1010" class="conn" marker-end="url(#arr)"/>
+<path d="M75.0,1054 V1061.0 H225.0 V1064" class="conn" marker-end="url(#arr)"/>
+<g class="node n-ceo"><title>요청·결정</title><rect x="10.0" y="66" width="130" height="40" rx="6"/>
+<text x="75.0" y="91" text-anchor="middle" class="t-node">요청·결정</text></g>
+<g class="node n-act"><title>S1 ORDER 작성 — 비서팀</title><rect x="160.0" y="120" width="130" height="40" rx="6"/>
+<text x="225.0" y="137" text-anchor="middle" class="t-node"><tspan class="pid">S1</tspan> ORDER 작성</text><text x="225.0" y="152" text-anchor="middle" class="t-sub">비서팀</text></g>
+<g class="node n-act"><title>P1 REQ 작성 — PM팀</title><rect x="160.0" y="174" width="130" height="40" rx="6"/>
+<text x="225.0" y="191" text-anchor="middle" class="t-node"><tspan class="pid">P1</tspan> REQ 작성</text><text x="225.0" y="206" text-anchor="middle" class="t-sub">PM팀</text></g>
+<g class="node n-act"><title>Q1 REQ 판정 — fail이면 P1로</title><rect x="610.0" y="228" width="130" height="40" rx="6"/>
+<text x="675.0" y="245" text-anchor="middle" class="t-node"><tspan class="pid">Q1</tspan> REQ 판정</text><text x="675.0" y="260" text-anchor="middle" class="t-sub">fail이면 P1로</text></g>
+<g class="node n-ceo"><title>REQ 승인</title><rect x="10.0" y="282" width="130" height="40" rx="6"/>
+<text x="75.0" y="307" text-anchor="middle" class="t-node">REQ 승인</text></g>
+<g class="node n-cond"><title>X1 실험 — 선택·REQ가 정한 부</title><rect x="310.0" y="366" width="130" height="40" rx="6"/>
+<text x="375.0" y="383" text-anchor="middle" class="t-node"><tspan class="pid">X1</tspan> 실험</text><text x="375.0" y="398" text-anchor="middle" class="t-sub">선택·REQ가 정한 부</text></g>
+<g class="node n-act"><title>E1 EC 판단 — 모든 안건</title><rect x="310.0" y="420" width="130" height="40" rx="6"/>
+<text x="375.0" y="437" text-anchor="middle" class="t-node"><tspan class="pid">E1</tspan> EC 판단</text><text x="375.0" y="452" text-anchor="middle" class="t-sub">모든 안건</text></g>
+<g class="node n-cond"><title>E2 EC 작성 — EC 있음</title><rect x="310.0" y="474" width="130" height="40" rx="6"/>
+<text x="375.0" y="491" text-anchor="middle" class="t-node"><tspan class="pid">E2</tspan> EC 작성</text><text x="375.0" y="506" text-anchor="middle" class="t-sub">EC 있음</text></g>
+<g class="node n-cond"><title>Q2 EC 판정 — EC 있음</title><rect x="610.0" y="528" width="130" height="40" rx="6"/>
+<text x="675.0" y="545" text-anchor="middle" class="t-node"><tspan class="pid">Q2</tspan> EC 판정</text><text x="675.0" y="560" text-anchor="middle" class="t-sub">EC 있음</text></g>
+<g class="node n-act"><title>E3·E4 명세 — 적용본·제품</title><rect x="310.0" y="582" width="130" height="40" rx="6"/>
+<text x="375.0" y="599" text-anchor="middle" class="t-node"><tspan class="pid">E3·E4</tspan> 명세</text><text x="375.0" y="614" text-anchor="middle" class="t-sub">적용본·제품</text></g>
+<g class="node n-cond"><title>Q3 명세 판정 — C·M, EC 없음</title><rect x="610.0" y="636" width="130" height="40" rx="6"/>
+<text x="675.0" y="653" text-anchor="middle" class="t-node"><tspan class="pid">Q3</tspan> 명세 판정</text><text x="675.0" y="668" text-anchor="middle" class="t-sub">C·M, EC 없음</text></g>
+<g class="node n-stb"><title>M1 시각 디자인 — 대기·선택</title><rect x="760.0" y="690" width="130" height="40" rx="6"/>
+<text x="825.0" y="707" text-anchor="middle" class="t-node"><tspan class="pid">M1</tspan> 시각 디자인</text><text x="825.0" y="722" text-anchor="middle" class="t-sub">대기·선택</text></g>
+<g class="node n-stb"><title>Q4 시각 디자인 판정 — 대기·선택</title><rect x="610.0" y="744" width="130" height="40" rx="6"/>
+<text x="675.0" y="761" text-anchor="middle" class="t-node"><tspan class="pid">Q4</tspan> 시각 디자인 판정</text><text x="675.0" y="776" text-anchor="middle" class="t-sub">대기·선택</text></g>
+<g class="node n-cond"><title>Q7 인수 시험 — Critical·Major</title><rect x="610.0" y="798" width="130" height="40" rx="6"/>
+<text x="675.0" y="815" text-anchor="middle" class="t-node"><tspan class="pid">Q7</tspan> 인수 시험</text><text x="675.0" y="830" text-anchor="middle" class="t-sub">Critical·Major</text></g>
+<g class="node n-act"><title>V1·V2 구현</title><rect x="460.0" y="852" width="130" height="40" rx="6"/>
+<text x="525.0" y="877" text-anchor="middle" class="t-node"><tspan class="pid">V1·V2</tspan> 구현</text></g>
+<g class="node n-stb"><title>O1·M2 지원 작업 — 대기·REQ가 정한 위치</title><rect x="760.0" y="906" width="130" height="40" rx="6"/>
+<text x="825.0" y="923" text-anchor="middle" class="t-node"><tspan class="pid">O1·M2</tspan> 지원 작업</text><text x="825.0" y="938" text-anchor="middle" class="t-sub">대기·REQ가 정한 위치</text></g>
+<g class="node n-act"><title>Q5 최종 판정</title><rect x="610.0" y="960" width="130" height="40" rx="6"/>
+<text x="675.0" y="985" text-anchor="middle" class="t-node"><tspan class="pid">Q5</tspan> 최종 판정</text></g>
+<g class="node n-ceo"><title>최종 판정서 승인</title><rect x="10.0" y="1014" width="130" height="40" rx="6"/>
+<text x="75.0" y="1039" text-anchor="middle" class="t-node">최종 판정서 승인</text></g>
+<g class="node n-act"><title>S4 반영·커밋 — 비서팀</title><rect x="160.0" y="1068" width="130" height="40" rx="6"/>
+<text x="225.0" y="1085" text-anchor="middle" class="t-node"><tspan class="pid">S4</tspan> 반영·커밋</text><text x="225.0" y="1100" text-anchor="middle" class="t-sub">비서팀</text></g>
+</svg></div>
+    </div>
+    <div class="grid2">
+      <div class="card">
+        <h3>조건에 따른 분기</h3>
+        <ul class="small">
+          <li>EC 판단에서 「EC 있음」이면 EC 작성 → EC 판정 → 명세 순서이고, 명세 판정은 하지 않습니다.</li>
+          <li>Critical·Major에서 「EC 없음」이면 명세 뒤에 명세 판정을 합니다.</li>
+          <li>인수 시험은 Critical·Major에만 둡니다. Minor는 명세가 선택이고, 인수 시험 없이 구현 → 최종 판정입니다.</li>
+          <li>시각 디자인과 지원 작업은 REQ <code>workflow:</code>에 있을 때만 실행합니다.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>파이프라인 밖의 일</h3>
+        <ul class="small">
+          <li><b>Q6 중단 부적합 기록</b>: 어느 단계에서든 판정 없이 멈추면(중단 조건 1·5·6·8) 기록합니다. 판정의 <code>fail</code>·<code>rejected</code>는 그 판정 파트가 판정서와 함께 기록합니다.</li>
+          <li><b>S2 조사·브리핑</b>, <b>S3 핫픽스</b>(REQ 없이 대표님 사후 확인), <b>O2 보안 점검</b>(정기)은 이 흐름과 따로 실행합니다.</li>
+          <li>재작업·결함 반영·문체 반영은 새 파트가 아니라 처음 작성한 파트가 다시 맡습니다.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="head">
+      <h2>지침 계층: 파트마다 무엇을 싣나</h2>
+      <p class="sub">위 두 계층은 모든 에이전트에 실리므로 아주 얇게 두고, 실제 내용은 파트 카드에 둡니다. 생성 스크립트가 「부 + 팀 + 파트」를 합쳐 파트별 정의 파일 하나로 만듭니다.</p>
+    </div>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>계층</th><th>실리는 범위</th><th class="num">Q2 EC 판정</th><th class="num">Q7 인수 시험</th><th class="num">E2 EC 작성</th><th class="num">V1 구현·대조</th></tr></thead>
+        <tbody>
+          <tr><td>전역 공통</td><td>모든 에이전트</td><td class="num">1,000</td><td class="num">1,000</td><td class="num">1,000</td><td class="num">1,000</td></tr>
+          <tr><td>표준 공통(<code>AGENTS.md</code> 핵심 헌법)</td><td>모든 에이전트</td><td class="num">1,000</td><td class="num">1,000</td><td class="num">1,000</td><td class="num">1,000</td></tr>
+          <tr><td>부 지침</td><td>그 부의 파트</td><td class="num">500</td><td class="num">500</td><td class="num">1,000</td><td class="num">1,000</td></tr>
+          <tr><td>팀 지침</td><td>그 팀의 파트(3개 팀만)</td><td class="num">2,000</td><td class="num dim">없음</td><td class="num dim">없음</td><td class="num dim">없음</td></tr>
+          <tr><td>파트 카드</td><td>그 파트</td><td class="num">1,000</td><td class="num">1,500</td><td class="num">1,500</td><td class="num">1,000</td></tr>
+          <tr class="sum"><td>합계(목표)</td><td></td><td class="num">5,500</td><td class="num">4,000</td><td class="num">4,500</td><td class="num">4,000</td></tr>
+          <tr><td>지금(평균)</td><td class="small">기동 지침 17,229자 + 작업 중 읽은 매뉴얼</td><td class="num">35,800</td><td class="num">31,700</td><td class="num">45,300</td><td class="num">18,400</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <h3>에이전트 하나가 싣는 지침(글자)</h3>
+      <div class="legend"><span><i class="sw now"></i>지금(지난주 평균)</span><span><i class="sw tgt"></i>계층형 목표</span></div>
+      <div class="chart bars"><svg viewBox="0 0 900 258" role="img" aria-labelledby="bar-t"><title id="bar-t">파트별 에이전트 하나가 싣는 지침 분량: 지금과 계층형 목표</title>
+<line x1="130.0" y1="6" x2="130.0" y2="236" class="baseline"/><text x="130.0" y="252" text-anchor="middle" class="t-muted">0</text>
+<line x1="262.0" y1="6" x2="262.0" y2="236" class="gridline"/><text x="262.0" y="252" text-anchor="middle" class="t-muted">10천</text>
+<line x1="394.0" y1="6" x2="394.0" y2="236" class="gridline"/><text x="394.0" y="252" text-anchor="middle" class="t-muted">20천</text>
+<line x1="526.0" y1="6" x2="526.0" y2="236" class="gridline"/><text x="526.0" y="252" text-anchor="middle" class="t-muted">30천</text>
+<line x1="658.0" y1="6" x2="658.0" y2="236" class="gridline"/><text x="658.0" y="252" text-anchor="middle" class="t-muted">40천</text>
+<line x1="790.0" y1="6" x2="790.0" y2="236" class="gridline"/><text x="790.0" y="252" text-anchor="middle" class="t-muted">50천</text>
+<text x="120" y="32.0" text-anchor="end" class="t-label">Q2 EC 판정</text>
+<g class="bar"><title>Q2 EC 판정 지금: 약 35,800자</title><rect x="130" y="8" width="502.55999999999995" height="20" fill="transparent"/><path d="M130,10 h468.55999999999995 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-468.55999999999995 z" fill="var(--s1)"/><text x="608.56" y="22" class="t-value">35,800</text></g>
+<g class="bar"><title>Q2 EC 판정 목표: 약 5,500자</title><rect x="130" y="28" width="102.6" height="20" fill="transparent"/><path d="M130,30 h68.6 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-68.6 z" fill="var(--s3)"/><text x="208.6" y="42" class="t-value">5,500 (−85%)</text></g>
+<text x="120" y="88.0" text-anchor="end" class="t-label">Q7 인수 시험</text>
+<g class="bar"><title>Q7 인수 시험 지금: 약 31,700자</title><rect x="130" y="64" width="448.44000000000005" height="20" fill="transparent"/><path d="M130,66 h414.44000000000005 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-414.44000000000005 z" fill="var(--s1)"/><text x="554.44" y="78" class="t-value">31,700</text></g>
+<g class="bar"><title>Q7 인수 시험 목표: 약 4,000자</title><rect x="130" y="84" width="82.80000000000001" height="20" fill="transparent"/><path d="M130,86 h48.80000000000001 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-48.80000000000001 z" fill="var(--s3)"/><text x="188.8" y="98" class="t-value">4,000 (−87%)</text></g>
+<text x="120" y="144.0" text-anchor="end" class="t-label">E2 EC 작성</text>
+<g class="bar"><title>E2 EC 작성 지금: 약 45,300자</title><rect x="130" y="120" width="627.96" height="20" fill="transparent"/><path d="M130,122 h593.96 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-593.96 z" fill="var(--s1)"/><text x="733.96" y="134" class="t-value">45,300</text></g>
+<g class="bar"><title>E2 EC 작성 목표: 약 4,500자</title><rect x="130" y="140" width="89.4" height="20" fill="transparent"/><path d="M130,142 h55.400000000000006 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-55.400000000000006 z" fill="var(--s3)"/><text x="195.4" y="154" class="t-value">4,500 (−90%)</text></g>
+<text x="120" y="200.0" text-anchor="end" class="t-label">V1 구현·대조</text>
+<g class="bar"><title>V1 구현·대조 지금: 약 18,400자</title><rect x="130" y="176" width="272.88" height="20" fill="transparent"/><path d="M130,178 h238.88 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-238.88 z" fill="var(--s1)"/><text x="378.88" y="190" class="t-value">18,400</text></g>
+<g class="bar"><title>V1 구현·대조 목표: 약 4,000자</title><rect x="130" y="196" width="82.80000000000001" height="20" fill="transparent"/><path d="M130,198 h48.80000000000001 a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-48.80000000000001 z" fill="var(--s3)"/><text x="188.8" y="210" class="t-value">4,000 (−78%)</text></g>
+</svg></div>
+      <p class="note">양쪽 모두 서식(<code>templates/</code>) 읽기는 뺀 값입니다. 판정 파트가 카드에 없는 규정을 확인하려고 매뉴얼 원문을 여는 추가 읽기도 목표값에 넣지 않았으며, 시범 적용 때 실측합니다.</p>
+    </div>
+    <div class="tiles">
+      <div class="tile"><span class="k">서브에이전트 지침 비용(지난주)</span><span class="v">$77.9</span><span class="n">서브에이전트 $460.88의 약 17%</span></div>
+      <div class="tile after"><span class="k">서브에이전트 목표</span><span class="v">$6.6~14.4</span><span class="n">절감 $63.5~71.3</span></div>
+      <div class="tile"><span class="k">PM 본 세션 지침 비용(지난주)</span><span class="v">$46.8</span><span class="n">본 세션 $164.74의 약 28%</span></div>
+      <div class="tile after"><span class="k">PM 목표</span><span class="v">$3.3~7.1</span><span class="n">절감 $39.6~43.5</span></div>
+    </div>
+    <p class="note">계산: 호출마다 맥락에 있는 지침 토큰(글자 × 0.93)을 처음 실릴 때 캐시 쓰기 1회($5 또는 $8/MTok), 그 뒤 호출마다 캐시 읽기($0.20/MTok)로 셈했습니다. 기본 프롬프트·스킬 목록·도구 목록은 편성과 관계없으며, 개선안 종합 D1(파이프라인 실행 환경에서 쓰지 않는 스킬·커넥터 끄기)이 따로 다룹니다.</p>
+  </section>
+
+  <section>
+    <div class="head">
+      <h2>편성 기준</h2>
+    </div>
+    <div class="rules">
+      <div class="rule"><span class="no">파트 ①</span><b>공정 단계 하나 = 파트 하나</b><p class="small">한 단계를 여러 실행으로 쪼개지 않습니다. 쪼개면 실행 횟수가 늘어 비용이 늘어납니다(예: 백엔드·프론트엔드·리팩토링을 따로 실행).</p></div>
+      <div class="rule"><span class="no">파트 ②</span><b>새 버전은 같은 파트</b><p class="small">재작업·결함 반영·문체 반영은 처음 작성한 파트가, 재판정·문체 반영 대조는 그 판정 파트가 맡습니다.</p></div>
+      <div class="rule"><span class="no">파트 ③</span><b>작성과 판정은 다른 파트</b><p class="small">작성하는 일과 그 결과를 판정하는 일은 다른 파트, 다른 실행입니다.</p></div>
+      <div class="rule"><span class="no">파트 ④·⑤</span><b>예외 두 가지</b><p class="small">같은 단계라도 안건 종류에 따라 규정이 크게 다르면 카드를 나눕니다(E3·E4, V1·V2). 비서팀은 대화 업무라 책무를 묶은 단위로 둡니다.</p></div>
+      <div class="rule"><span class="no">부</span><b>폴더와 권한 한계의 단위</b><p class="small"><code>AGENTS.md</code> 1절 조직 표의 행입니다. 비서실 행에 비서실과 PM이 함께 있으므로 한 부 안의 두 팀으로 둡니다.</p></div>
+      <div class="rule"><span class="no">팀</span><b>지침은 필요한 곳에만</b><p class="small">실행 환경이나 권한이 다르거나, 같은 팀 파트 2개 이상이 부 지침 밖의 규정을 함께 쓸 때만 팀 지침을 둡니다. 나머지는 표시용입니다.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="head">
+      <h2>필요한 규정 개정</h2>
+      <p class="sub">여섯 건을 공정 지도·카드 생성 스크립트와 함께 하나의 Critical 안건으로 진행하는 규모입니다. 전역 지침의 Claude Code용 축소본은 대표님 승인을 받은 뒤 만듭니다.</p>
+    </div>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>번호</th><th>대상</th><th>개정 방향</th></tr></thead>
+        <tbody>
+          <tr><td>①</td><td><code>Workflow/02</code> 2절 품질 행</td><td>「세 책무를 파트로 나누지 않는다」를 판정팀·시험팀과 Q1~Q7로 변경</td></tr>
+          <tr><td>②</td><td><code>Workflow/02</code> 2절 서브에이전트 열, <code>Workflow/06</code> 3절 1항</td><td>부서마다 정의 파일 하나 → 파트마다 생성한 정의 파일(규정 문장 포함)</td></tr>
+          <tr><td>③</td><td><code>AGENTS.md</code> 2절 9항 「단일 원천」, 최종 판정 기준 6 「사본 대조」</td><td>생성한 파트 카드는 예외로 하고, 커밋 전 검사가 원천 절과의 일치를 대조</td></tr>
+          <tr><td>④</td><td><code>Workflow/05</code> 실행 명령·PM 지시문, <code>Workflow/03</code>의 기동 규정</td><td>부서 서브에이전트 기동 → PM 카드 읽기와 파트 이름으로 기동</td></tr>
+          <tr><td>⑤</td><td><code>Workflow/01</code>~<code>07</code> 전반</td><td>파트 크기의 절로 다시 나누고, 절마다 대상 파트 태그를 붙임</td></tr>
+          <tr><td>⑥</td><td><code>Workflow/06</code> 4절 커밋 전 검사</td><td>카드와 원천 절의 일치 대조, 태그 누락 검사 추가</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">모델 규정(<code>Workflow/04</code>)은 바꾸지 않습니다. 다만 개선안 종합 C1(작성은 Sonnet, 판정은 Opus)은 현행 규정으로는 어느 분류에서도 그대로 시범할 수 없어, 시범 ORDER에서 해당 규정 개정이나 예외 승인을 먼저 정해야 합니다.</p>
+  </section>
+
+  <section>
+    <div class="head">
+      <h2>확인하지 못한 항목</h2>
+    </div>
+    <ul class="small">
+      <li>파트별로 실제 필요한 매뉴얼 절의 분량(공정 지도를 만들 때 절 ID별로 측정)</li>
+      <li>비서팀 파트(S1~S4)의 실행 횟수와 비용(코워크 세션별 기록 없음), 코워크 스킬 방식의 절감액</li>
+      <li>PM 본 세션에 정의 파일을 싣는 기능의 유무(없으면 실행 명령의 첫 지시로 PM 카드를 읽게 함)</li>
+      <li>절감액 계산의 전제(PM 기동 지침을 17,229자로 둠, 맥락 압축 무시)가 만드는 오차</li>
+      <li>대기 파트(운영·마케팅·제품 개발)의 실제 필요 규정과 활성 시점</li>
+    </ul>
+  </section>
+
+  <footer>
+    <p>작성 날짜: 2026-10-13</p>
+    <p>작성 서비스·세션 식별자와 모델: 코워크·20261013T0935, claude-opus-5-5(작성 세션의 설정 모델. 실제 서빙 모델은 확인 불가)</p>
+    <p>원천 문서: <code>Departments/Secretariat/assets/research/조사_20261013_부팀파트편성검토_v01.md</code></p>
+  </footer>
+</main>
+</body>
+</html>
