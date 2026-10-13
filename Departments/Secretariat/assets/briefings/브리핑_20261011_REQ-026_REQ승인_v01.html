@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>브리핑: ORD-006 요구 항목 12 REQ 승인(REQ-026)</title>
+<style>
+  body { margin: 0; padding: 24px; font-family: sans-serif; line-height: 1.6; color: #1f2328; background: #ffffff; }
+  main { max-width: 960px; margin: 0 auto; }
+  h1 { font-size: 1.5rem; margin: 0 0 16px; }
+  h2 { font-size: 1.15rem; margin: 24px 0 8px; }
+  .top { border: 2px solid #1f2328; border-radius: 8px; padding: 16px; margin-bottom: 24px; }
+  .top h2 { margin-top: 0; }
+  table { border-collapse: collapse; width: 100%; margin: 8px 0; }
+  th, td { border: 1px solid #d0d7de; padding: 6px 8px; text-align: left; vertical-align: top; }
+  th { background: #f6f8fa; }
+  code { font-family: monospace; background: #f6f8fa; padding: 0 4px; }
+  footer { margin-top: 32px; padding-top: 12px; border-top: 1px solid #d0d7de; font-size: 0.875rem; color: #57606a; }
+</style>
+</head>
+<body>
+<main>
+  <h1>브리핑: ORD-006 요구 항목 12 REQ 승인(REQ-026)</h1>
+
+  <section class="top">
+    <h2>결론</h2>
+    <p>PM이 ORD-006 요구 항목 12(추적성) 전담 안건으로 <code>REQ-026_v03.md</code>(Critical)를 작성했습니다. REQ 판정은 재판정 2차에서 <code>pass</code>(결함 0건, 문체 지적 0건)로 완료되었습니다. 모든 결정 항목(D1~D13)의 권고안대로 승인하시면 됩니다.</p>
+    <h2>대표님이 할 일</h2>
+    <ul>
+      <li>승인 문구 입력: <code>REQ-026_v03 승인, 전부 권고안</code></li>
+      <li>대안을 선택하시는 항목이 있으면 해당 번호와 대안을 함께 입력하십시오. (예: <code>REQ-026_v03 승인, D13은 high, 나머지 권고안</code>)</li>
+      <li>표준 개정 제안 검토(ORDER 발행 여부): <code>NCR-026_01.md</code>(C2 2건 누적), <code>NCR-026_02.md</code>(C3 2건 누적)</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>1. 결정 표 비교 (D1~D13)</h2>
+    <table>
+      <tr><th>번호</th><th>정할 일</th><th>권고안</th><th>대안과 영향</th></tr>
+      <tr>
+        <td>D1</td>
+        <td>추적 식별자의 방식</td>
+        <td>ORDER 번호와 그 ORDER의 요구 항목 번호를 합친 것(<code>ORD-xxx-요구항목번호</code>)을 추적 식별자로 정하고, REQ 체크리스트 번호와 최종 판정서의 체크리스트 대조 번호가 그 요구 항목 번호를 그대로 이어받는다는 것을 표준에 명시합니다. 지금도 REQ 체크리스트 번호는 요구 항목 번호와 같아 새 번호 체계를 만들 필요가 없기 때문입니다.</td>
+        <td>(가) ORDER와 별도로 안건마다 새 일련번호 부여: ORDER 없는 작업에도 같은 번호를 쓸 수 있지만 기존 번호와 이중 관리 부담이 생깁니다.</td>
+      </tr>
+      <tr>
+        <td>D2</td>
+        <td>연결마다 버전을 남기는지 (ORDER → REQ, T2)</td>
+        <td>REQ 머리말에 출처 ORDER의 버전을 기록합니다. ORDER <code>related_req</code>는 지금처럼 버전 없는 이름으로 둡니다. REQ 새 버전마다 ORDER를 매번 수정하지 않으면서도 정확한 버전 연결을 추적할 수 있습니다.</td>
+        <td>(가) REQ 1절 본문에만 기재: 규칙 변경은 없으나 머리말 메타데이터 조회가 불가능하고 본문을 일일이 확인해야 합니다.</td>
+      </tr>
+      <tr>
+        <td>D3</td>
+        <td>다른 안건 기록을 버전으로 참조하는 경우 (T4)</td>
+        <td>다른 안건이 정한 규정을 근거로 들 때는 그 규정이 있는 현행 원천 문서와 절을 참조하고, 다른 안건 기록의 버전 참조는 그 버전에 대한 사실(승인, 판정, 결정, 커밋)을 적을 때만 쓴다는 원칙을 표준에 둡니다. 규칙 개정에 따른 참조 풍화를 방지합니다.</td>
+        <td>(가) 현행 유지: 규정 추가는 없으나 T4 풍화 문제가 그대로 남습니다.</td>
+      </tr>
+      <tr>
+        <td>D4</td>
+        <td>커밋에서 승인본을 찾을 수 있어야 하는지 (T3)</td>
+        <td>찾을 수 있어야 합니다. 커밋 하나에서 그 커밋이 반영한 승인된 REQ 버전과 승인받은 최종 판정서(핫픽스는 확인받은 HOTFIX 버전)를 찾을 수 있고, 같은 안건의 커밋이 여러 건이면 각 커밋이 무엇을 담았는지 구분할 수 있게 합니다. 구체적 방법은 EC에서 확정합니다.</td>
+        <td>(가) 현행 유지(커밋 메시지에 안건 번호만 기재): 커밋에 든 여러 REQ 버전·판정서 중 어떤 것이 승인본인지 찾는 기준이 기록에 없습니다.</td>
+      </tr>
+      <tr>
+        <td>D5</td>
+        <td>ORDER를 거치지 않는 작업에도 근거를 남기는지 (T6, T9, REQ-016 D1)</td>
+        <td>남깁니다. ① 핫픽스는 결함을 유발한 원인 안건 번호를 HOTFIX에 기록합니다 ② 비서실이 하는 「요청 커밋」(파이프라인 밖 <code>Lab/</code> 실험 파일 커밋 포함)은 대표님 요청 원문을 저장소 기록으로 남기고 커밋에서 해당 기록을 찾을 수 있게 합니다. 대표님 직접 <code>[CEO]</code> 커밋은 대상에서 제외합니다.</td>
+        <td>(가) ①만 수행: 요청 커밋의 근거가 비서실 대화창에만 남습니다. (나) 대표님 직접 커밋에도 근거 기록 의무화: 모든 커밋에 근거가 남으나 대표님의 작업 절차가 번거로워집니다.</td>
+      </tr>
+      <tr>
+        <td>D6</td>
+        <td>추적 관계 정의에 넣을 문서 (T5)</td>
+        <td>HOTFIX, 승인 기록, AUDIT, 브리핑, 조사 자료, 실험 파일을 추적 관계에 추가하고 각 문서의 선후 연결을 정합니다. ORDER에는 근거 조사 자료(외부 보고서 포함)를 적는 자리를 신설합니다.</td>
+        <td>(가) HOTFIX와 승인 기록만 추가: 조사 자료·외부 보고서와 ORDER 사이의 연결이 공식 기록에 남지 않습니다.</td>
+      </tr>
+      <tr>
+        <td>D7</td>
+        <td>판정 완료 시각 (T1 잔여, RES-016_v01 불일치)</td>
+        <td>판정서 <code>completed_at</code>에는 판정을 마칠 때 판정 세션이 명령으로 조회한 시각을 조회 결과 그대로 적고, 반올림하거나 추정한 값을 적지 않는 규정을 둡니다.</td>
+        <td>(가) 현행 유지: 미기재(확인 불가)는 방지되나 임의 추정 기재를 차단하지 못합니다.</td>
+      </tr>
+      <tr>
+        <td>D8</td>
+        <td>안건 번호 없는 비서실 산출물의 Git 커밋 시점과 경로</td>
+        <td>그 안건 REQ 승인과 최종 판정서 승인에 사용된 승인 브리핑, 그리고 그 안건 ORDER가 근거로 명시한 조사 자료는 해당 안건의 최종 판정서 승인 뒤 커밋에 포함합니다. 특정 안건에 묶이지 않는 일반 산출물은 현행대로 대표님 요청에 따른 「요청 커밋」으로 처리합니다.</td>
+        <td>(가) 전부 요청 커밋으로 유지: 대표님이 별도 요청하지 않으면 핵심 승인 근거가 Git에 남지 않습니다. (나) 비서실 정기 일괄 커밋: 대표님 명시적 요청 없는 커밋이 발생해 AGENTS.md 불변 원칙 개정이 필요합니다.</td>
+      </tr>
+      <tr>
+        <td>D9</td>
+        <td>고치지 않는 항목 (T7, T10, T11)</td>
+        <td>세 가지 모두 이 REQ에서 고치지 않습니다. T7(이월 문체 지적 종결 기록)은 판정서 기록에 남아 있고 사고 이력이 없습니다. T10(대표님 직접 기재 시 승인 문구)은 REQ 결정 열에 남으며 대표님 작업 방식을 강제하지 않습니다. T11(승인 시각 대조)은 요건 미달 문구 불인정 규정이 이미 있습니다. 사고 근거 없는 규칙 비대화 방지(AGENTS.md 불변 원칙 8항)를 준수합니다.</td>
+        <td>(가) T7 개정 (나) T10 개정 (다) T11 개정: 실효성 대비 규칙 복잡도가 증가합니다.</td>
+      </tr>
+      <tr>
+        <td>D10</td>
+        <td>서버실 원본의 추적 (T8)</td>
+        <td>이 REQ에서 다루지 않고, ORDER 요구 항목 5(서버실 사용 규칙, 처리 순서 ⑨) 전담 REQ에서 서버실 규칙과 함께 확정합니다.</td>
+        <td>(가) 이 REQ에서 일괄 확정: 서버실 운영 규칙이 정해지기 전에 기록 방식만 앞서 결정하게 됩니다.</td>
+      </tr>
+      <tr>
+        <td>D11</td>
+        <td>추적성 원칙을 둘 문서</td>
+        <td><code>AGENTS.md</code> 「불변 원칙」에 추적성 원칙을 1개 항으로 신설하고, 상세 내용은 <code>Workflow/07_문서_서식_및_번호</code> 「문서 체계」를 단일 원천으로 둡니다.</td>
+        <td>(가) <code>Workflow/07</code>에만 신설: 최상위 거버넌스 불변 원칙에 핵심 기준인 추적성이 명시되지 않습니다.</td>
+      </tr>
+      <tr>
+        <td>D12</td>
+        <td>새 규정의 적용 시점</td>
+        <td>이 REQ 커밋 뒤에 첫 버전을 작성하는 기록(ORDER, REQ, HOTFIX, 판정서 등)과 그 이후의 커밋부터 적용하며, 과거 기록에 소급하지 않습니다. 진행 중인 문서의 혼선을 방지합니다.</td>
+        <td>(가) 기존 현행 기록에 소급 적용: 과거 정합성은 맞춰지나 이미 완료된 기록들의 재작성·재판정이 대규모로 발생합니다.</td>
+      </tr>
+      <tr>
+        <td>D13</td>
+        <td>effort</td>
+        <td><code>medium</code> (기본값)</td>
+        <td><code>high</code></td>
+      </tr>
+    </table>
+  </section>
+
+  <section>
+    <h2>2. 덮어쓰기·삭제 가능성이 있는 기존 경로 (REQ <code>scope:</code>)</h2>
+    <p>거버넌스 파일은 원본을 직접 수정하지 않고 적용본으로 작성하며, 최종 판정서 승인 뒤 비서실이 반영합니다. 신규 생성되는 <code>Departments/Design/docs/tad/EC-026</code> 외 기존 파일 목록은 아래와 같습니다.</p>
+    <table>
+      <tr><th>구분</th><th>경로</th><th>개정 사유 요약</th></tr>
+      <tr><td>최상위 거버넌스</td><td><code>AGENTS.md</code></td><td>D11 추적성 불변 원칙 조항 신설 및 0절 문서 지도 반영</td></tr>
+      <tr><td>표준 매뉴얼</td><td><code>Workflow/01_표준_개요.md</code></td><td>용어 정의에 추적성 및 추적 식별자 추가</td></tr>
+      <tr><td>표준 매뉴얼</td><td><code>Workflow/02_부서_구조_및_작업구역.md</code></td><td>비서실 산출물 목록에 요청 커밋 원문 기록 추가</td></tr>
+      <tr><td>표준 매뉴얼</td><td><code>Workflow/03_라이프사이클.md</code></td><td>D7 판정 완료 시각 조회 규정 및 D5 파이프라인 밖 실험 파일 커밋 연결</td></tr>
+      <tr><td>표준 매뉴얼</td><td><code>Workflow/05_인수인계_및_실행명령.md</code></td><td>D8 안건 산출물 스테이징 대상 확대 및 D5 요청 커밋 절차 정비</td></tr>
+      <tr><td>표준 매뉴얼</td><td><code>Workflow/07_문서_서식_및_번호.md</code></td><td>D1·D3·D6 추적 관계 정비, 머리말 규정 및 커밋 메시지 규칙</td></tr>
+      <tr><td>템플릿</td><td><code>Workflow/templates/ORDER_TEMPLATE.md</code></td><td>D6 근거 조사 자료 및 외부 보고서 기재란 신설</td></tr>
+      <tr><td>템플릿</td><td><code>Workflow/templates/REQ_TEMPLATE.md</code></td><td>D2 출처 ORDER 버전 기재란 신설</td></tr>
+      <tr><td>템플릿</td><td><code>Workflow/templates/HOTFIX_TEMPLATE.md</code></td><td>D5 유발 원인 안건 번호 기재란 신설</td></tr>
+      <tr><td>템플릿</td><td><code>Workflow/templates/RES_TEMPLATE.md</code></td><td>D7 completed_at 시각 조회 지침 명시</td></tr>
+      <tr><td>에이전트 설정</td><td><code>.claude/agents/quality.md</code></td><td>품질 판정관 completed_at 시각 조회 지침 정합성 확보</td></tr>
+    </table>
+  </section>
+
+  <section>
+    <h2>3. 원천 문서 경로</h2>
+    <ul>
+      <li>출처 ORDER: <code>Departments/Secretariat/assets/inbox/ORD-006_v11.md</code></li>
+      <li>요청서(REQ): <code>Departments/Secretariat/docs/requests/REQ-026_v03.md</code></li>
+      <li>판정서: <code>Departments/Quality/results/RES-026-REQ_v03.md</code></li>
+      <li>부적합 기록: <code>Departments/Quality/docs/nonconformance/NCR-026_01.md</code>, <code>Departments/Quality/docs/nonconformance/NCR-026_02.md</code></li>
+    </ul>
+  </section>
+
+  <footer>
+    <p>작성 날짜: 2026-10-11</p>
+    <p>작성 서비스·세션 식별자와 모델: Antigravity, 세션 식별자 <code>cbd79453</code>, 모델 확인 불가</p>
+    <p>원천 문서: <code>Departments/Secretariat/docs/requests/REQ-026_v03.md</code>, <code>Departments/Quality/results/RES-026-REQ_v03.md</code></p>
+  </footer>
+</main>
+</body>
+</html>

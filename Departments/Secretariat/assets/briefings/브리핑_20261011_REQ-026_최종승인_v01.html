@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>브리핑: REQ-026 최종 승인(추적성 정비)</title>
+<style>
+  body { margin: 0; padding: 24px; font-family: sans-serif; line-height: 1.6; color: #1f2328; background: #ffffff; }
+  main { max-width: 960px; margin: 0 auto; }
+  h1 { font-size: 1.5rem; margin: 0 0 16px; }
+  h2 { font-size: 1.15rem; margin: 24px 0 8px; }
+  .top { border: 2px solid #1f2328; border-radius: 8px; padding: 16px; margin-bottom: 24px; }
+  .top h2 { margin-top: 0; }
+  table { border-collapse: collapse; width: 100%; margin: 8px 0; }
+  th, td { border: 1px solid #d0d7de; padding: 6px 8px; text-align: left; vertical-align: top; }
+  th { background: #f6f8fa; }
+  code { font-family: monospace; background: #f6f8fa; padding: 0 4px; }
+  footer { margin-top: 32px; padding-top: 12px; border-top: 1px solid #d0d7de; font-size: 0.875rem; color: #57606a; }
+</style>
+</head>
+<body>
+<main>
+  <h1>브리핑: REQ-026 최종 승인(추적성 정비)</h1>
+
+  <section class="top">
+    <h2>결론</h2>
+    <p>REQ-026 원스톱 파이프라인이 최종 판정 <code>pass</code>(<code>Departments/Quality/results/RES-026_v01.md</code>, 결함 0건, 문체 지적 0건)로 완료되었습니다. 거버넌스 파일 개정 10건의 적용본 작성이 완료되었으며 인수 시험 18건 전체 통과를 확인했습니다. 대표님 최종 승인 후 비서실이 원본 반영·정리·스테이징·커밋 전 검사·커밋을 진행합니다.</p>
+    <h2>대표님이 할 일</h2>
+    <ul>
+      <li><strong>최종 승인 문구 입력</strong>: <code>RES-026_v01 승인</code></li>
+      <li><strong>표준 개정 제안 검토</strong>: <code>NCR-026_04.md</code> (원인 C1 누적 2건, EC 작성 시 복수 결정을 합칠 때 대상·조건 명시 및 대조 표준화 제안. 추후 ORDER 발행 여부 결정)</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>1. 결정 사항 반영 위치 (D1~D13)</h2>
+    <table>
+      <tr><th>번호</th><th>결정 내용</th><th>반영 위치 (적용본 기준)</th></tr>
+      <tr>
+        <td>D1</td>
+        <td>추적 식별자(<code>ORD-xxx-요구항목번호</code>) 명시 및 체크리스트·판정 대조 번호 승계</td>
+        <td><code>Workflow/07_문서_서식_및_번호.md</code> 1절 「추적 식별자」, <code>Workflow/01_표준_개요.md</code> 4절 「추적 식별자」, <code>REQ_TEMPLATE.md</code> 1절 안내, <code>RES_TEMPLATE.md</code> 3절 안내</td>
+      </tr>
+      <tr>
+        <td>D2</td>
+        <td>출처 ORDER 버전 기록(<code>source_order</code>) 및 ORDER <code>related_req</code> 버전 없는 이름 유지</td>
+        <td><code>REQ_TEMPLATE.md</code> 머리말 <code>source_order</code>, <code>Workflow/07_문서_서식_및_번호.md</code> 1·3절</td>
+      </tr>
+      <tr>
+        <td>D3</td>
+        <td>다른 안건 규정은 현행 원천 문서·절 참조, 버전 참조는 과거 사실 기술에 한정</td>
+        <td><code>Workflow/07_문서_서식_및_번호.md</code> 1절 「다른 안건 기록의 참조」</td>
+      </tr>
+      <tr>
+        <td>D4</td>
+        <td>커밋에서 승인된 REQ 버전과 승인된 판정서 식별(근거 줄 표 및 키 규정), 여러 커밋 구분(<code>Follows</code>)</td>
+        <td><code>Workflow/07_문서_서식_및_번호.md</code> 2절 「커밋 메시지」, <code>Workflow/05_인수인계_및_실행명령.md</code> 1.1·8.1·8.3절, <code>HOTFIX_TEMPLATE.md</code> 5절</td>
+      </tr>
+      <tr>
+        <td>D5</td>
+        <td>HOTFIX 원인 안건 필드(<code>origin</code>) 신설, 비서실 요청 커밋에 요청 원문 기록 신설(<code>Lab/</code> 포함), 대표님 직접 커밋 제외</td>
+        <td><code>HOTFIX_TEMPLATE.md</code> 머리말 <code>origin</code>·1절, <code>Workflow/05_인수인계_및_실행명령.md</code> 8.3·8.4절, <code>Workflow/07_문서_서식_및_번호.md</code> 1·2절, <code>Workflow/02_부서_구조_및_작업구역.md</code> 2·2.1·4절</td>
+      </tr>
+      <tr>
+        <td>D6</td>
+        <td>HOTFIX, 승인 기록, AUDIT, 브리핑, 조사 자료, 실험 파일을 추적 관계에 편입, ORDER에 「근거 자료」 줄 신설</td>
+        <td><code>Workflow/07_문서_서식_및_번호.md</code> 1절 「추적 관계」 사슬 및 연결 자리 표, <code>ORDER_TEMPLATE.md</code> 「근거 자료」 줄</td>
+      </tr>
+      <tr>
+        <td>D7</td>
+        <td>판정서 <code>completed_at</code>에 판정 완료 시 명령으로 실측한 시각 결과 기재(추정·반올림 금지)</td>
+        <td><code>Workflow/03_라이프사이클.md</code> 5.2절 6항, <code>RES_TEMPLATE.md</code> 머리말 주석·4절, <code>Workflow/07_문서_서식_및_번호.md</code> 3절</td>
+      </tr>
+      <tr>
+        <td>D8</td>
+        <td>승인 브리핑 및 ORDER 명시 조사 자료를 안건 최종 승인 커밋에 편입, 일반 산출물은 요청 커밋 유지</td>
+        <td><code>Workflow/05_인수인계_및_실행명령.md</code> 1.1절 6번 ⑨·⑩, <code>Workflow/07_문서_서식_및_번호.md</code> 2절 승인 브리핑 주제 규칙</td>
+      </tr>
+      <tr>
+        <td>D9</td>
+        <td>T7(이월 지적 종결), T10(대표님 직접 승인 문구), T11(승인 시각 대조) 미개정 (현행 유지)</td>
+        <td>규정 변경 없음 (<code>Workflow/03</code> 5.1절 및 <code>Workflow/07</code> 3.1절 원본 유지)</td>
+      </tr>
+      <tr>
+        <td>D10</td>
+        <td>서버실 원본의 Git 기록 방식 미개정 (순서 ⑨ 전담 REQ로 이관)</td>
+        <td>규정 변경 없음</td>
+      </tr>
+      <tr>
+        <td>D11</td>
+        <td>최상위 거버넌스 <code>AGENTS.md</code> 「불변 원칙」에 10항 「추적성」 조항 신설 및 원천 참조</td>
+        <td><code>AGENTS.md</code> 0절 문서 지도 및 2절 10항 「추적성」, <code>Workflow/01_표준_개요.md</code> 4절 「추적성」 행</td>
+      </tr>
+      <tr>
+        <td>D12</td>
+        <td>새 추적 규정의 적용 시점(REQ-026 커밋 이후 첫 작성 기록 및 커밋부터 적용, 과거 기록 소급 배제)</td>
+        <td><code>Workflow/07_문서_서식_및_번호.md</code> 1절 「추적 규정의 적용 시점」</td>
+      </tr>
+      <tr>
+        <td>D13</td>
+        <td>effort: medium</td>
+        <td>실행 명령 및 메타데이터 반영 (문서 개정 없음)</td>
+      </tr>
+    </table>
+  </section>
+
+  <section>
+    <h2>2. 덮어쓰기 원본 및 삭제 대상 목록</h2>
+    <p>최종 판정서 승인 시 비서실이 결과서 반영 명령에 따라 아래 10개 원본 파일에 적용본을 덮어씁니다.</p>
+    <table>
+      <tr><th>적용본 경로</th><th>덮어쓸 원본 경로</th></tr>
+      <tr><td><code>Departments/Design/workspace/REQ-026_적용본_v01/AGENTS.md.적용본</code></td><td><code>AGENTS.md</code></td></tr>
+      <tr><td><code>Departments/Design/workspace/REQ-026_적용본_v01/Workflow.적용본/01_표준_개요.md</code></td><td><code>Workflow/01_표준_개요.md</code></td></tr>
+      <tr><td><code>Departments/Design/workspace/REQ-026_적용본_v01/Workflow.적용본/02_부서_구조_및_작업구역.md</code></td><td><code>Workflow/02_부서_구조_및_작업구역.md</code></td></tr>
+      <tr><td><code>Departments/Design/workspace/REQ-026_적용본_v01/Workflow.적용본/03_라이프사이클.md</code></td><td><code>Workflow/03_라이프사이클.md</code></td></tr>
+      <tr><td><code>Departments/Design/workspace/REQ-026_적용본_v01/Workflow.적용본/05_인수인계_및_실행명령.md</code></td><td><code>Workflow/05_인수인계_및_실행명령.md</code></td></tr>
+      <tr><td><code>Departments/Design/workspace/REQ-026_적용본_v01/Workflow.적용본/07_문서_서식_및_번호.md</code></td><td><code>Workflow/07_문서_서식_및_번호.md</code></td></tr>
+      <tr><td><code>Departments/Design/workspace/REQ-026_적용본_v01/Workflow.적용본/templates/ORDER_TEMPLATE.md</code></td><td><code>Workflow/templates/ORDER_TEMPLATE.md</code></td></tr>
+      <tr><td><code>Departments/Design/workspace/REQ-026_적용본_v01/Workflow.적용본/templates/REQ_TEMPLATE.md</code></td><td><code>Workflow/templates/REQ_TEMPLATE.md</code></td></tr>
+      <tr><td><code>Departments/Design/workspace/REQ-026_적용본_v01/Workflow.적용본/templates/HOTFIX_TEMPLATE.md</code></td><td><code>Workflow/templates/HOTFIX_TEMPLATE.md</code></td></tr>
+      <tr><td><code>Departments/Design/workspace/REQ-026_적용본_v01/Workflow.적용본/templates/RES_TEMPLATE.md</code></td><td><code>Workflow/templates/RES_TEMPLATE.md</code></td></tr>
+    </table>
+
+    <p>반영 후 아래 6개 일회성 파일(판정서 7절 삭제 대상)을 삭제합니다.</p>
+    <ul>
+      <li><code>Departments/Design/workspace/REQ-026_EC복사_v01.py</code></li>
+      <li><code>Departments/Design/workspace/REQ-026_EC복사_v02.py</code></li>
+      <li><code>Departments/Design/workspace/REQ-026_적용본복사_20261011a.py</code></li>
+      <li><code>Departments/Secretariat/workspace/REQ-026_EC변경분_v01v02.diff</code></li>
+      <li><code>Departments/Secretariat/workspace/REQ-026_EC변경분_v02v03.diff</code></li>
+      <li><code>Departments/Secretariat/workspace/REQ-026_검사진단_v01.py</code></li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>3. 원천 문서 경로</h2>
+    <ul>
+      <li>요청서(REQ): <code>Departments/Secretariat/docs/requests/REQ-026_v03.md</code></li>
+      <li>엔지니어링 변경문(EC): <code>Departments/Design/docs/tad/EC-026_v03.md</code></li>
+      <li>설계 결과서: <code>Departments/Design/results/RPT-026_v02.md</code></li>
+      <li>인수 시험 절차서: <code>Departments/Quality/results/ACC-026_v01.md</code></li>
+      <li>개발 결과서: <code>Departments/Development/results/DEV-026_v01.md</code></li>
+      <li>최종 판정서: <code>Departments/Quality/results/RES-026_v01.md</code></li>
+    </ul>
+  </section>
+
+  <footer>
+    <p>작성 날짜: 2026-10-11</p>
+    <p>작성 서비스·세션 식별자와 모델: Antigravity, 세션 식별자 <code>cbd79453</code>, 모델 확인 불가</p>
+    <p>원천 문서: <code>Departments/Secretariat/docs/requests/REQ-026_v03.md</code>, <code>Departments/Quality/results/RES-026_v01.md</code>, <code>Departments/Design/results/RPT-026_v02.md</code></p>
+  </footer>
+</main>
+</body>
+</html>

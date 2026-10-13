@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ORD-010 v03 요약</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  /* 레이아웃: 한 단 보고서. 결론 상자 → 관문 행렬(지금/반영 뒤) → 요구 항목 카드 → 결정 반영 → 처리 순서 → 임시 조치 */
+  :root {
+    --bg: #fbfbfa; --surface: #ffffff; --ink: #1d2126; --muted: #5d646d; --line: #d6d9dd; --soft: #f1f2f3;
+    --accent: #2d5b8a; --accent-soft: #e3ecf5;
+    --ok: #1d6b3a; --ok-soft: #dff2e5; --warn: #7a5300; --warn-soft: #fbf0cf; --bad: #a3222f; --bad-soft: #fbe3e5;
+    --font-body: "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", sans-serif;
+    --font-mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+    --bg: #15181c; --surface: #1c2025; --ink: #e6e8eb; --muted: #a2a9b2; --line: #343a42; --soft: #23282e;
+    --accent: #8fb6de; --accent-soft: #1f3247;
+    --ok: #7fd39b; --ok-soft: #173424; --warn: #e8c46a; --warn-soft: #3a3016; --bad: #f2939b; --bad-soft: #3d1c21;
+    color-scheme: dark } }
+  :root[data-theme="dark"] {
+    --bg: #15181c; --surface: #1c2025; --ink: #e6e8eb; --muted: #a2a9b2; --line: #343a42; --soft: #23282e;
+    --accent: #8fb6de; --accent-soft: #1f3247;
+    --ok: #7fd39b; --ok-soft: #173424; --warn: #e8c46a; --warn-soft: #3a3016; --bad: #f2939b; --bad-soft: #3d1c21;
+    color-scheme: dark }
+
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 15px; line-height: 1.65; }
+  main { max-width: 920px; margin: 0 auto; padding-inline: 16px; padding-block: 28px 40px; display: grid; gap: 30px; }
+  h1, h2, h3 { text-wrap: balance; line-height: 1.35; margin: 0; }
+  h1 { font-size: 1.6rem; font-weight: 700; }
+  h2 { font-size: 1.15rem; font-weight: 700; }
+  h3 { font-size: 0.98rem; font-weight: 600; }
+  p, ul { margin: 0; }
+  ul { padding-left: 1.2em; display: grid; gap: 4px; }
+  section { display: grid; gap: 12px; min-width: 0; }
+  code { font-family: var(--font-mono); font-size: 0.86em; background: var(--soft); padding: 0 4px; border-radius: 3px; word-break: break-all; }
+  .eyebrow { font-size: 0.78rem; letter-spacing: 0.06em; color: var(--muted); font-weight: 600; }
+  .note { font-size: 0.88rem; color: var(--muted); }
+  .head { display: grid; gap: 6px; }
+
+  .top { background: var(--surface); border: 1.5px solid var(--ink); border-radius: 8px; padding: 18px; display: grid; gap: 14px; }
+  .top ul { gap: 6px; }
+
+  .scroll { overflow-x: auto; min-width: 0; }
+  table { border-collapse: collapse; width: 100%; font-size: 0.9rem; background: var(--surface); }
+  th, td { border: 1px solid var(--line); padding: 7px 9px; text-align: left; vertical-align: top; }
+  th { background: var(--soft); font-weight: 600; }
+
+  /* 관문 행렬 */
+  .switch { display: flex; gap: 6px; flex-wrap: wrap; }
+  .switch button { font: inherit; font-size: 0.88rem; border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 6px; padding: 5px 12px; cursor: pointer; }
+  .switch button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--surface); font-weight: 600; }
+  .switch button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .gate { min-width: 640px; border-collapse: separate; border-spacing: 0; }
+  .gate td:first-child, .gate th:first-child { width: 28%; position: sticky; left: 0; background: var(--surface); z-index: 1; box-shadow: inset -1px 0 0 var(--line); }
+  .gate th:first-child { background: var(--soft); }
+  .chip { display: inline-block; font-size: 0.8rem; font-weight: 600; padding: 1px 8px; border-radius: 10px; white-space: nowrap; }
+  .c-ok { background: var(--ok-soft); color: var(--ok); }
+  .c-warn { background: var(--warn-soft); color: var(--warn); }
+  .c-bad { background: var(--bad-soft); color: var(--bad); }
+  .c-na { background: var(--soft); color: var(--muted); }
+  .sub { display: block; font-size: 0.8rem; color: var(--muted); margin-top: 3px; }
+  .changed { outline: 2px solid var(--accent); outline-offset: -2px; }
+  .legend { display: flex; flex-wrap: wrap; gap: 8px 14px; font-size: 0.82rem; color: var(--muted); }
+
+  /* 요구 항목 카드 */
+  .cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; display: grid; gap: 6px; align-content: start; }
+  .card.new { border: 2px solid var(--accent); }
+  .card .t { display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
+  .num { font-family: var(--font-mono); font-weight: 500; color: var(--accent); }
+  .card p { font-size: 0.9rem; }
+  .tag { font-size: 0.74rem; font-weight: 600; padding: 0 6px; border-radius: 4px; background: var(--accent-soft); color: var(--accent); }
+  .grp { font-size: 0.8rem; color: var(--muted); }
+
+  /* 처리 순서 */
+  .flow { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  .step { border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; background: var(--surface); font-size: 0.88rem; }
+  .step.now { border: 2px solid var(--warn); background: var(--warn-soft); }
+  .step.this { border: 2px solid var(--accent); background: var(--accent-soft); font-weight: 600; }
+  .step.cond { border-style: dashed; color: var(--muted); }
+  .arrow { color: var(--muted); }
+
+  footer { border-top: 1px solid var(--line); padding-top: 12px; font-size: 0.84rem; color: var(--muted); display: grid; gap: 4px; }
+
+  @media (max-width: 640px) { .cards { grid-template-columns: minmax(0, 1fr); } h1 { font-size: 1.4rem; } }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+</head>
+<body>
+<main>
+  <div class="head">
+    <span class="eyebrow">비서실 브리핑 · 2026-10-11</span>
+    <h1>ORD-010 v03 요약</h1>
+    <p class="note">대상: <code>Departments/Secretariat/assets/inbox/ORD-010_v03.md</code> · ORD-010 v03 판정 3회(최초 1회, 재판정 2회, 비서실 판정 서브에이전트), 남은 지적 없음</p>
+  </div>
+
+  <section class="top" aria-labelledby="s-top">
+    <h2 id="s-top">결론</h2>
+    <ul>
+      <li><strong>ORD-010은 승인 범위 밖 변경이 커밋 전 검사를 통과하는 경로를 막는 ORDER입니다.</strong> 지금 커밋 전 검사는 이미 커밋이 끝난 REQ·HOTFIX도 통과 근거로 씁니다. 그래서 끝난 REQ의 scope 안 파일은 새 승인 없이 고쳐도 검사를 통과합니다. 실제로 그런 커밋이 있었는지는 확인하지 않았고 요구 항목 4에서 확인합니다. 사고가 아닌 예방 개정이며, 분류 제안은 Critical입니다.</li>
+      <li><strong>원스톱이 진행 중이어도 다른 안건의 REQ를 쓸 수 있게 하는 규칙(요구 항목 5)도 담았습니다.</strong> v03에서는 요구 항목 6(PowerShell 커밋·푸시 확인)을 더하고, AI 비서 비교 조사와 대조해 나온 결정 네 가지(D-A~D-D)를 반영했습니다.</li>
+      <li><strong>REQ 작성은 진행 중인 REQ-026의 최종 승인 커밋 뒤에 시작합니다.</strong></li>
+      <li><strong>요구 항목 1과 3이 반영된 커밋이 끝날 때까지는 커밋 전에 스테이징 목록을 확인합니다.</strong> 커밋하는 대표님·비서실이 확인하고, v03부터는 대표님이 요청하신 PM 커밋도 대표님이 확인합니다.</li>
+    </ul>
+    <h2>대표님이 할 일</h2>
+    <ul>
+      <li>v03을 확인하시면 「ORD-010 확인」이라고 말씀해 주십시오. 그 시각을 <code>ceo_checked_at</code>에 적습니다(승인이나 REQ 작성의 착수 조건은 아닙니다).</li>
+      <li>PM에 커밋을 요청하실 때 「커밋 전에 <code>git diff --cached --name-only</code> 결과를 보고하고 확인을 받은 뒤 커밋한다」를 넣어 주십시오.</li>
+      <li>대화창으로 드린 전달 문구를 AI 비서 비교 담당 세션(<code>코워크·20261011T2138</code>)에 붙여 넣어 주십시오.</li>
+    </ul>
+  </section>
+
+  <section aria-labelledby="s-gate">
+    <div class="head">
+      <h2 id="s-gate">1. 커밋 한 건이 지나는 관문</h2>
+      <p>커밋 경로마다 관문이 다릅니다. 커밋 실행 확인(<code>ask</code>)은 명령을 실행할지 묻기만 하고 scope는 대조하지 않습니다. 그래서 판정을 거치지 않는 커밋에서 승인 범위를 기계로 확인하는 관문은 커밋 전 검사 하나뿐입니다.</p>
+    </div>
+    <div class="switch" role="group" aria-label="보기 선택">
+      <button type="button" id="v-now" aria-pressed="true">지금</button>
+      <button type="button" id="v-after" aria-pressed="false">ORD-010 반영 뒤</button>
+    </div>
+    <div class="scroll">
+      <table class="gate">
+        <thead>
+          <tr><th>커밋 경로</th><th>커밋 실행 확인(계층 1)</th><th>커밋 전 검사(계층 3)</th><th>최종 판정 범위 대조(계층 4)</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>원스톱 파이프라인의 최종 승인 커밋<span class="sub"><code>Workflow/05</code> 1.1절대로 셸을 실행할 수 있는 비서실이 커밋</span></td>
+            <td><span class="chip c-na">적용 밖</span><span class="sub">계층 1은 Claude Code에만 적용</span></td>
+            <td data-now='<span class="chip c-warn">끝난 REQ·HOTFIX도 통과</span><span class="sub">계층 4가 대신 대조함</span>' data-after='<span class="chip c-ok">끝나지 않은 REQ·HOTFIX만</span>'><span class="chip c-warn">끝난 REQ·HOTFIX도 통과</span><span class="sub">계층 4가 대신 대조함</span></td>
+            <td><span class="chip c-ok">있음</span><span class="sub">그 안건 REQ의 scope로 대조</span></td>
+          </tr>
+          <tr>
+            <td>비서실의 요청 커밋(대표님 요청)·핫픽스 커밋, 대표님 직접 커밋</td>
+            <td><span class="chip c-na">적용 밖</span></td>
+            <td data-now='<span class="chip c-bad">끝난 REQ·HOTFIX도 통과</span><span class="sub">임시로 커밋하는 대표님·비서실이 스테이징 목록 확인</span>' data-after='<span class="chip c-ok">끝나지 않은 REQ·HOTFIX만</span>'><span class="chip c-bad">끝난 REQ·HOTFIX도 통과</span><span class="sub">임시로 커밋하는 대표님·비서실이 스테이징 목록 확인</span></td>
+            <td><span class="chip c-na">없음</span></td>
+          </tr>
+          <tr>
+            <td>대표님이 요청한 PM 커밋(Bash 도구)</td>
+            <td><span class="chip c-ok">확인 있음</span><span class="sub">scope 대조는 하지 않음</span></td>
+            <td data-now='<span class="chip c-bad">끝난 REQ·HOTFIX도 통과</span><span class="sub">임시 확인 대상(D-D, v03부터)</span>' data-after='<span class="chip c-ok">끝나지 않은 REQ·HOTFIX만</span>'><span class="chip c-bad">끝난 REQ·HOTFIX도 통과</span><span class="sub">임시 확인 대상(D-D, v03부터)</span></td>
+            <td><span class="chip c-na">없음</span></td>
+          </tr>
+          <tr>
+            <td>대표님이 요청한 PM 커밋(PowerShell 도구)</td>
+            <td data-now='<span class="chip c-warn">기본 확인뿐</span><span class="sub">ask 규칙이 없어, allow나 저장된 규칙이 더해지면 확인 없이 실행될 수 있음</span>' data-after='<span class="chip c-ok">확인 있음</span><span class="sub">요구 항목 6. scope 대조는 하지 않음</span>'><span class="chip c-warn">기본 확인뿐</span><span class="sub">ask 규칙이 없어, allow나 저장된 규칙이 더해지면 확인 없이 실행될 수 있음</span></td>
+            <td data-now='<span class="chip c-bad">끝난 REQ·HOTFIX도 통과</span><span class="sub">임시 확인 대상(D-D, v03부터)</span>' data-after='<span class="chip c-ok">끝나지 않은 REQ·HOTFIX만</span>'><span class="chip c-bad">끝난 REQ·HOTFIX도 통과</span><span class="sub">임시 확인 대상(D-D, v03부터)</span></td>
+            <td><span class="chip c-na">없음</span></td>
+          </tr>
+          <tr>
+            <td><code>workspace</code> 스크립트 안의 커밋<span class="sub">대표님 요청 없는 커밋이면 규정 위반. 계층 1을 이대로 둘지는 REQ에서 정함</span></td>
+            <td><span class="chip c-bad">확인 없음</span></td>
+            <td data-now='<span class="chip c-bad">끝난 REQ·HOTFIX도 통과</span>' data-after='<span class="chip c-ok">끝나지 않은 REQ·HOTFIX만</span>'><span class="chip c-bad">끝난 REQ·HOTFIX도 통과</span></td>
+            <td><span class="chip c-na">없음</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="legend"><span><span class="chip c-ok">초록</span> 장치 있음</span><span><span class="chip c-warn">노랑</span> 조건부</span><span><span class="chip c-bad">빨강</span> 빈틈</span><span><span class="chip c-na">회색</span> 해당 없음</span><span>파란 테두리: 반영 뒤 바뀌는 칸</span></div>
+    <p class="note">반영 뒤에도 끝나지 않은 다른 REQ·HOTFIX의 scope 안 변경은 통과합니다. <code>--no-verify</code>를 쓰거나 <code>core.hooksPath</code>가 설정되지 않은 PC에서는 커밋 전 검사가 실행되지 않습니다.</p>
+    <p class="note">예: 커밋이 끝난 <code>REQ-021_v02</code>의 scope에 <code>Workflow/01</code>~<code>07</code>이 있어, 지금은 새 승인 없이 <code>Workflow/</code>를 고쳐도 커밋 전 검사를 통과합니다. 이 한계는 <code>Workflow/06_통제장치_및_배포.md</code> 1절 계층 3 「한계」에 이미 적혀 있습니다.</p>
+  </section>
+
+  <section aria-labelledby="s-req">
+    <h2 id="s-req">2. 요구 항목 여섯 가지</h2>
+    <div class="cards">
+      <article class="card">
+        <div class="t"><span class="num">1</span><h3>끝난 REQ·HOTFIX를 통과 근거에서 빼기</h3></div>
+        <p>커밋 전 검사는 승인된 REQ와 확인된 HOTFIX 가운데 끝나지 않은 것만 통과 근거로 씁니다. 커밋 없이 끝난 안건(다른 안건에 흡수된 것, 대표님이 더 진행하지 않기로 정한 것 등)도 끝난 것으로 봅니다. 판정 <code>fail</code> 뒤 고쳐서 계속하는 안건은 끝난 것이 아닙니다.</p>
+        <span class="grp">종결 처리</span>
+      </article>
+      <article class="card">
+        <div class="t"><span class="num">2</span><h3>종결의 기록</h3></div>
+        <p>어느 안건이 언제, 어느 커밋이나 경로로 끝났는지 찾을 수 있게 합니다. 커밋 경로와 관계없이 기록을 남깁니다.</p>
+        <span class="grp">종결 처리</span>
+      </article>
+      <article class="card">
+        <div class="t"><span class="num">3</span><h3>기존 기록의 종결</h3></div>
+        <p>이미 끝난 REQ·HOTFIX를 끝난 상태로 만듭니다. 파생 안건 <code>REQ-010-1</code>과 커밋 없이 끝난 <code>REQ-011</code>도 포함합니다.</p>
+        <span class="grp">종결 처리</span>
+      </article>
+      <article class="card">
+        <div class="t"><span class="num">4</span><h3>지난 기간의 범위 대조</h3></div>
+        <p>끝난 안건이 통과 근거로 쓰인 기간에 승인 범위 밖 변경이 커밋되었는지 커밋 이력과 대조해 기록합니다.</p>
+        <span class="grp">종결 처리</span>
+      </article>
+      <article class="card">
+        <div class="t"><span class="num">5</span><h3>REQ 작성 파이프라인의 겹쳐 실행</h3></div>
+        <p>원스톱이 진행 중이어도 다른 안건의 REQ를 쓸 수 있습니다. 바꾸는 문서가 겹치면 진행 중인 안건이 끝난 뒤 씁니다.</p>
+        <span class="grp">병렬 운용 · 별도 REQ로 나뉠 수 있음</span>
+      </article>
+      <article class="card new">
+        <div class="t"><span class="num">6</span><h3>PowerShell 도구의 커밋·푸시 확인</h3><span class="tag">v03 신설</span></div>
+        <p>PowerShell 도구로 내리는 <code>git commit</code>·<code>git push</code>도 Bash 도구처럼 실행 전에 확인을 받습니다. <code>Workflow/06</code>의 관련 설명도 맞춥니다.</p>
+        <span class="grp">커밋 실행 확인 · 별도 REQ로 나뉠 수 있음</span>
+      </article>
+    </div>
+    <p class="note">REQ 분할, 종결을 판단하는 수단, 「진행 중」의 범위 같은 세부 사항은 PM이 REQ에서 정하고 대표님이 REQ 결정 표에서 승인합니다.</p>
+  </section>
+
+  <section aria-labelledby="s-dec">
+    <h2 id="s-dec">3. v03에 반영한 결정</h2>
+    <p>AI 비서 비교 조사(<code>코워크·20261011T2138</code>)와 대조한 보완 검토의 권고안을 대표님이 그대로 적용하셨습니다(「권고안 적용」).</p>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>결정·보완</th><th>내용</th><th>ORD-010 v03 반영 위치</th></tr></thead>
+        <tbody>
+          <tr><td>D-A</td><td>PowerShell <code>ask</code> 보완을 ORD-010에서 처리. 「MODS적용검토」의 같은 미결도 이 결정으로 정리</td><td>요구 항목 6, 3절 7항</td></tr>
+          <tr><td>D-B</td><td>승인 기록 대조는 커밋 전 검사에 넣지 않음. 파일 존재 확인으로는 승인을 증명할 수 없음</td><td>3절 8항</td></tr>
+          <tr><td>D-C</td><td>현황 표(차용 2)를 ORDER로 낼 때 검사 스크립트나 ORD-010 대상 문서를 함께 고치면 ORD-010 뒤에 처리</td><td>5절</td></tr>
+          <tr><td>D-D</td><td>대표님이 요청하신 PM 커밋도 임시 확인 대상</td><td>3절 9항, 5절</td></tr>
+          <tr><td>S1·S2</td><td>표준에 이미 적힌 한계와 커밋 실행 확인과의 관계를 사실로 추가(결정 불필요)</td><td>1절 경위, 머리말, REQ에서 정할 사항</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section aria-labelledby="s-flow">
+    <h2 id="s-flow">4. 처리 순서</h2>
+    <div class="flow" role="group" aria-label="처리 순서">
+      <span class="step now">REQ-026 원스톱 진행 중</span><span class="arrow">→</span>
+      <span class="step">REQ-026 최종 승인 커밋</span><span class="arrow">→</span>
+      <span class="step this">ORD-010 REQ 작성(요구 항목 1~6)</span><span class="arrow">→</span>
+      <span class="step this">ORD-010 마지막 REQ 커밋</span><span class="arrow">→</span>
+      <span class="step">ORD-006 ⑧ REQ 작성</span>
+    </div>
+    <div class="flow" role="group" aria-label="조건부 순서">
+      <span class="step this">ORD-010 마지막 REQ 커밋</span><span class="arrow">→</span>
+      <span class="step cond">차용 2(현황 표) REQ 작성 · ORDER로 발행하고 같은 파일을 고칠 때만</span>
+    </div>
+    <p class="note">REQ-026의 scope(<code>Workflow/03</code>·<code>05</code>·<code>07</code>, REQ·HOTFIX 서식)와 ORD-010이 고칠 문서가 겹칠 수 있으므로 REQ-026 뒤에 씁니다. 요구 항목 6의 대상은 REQ-026과 겹치지 않지만 ORDER 전체의 착수 조건을 따릅니다.</p>
+  </section>
+
+  <section aria-labelledby="s-tmp">
+    <h2 id="s-tmp">5. 반영 전까지의 임시 확인</h2>
+    <p>요구 항목 1과 3이 모두 반영된 커밋이 끝날 때까지 커밋 전에 사람이 확인합니다. 스테이징 목록 가운데 대조 제외 구역·<code>CEO/</code>·<code>Lab/</code> 밖의 파일이 근거 REQ(또는 HOTFIX)의 scope 안에 있는지 봅니다.</p>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>커밋 주체</th><th>확인 주체</th><th>방법</th></tr></thead>
+        <tbody>
+          <tr><td>대표님 직접</td><td>대표님</td><td><code>git diff --cached --name-only</code> 결과를 직접 확인</td></tr>
+          <tr><td>셸을 실행할 수 있는 비서실</td><td>그 비서실</td><td>같은 명령으로 확인. 전달 문구는 이미 드림</td></tr>
+          <tr><td>PM(대표님 요청)<span class="sub">v03 추가</span></td><td>대표님</td><td>요청 문구에 결론 「대표님이 할 일」의 문구를 넣고, PM이 보고한 목록을 확인</td></tr>
+          <tr><td>대표님 요청 없는 Claude Code 커밋(규정 위반)</td><td>없음</td><td>임시 확인으로는 막지 못함. 요구 항목 1·3의 반영으로만 해소</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer>
+    <p>작성: 비서실 · 코워크·20261011T1048 · claude-opus-5-5(설정 모델. 실제 서빙 모델은 확인 불가) · 2026-10-11</p>
+    <p>원천 문서: <code>Departments/Secretariat/assets/inbox/ORD-010_v03.md</code>, <code>Departments/Secretariat/assets/research/조사_20261011_ORD-010보완검토_v01.md</code>, <code>Departments/Secretariat/assets/research/조사_20261011_AI비서비교_v02.md</code>, <code>Departments/Secretariat/assets/research/조사_20261011_Orca비교검토_v01.md</code>, <code>.claude/settings.json</code>, <code>Workflow/05_인수인계_및_실행명령.md</code>, <code>Workflow/06_통제장치_및_배포.md</code>(2026-10-11 PC 사본)</p>
+  </footer>
+</main>
+
+<script>
+  (function () {
+    var cells = document.querySelectorAll('[data-now]');
+    var bNow = document.getElementById('v-now');
+    var bAfter = document.getElementById('v-after');
+    function show(after) {
+      cells.forEach(function (td) {
+        td.innerHTML = after ? td.getAttribute('data-after') : td.getAttribute('data-now');
+        td.classList.toggle('changed', after && td.getAttribute('data-after') !== td.getAttribute('data-now'));
+      });
+      bNow.setAttribute('aria-pressed', String(!after));
+      bAfter.setAttribute('aria-pressed', String(after));
+    }
+    bNow.addEventListener('click', function () { show(false); });
+    bAfter.addEventListener('click', function () { show(true); });
+    show(false);
+  })();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>브리핑: 비서실 세션 간 연락 비포·애프터</title>
+<style>
+  body { margin: 0; padding: 24px 16px; font-family: sans-serif; line-height: 1.6; color: #1f2328; background: #ffffff; }
+  main { max-width: 960px; margin: 0 auto; }
+  h1 { font-size: 1.5rem; margin: 0 0 16px; }
+  h2 { font-size: 1.15rem; margin: 28px 0 8px; }
+  h3 { font-size: 1rem; margin: 0 0 6px; }
+  .top { border: 2px solid #1f2328; border-radius: 8px; padding: 16px; margin-bottom: 24px; }
+  .top h2 { margin-top: 0; }
+  table { border-collapse: collapse; width: 100%; margin: 8px 0; font-size: 0.95rem; }
+  th, td { border: 1px solid #d0d7de; padding: 6px 8px; text-align: left; vertical-align: top; }
+  th { background: #f6f8fa; }
+  code { font-family: monospace; background: #f6f8fa; padding: 0 4px; word-break: break-all; }
+  .scroll { overflow-x: auto; }
+  .note { font-size: 0.9rem; color: #57606a; }
+  .scene { border: 1px solid #d0d7de; border-radius: 8px; margin: 14px 0; overflow: hidden; }
+  .scene > h3 { background: #f6f8fa; margin: 0; padding: 8px 12px; border-bottom: 1px solid #d0d7de; }
+  .ba { display: grid; grid-template-columns: 1fr 1fr; }
+  .ba > div { padding: 10px 12px; }
+  .before { background: #fff8f7; border-right: 1px solid #d0d7de; }
+  .after { background: #f6fff8; }
+  .ba ol { margin: 4px 0 6px; padding-left: 20px; }
+  .lbl { display: inline-block; font-size: 0.8rem; font-weight: bold; padding: 0 6px; border-radius: 4px; }
+  .l-b { background: #ffebe9; color: #a40e26; }
+  .l-a { background: #dafbe1; color: #116329; }
+  .cnt { font-size: 0.9rem; font-weight: bold; }
+  .when { font-size: 0.8rem; color: #57606a; }
+  .say { background: #ddf4ff; color: #0550ae; border-radius: 4px; padding: 0 4px; white-space: nowrap; }
+  .copy { background: #ffebe9; color: #a40e26; border-radius: 4px; padding: 0 4px; white-space: nowrap; }
+  .files { background: #0d1117; color: #e6edf3; border-radius: 8px; padding: 12px; font-family: monospace; font-size: 0.85rem; line-height: 1.7; overflow-x: auto; white-space: pre; }
+  .files .c { color: #8b949e; }
+  .flow { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin: 6px 0 14px; }
+  .step { border: 1px solid #d0d7de; border-radius: 6px; padding: 4px 8px; background: #f6f8fa; font-size: 0.9rem; }
+  .step.new { border: 2px solid #116329; background: #dafbe1; font-weight: bold; }
+  .step.now { border-color: #0550ae; background: #ddf4ff; }
+  .arrow { color: #57606a; }
+  @media (max-width: 640px) {
+    .ba { grid-template-columns: 1fr; }
+    .before { border-right: none; border-bottom: 1px solid #d0d7de; }
+  }
+  footer { margin-top: 32px; padding-top: 12px; border-top: 1px solid #d0d7de; font-size: 0.875rem; color: #57606a; }
+</style>
+</head>
+<body>
+<main>
+  <h1>브리핑: 비서실 세션 간 연락 비포·애프터</h1>
+
+  <section class="top">
+    <h2>결론</h2>
+    <ul>
+      <li>세션끼리 <strong>연락 파일</strong>로 주고받습니다. 1건 = 파일 1개이고 고치지 않습니다. 폴더의 파일 이름 목록이 그대로 <strong>상황판</strong>이 됩니다.</li>
+      <li>대표님 손 작업은 <span class="copy">복사·붙여넣기</span>에서 <span class="say">「연락 확인」</span> <span class="say">「진행」</span> 같은 짧은 말로 바뀝니다. 실행 전 내용 확인은 대표님이 그대로 합니다.</li>
+      <li>위치는 <code>Departments/Secretariat/workspace/연락/</code>입니다. 시범은 진행 중인 세션과 부딪히지 않아 바로 시작할 수 있습니다. 정식 반영은 ORD-006 ⑦(추적성) 커밋 뒤로 잡았습니다.</li>
+      <li>새 세션은 첫 답에서 「이비서입니다」처럼 스스로 이름을 정해 소개합니다.</li>
+    </ul>
+    <h2>대표님이 할 일</h2>
+    <ul>
+      <li>아래 6절의 D1(상황판 없앰), D3(위치와 시범 근거), D4(순서), D5(이름 세부 규칙)를 정해 주십시오. D1·D3이 정해지면 시범을 바로 시작합니다.</li>
+      <li>D2(호출 문구·승인 전달)는 정식 반영 때 정하셔도 됩니다. D6은 대기로 기록했습니다.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>1. 조사 질문</h2>
+    <p>비서실 코워크 세션 여럿을 동시에 쓸 때, 대표님이 세션 사이에서 내용을 복사해 옮기는 일을 어떻게 없앨 수 있습니까? 현행 규정이 원인이면 그 규정도 고칩니다.</p>
+  </section>
+
+  <section>
+    <h2>2. 장면별 비포·애프터(예상)</h2>
+    <p class="note">「애프터」는 이 안을 적용했을 때의 예상입니다. 표시가 없는 장면은 시범 때부터 됩니다. 「정식 반영 뒤」 표시가 있는 장면은 규정 개정(D2) 뒤에 됩니다.</p>
+
+    <div class="scene">
+      <h3>장면 1. 코워크가 정리한 커밋을 Antigravity에 맡길 때 <span class="when">(정식 반영 뒤)</span></h3>
+      <div class="ba">
+        <div class="before">
+          <span class="lbl l-b">지금</span>
+          <ol>
+            <li>코워크가 호출 문구 전문을 화면에 냄</li>
+            <li>대표님이 <span class="copy">복사</span> → Antigravity 창에 <span class="copy">붙여넣기</span></li>
+            <li>Antigravity가 커밋하고 결과 보고</li>
+            <li>대표님이 결과를 <span class="copy">복사</span> → 코워크에 <span class="copy">붙여넣기</span></li>
+          </ol>
+          <span class="cnt">복사·붙여넣기 2회(긴 문구)</span>
+        </div>
+        <div class="after">
+          <span class="lbl l-a">개선 뒤</span>
+          <ol>
+            <li>코워크에 <span class="say">「박비서한테 커밋 맡겨」</span> → 요청 파일 생성</li>
+            <li>Antigravity에 <span class="say">「연락 확인」</span> → 대표님 원문·호출 문구·승인 기록을 보여 줌</li>
+            <li>내용 보고 <span class="say">「진행」</span> → 커밋 후 회신 파일</li>
+            <li>코워크에 <span class="say">「연락 확인」</span> → 회신 요지</li>
+          </ol>
+          <span class="cnt">복사 0회, 짧은 말 4번</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="scene">
+      <h3>장면 2. 한 세션의 조사 결과를 다른 세션이 이어받을 때</h3>
+      <div class="ba">
+        <div class="before">
+          <span class="lbl l-b">지금</span>
+          <ol>
+            <li>조사한 세션의 보고에서 요지나 경로를 <span class="copy">복사</span></li>
+            <li>다른 세션에 <span class="copy">붙여넣기</span>하고 설명을 덧붙임</li>
+          </ol>
+          <span class="cnt">복사·붙여넣기 1회 이상</span>
+        </div>
+        <div class="after">
+          <span class="lbl l-a">개선 뒤</span>
+          <ol>
+            <li>조사한 세션에 <span class="say">「김비서한테 넘겨」</span> → 조사 파일 경로를 담은 요청</li>
+            <li>김비서 세션에 <span class="say">「연락 확인」</span></li>
+          </ol>
+          <span class="cnt">복사 0회</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="scene">
+      <h3>장면 3. 지금 어느 세션이 무엇을 맡고 있는지 볼 때</h3>
+      <div class="ba">
+        <div class="before">
+          <span class="lbl l-b">지금</span>
+          <ol>
+            <li>대표님 기억에 기대거나 세션 창을 하나씩 열어 봄</li>
+            <li>확실히 하려면 ORDER마다 「담당 세션」 줄을 열어 봄</li>
+          </ol>
+          <span class="cnt">한눈에 보는 곳 없음</span>
+        </div>
+        <div class="after">
+          <span class="lbl l-a">개선 뒤</span>
+          <ol>
+            <li>아무 세션에 <span class="say">「상황판 보여줘」</span></li>
+            <li>세션이 연락 폴더의 파일 이름 목록으로 작업별 담당을 정리(3절 그림)</li>
+          </ol>
+          <span class="cnt">파일 이름만 읽어 토큰이 적음</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="scene">
+      <h3>장면 4. 새 세션을 열 때</h3>
+      <div class="ba">
+        <div class="before">
+          <span class="lbl l-b">지금</span>
+          <ol>
+            <li>세션 이름이 첫 작성 시각(예: <code>코워크·20261011T1048</code>)</li>
+            <li>어느 창이 어느 세션인지 대표님이 구분하기 어려움</li>
+          </ol>
+        </div>
+        <div class="after">
+          <span class="lbl l-a">개선 뒤</span>
+          <ol>
+            <li>첫 답이 <strong>「이비서입니다」</strong>로 시작</li>
+            <li>이름은 다시 쓰지 않아 기록이 섞이지 않음(김비서 → 이비서 → … → 임비서 → 김비서2)</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+    <div class="scene">
+      <h3>장면 5. 두 세션이 같은 작업을 잡으려 할 때</h3>
+      <div class="ba">
+        <div class="before">
+          <span class="lbl l-b">지금</span>
+          <ol>
+            <li>파일을 고치기 직전에 다시 읽어 바뀐 것을 알아챔(사후 감지)</li>
+            <li>공유 파일(원안의 <code>BOARD.md</code>)이면 나중에 쓴 쪽이 앞의 줄을 지울 위험</li>
+          </ol>
+        </div>
+        <div class="after">
+          <span class="lbl l-a">개선 뒤</span>
+          <ol>
+            <li>시작할 때 「착수」 파일을 남기고 목록을 다시 봄</li>
+            <li>먼저 착수한 세션이 담당. 늦은 쪽은 물러나 담당 세션에 요청</li>
+          </ol>
+          <span class="cnt">새 파일만 만들므로 덮어쓰기 없음</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>3. 연락 폴더 모습(예시)</h2>
+    <p>파일 이름이 <code>시각_작업번호_종류_발신_수신.md</code>이라, 이름만 늘어놓아도 누가 무엇을 맡았는지 보입니다.</p>
+<div class="files">Departments/Secretariat/workspace/연락/
+20261011T150005_없음_소개_코워크·김비서_전체.md          <span class="c">← 김비서 등장(이전 식별자 코워크·20261011T1048)</span>
+20261011T150310_없음_소개_Antigravity·이비서_전체.md     <span class="c">← 이비서 등장</span>
+20261011T151020_조사-판매배포운영_착수_코워크·김비서_전체.md  <span class="c">← 김비서가 담당</span>
+20261011T152200_REQ-025_요청_코워크·김비서_Antigravity·이비서.md <span class="c">← 일을 맡김</span>
+20261011T153040_REQ-025_회신_Antigravity·이비서_코워크·김비서.md <span class="c">← 처리 결과</span>
+20261011T160000_조사-판매배포운영_완료_코워크·김비서_전체.md  <span class="c">← 담당 해제</span></div>
+    <table>
+      <tr><th>종류</th><th>쓰는 때</th></tr>
+      <tr><td>소개</td><td>세션이 이름을 정했을 때</td></tr>
+      <tr><td>착수 · 인계 · 완료</td><td>작업을 맡을 때, 대표님 지시로 넘겨받을 때, 놓을 때</td></tr>
+      <tr><td>요청 · 회신</td><td>다른 세션에 맡길 때, 처리했거나 되돌릴 때</td></tr>
+    </table>
+  </section>
+
+  <section>
+    <h2>4. 핵심 발견</h2>
+    <h3>위치(D3): <code>assets/</code>가 아니라 <code>workspace/</code></h3>
+    <ul>
+      <li>표준은 <code>assets/</code>를 「실제 자산(코드, 조사 자료 등)」 자리로, <code>workspace/</code>를 「중간 산출물, 메모」 자리로 정합니다(<code>Workflow/02</code> 3절). 연락은 같은 폴더의 PM 실행 기록처럼 일하면서 쌓이는 기록입니다.</li>
+      <li>재현 시험에서 <code>workspace/연락/</code> 새 파일만 있으면 커밋 전 검사를 통과했습니다. 배포본 설정(<code>.gitattributes</code>)도 고칠 필요가 없습니다.</li>
+      <li>지금 규정상 그 폴더는 PM 구역이라, 연락 폴더만 비서실 전용으로 바꿉니다.</li>
+    </ul>
+    <h3>순서(D4): 진행 중인 일은 끊지 않음</h3>
+    <div class="flow">
+      <span class="step now">시범 시작(D1·D3 결정 뒤 바로)</span><span class="arrow">·</span>
+      <span class="step">ORD-009(진행 중)</span><span class="arrow">→</span>
+      <span class="step">ORD-006 ⑦ 추적성</span><span class="arrow">→</span>
+      <span class="step new">연락 ORDER 반영</span><span class="arrow">→</span>
+      <span class="step">ORD-006 ⑧ ⑨</span><span class="arrow">→</span>
+      <span class="step">ORD-007</span><span class="arrow">→</span>
+      <span class="step">ORD-008</span>
+    </div>
+    <ul>
+      <li>시범은 새 폴더에 새 파일만 만들기 때문에 다른 세션의 작업과 검사에 영향이 없습니다.</li>
+      <li>정식 반영은 동시에 돌리지 않습니다. 같은 작업 트리에서 REQ 파이프라인 둘이 함께 돌면 두 파이프라인의 커밋 전 검사가 모두 실패합니다(재현 시험으로 확인).</li>
+      <li>⑦ 뒤에 두는 이유: ⑦이 「안건 번호 없는 비서실 산출물의 커밋 경로」를 정하므로, 연락의 커밋 방법을 그 결과에 맞춥니다. ORD-006 안의 순서 사이에 끼우는 것이라 ORD-006 담당 세션에 전할 문구를 드립니다.</li>
+    </ul>
+    <h3>바꾸는 규정</h3>
+    <p>개정 항목 열한 건(조항 기준 20곳 안팎)입니다. 대부분 문구를 고치거나 한 줄을 더합니다. 검사 스크립트와 권한 설정은 손대지 않습니다. 상세는 조사 자료 4절에 있습니다.</p>
+  </section>
+
+  <section>
+    <h2>5. 남는 한계</h2>
+    <ul>
+      <li>세션은 대표님 메시지를 받아야 움직입니다. 그래서 「연락 확인」 한마디는 없앨 수 없습니다.</li>
+      <li>서로 다른 작업이 같은 파일을 고치는 문제는 막지 못합니다. ORD-008 I1의 몫입니다(D6 대기).</li>
+      <li>시범 기간에는 호출 문구와 승인 문구를 지금처럼 대표님이 직접 전달합니다. 장면 1은 정식 반영 뒤에 됩니다.</li>
+      <li>시범 기간의 연락 파일은 커밋하지 않고 작업 폴더에 둡니다. 지금 규정상 그 폴더의 커밋을 허용하는 근거가 없어서, 정식 반영 때 한꺼번에 커밋합니다.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>6. 대표님 결정 사항</h2>
+    <div class="scroll">
+    <table>
+      <tr><th>정할 일</th><th>권고안</th><th>대안</th></tr>
+      <tr><td>D1 상황판</td><td>별도 파일 없이 연락 파일 목록으로 대신</td><td>원안대로 <code>BOARD.md</code></td></tr>
+      <tr><td>D2 호출 문구·승인 전달</td><td>연락으로 전달하고, 받는 세션에서 내용을 본 뒤 「진행」(정식 반영 뒤)</td><td>① 호출 문구만 ② 지금처럼 직접 전달</td></tr>
+      <tr><td>D3 위치와 시범 근거</td><td><code>workspace/연락/</code>. 대표님 지시로 시범 기간에만 예외</td><td><code>assets/연락/</code>. 또는 대표님이 <code>Workflow/02</code>를 직접 고친 뒤 시작</td></tr>
+      <tr><td>D4 순서</td><td>시범 바로, 정식 반영은 ORD-006 ⑦ 커밋 뒤·⑧ 앞</td><td>① ORD-006 ⑨ 뒤·ORD-007 앞 ② ORD-008 뒤</td></tr>
+      <tr><td>D5 이름 세부</td><td>열 개 이름 목록, 다시 쓰지 않음, 첫 답에서 소개, 겹치면 다음 이름, 대표님 지명은 안 쓰인 이름만</td><td>「대기하고 있는 애가 자기소개」를 다르게 읽으셨다면 알려 주십시오</td></tr>
+      <tr><td>D6 ORD-008 I1</td><td colspan="2">대기(대표님 결정)</td></tr>
+    </table>
+    </div>
+  </section>
+
+  <footer>
+    <p>작성 날짜: 2026-10-11</p>
+    <p>작성 서비스·세션 식별자와 모델: 코워크·20261011T1048, claude-opus-5-5(설정 모델. 실제 서빙 모델은 확인 불가)</p>
+    <p>원천 문서: <code>Departments/Secretariat/assets/research/조사_20261011_비서실세션연락검토_v03.md</code>(재현 시험 기록은 3.1절), <code>Workflow/02_부서_구조_및_작업구역.md</code> 3·4절, <code>Workflow/05_인수인계_및_실행명령.md</code> 1절·8절, <code>Departments/Secretariat/assets/inbox/ORD-006_v11.md</code>·<code>ORD-009_v01.md</code></p>
+  </footer>
+</main>
+</body>
+</html>
