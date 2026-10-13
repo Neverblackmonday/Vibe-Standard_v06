@@ -15,8 +15,11 @@ check_standard.py - 바이브 코딩 표준 v04 커밋 전 검사기
    그 밖의 변경과 섞이면 Lab/ 경로도 5·6의 대조를 받는다
 4. 비밀정보 검출: 3의 CEO/ 처리 뒤 남은 경로(Lab/·대조 제외 경로 포함)의 내용에서 SECRET_RULES에 맞는 값을 찾으면
    차단한다(예외 목록 SECRET_ALLOWLIST_REL에 등록된 검출 제외). 값은 출력하지 않는다
-5. scope 대조 제외 구역(WHITELIST_PREFIXES, 품질의 인수 시험·부적합 기록 경로, 부서 직속 results/·workspace/)을 뺀다
-6. 남은 변경 파일 전체가 승인된 REQ(최신 버전) 하나 또는 확인된 HOTFIX(최신 버전) 하나의 scope에 들어가야 한다.
+5. 커밋 대상(작업 트리 검사는 작업 트리)에 있는 종결 기록(CLOSE_DIR_REL 아래에서 이름이 CLOSE_PREFIX로 시작하는 파일)이
+   그 폴더 바로 아래에 있고 이름이 CLOSE_NAME 형식에 맞는지 확인한 뒤(틀리면 차단),
+   scope 대조 제외 구역(WHITELIST_PREFIXES, 품질의 인수 시험·부적합 기록 경로, 부서 직속 results/·workspace/)을 뺀다
+6. 남은 변경 파일 전체가 승인되었고 끝나지 않은 REQ(최신 버전) 하나 또는 확인되었고 끝나지 않은 HOTFIX(최신 버전) 하나의
+   scope에 들어가야 한다. 끝난 기록은 HEAD에 커밋된 종결 기록의 파일명으로 판단한다(Workflow/07 「종결 기록」).
    HOTFIX로 통과하려면 남은 변경 파일이 HOTFIX_MAX_SCOPE개 이하여야 한다
 7. 소스코드·테스트가 바뀌었으면 단위 테스트를 실행한다
 """
@@ -45,7 +48,7 @@ ROOT_DIR = Path(__file__).resolve().parent.parent.parent.parent.parent
 # (이 경로는 순서 5에서 빠지므로 순서 7 run_tests()의 대상이 아니다) (REQ-017)
 WHITELIST_PREFIXES = (
     "Departments/Secretariat/docs/requests/REQ-",  # REQ 기록 (승인 전 초안 포함)
-    "Departments/Secretariat/assets/",  # ORDER, 승인 기록, 조사 자료, 보고 자료
+    "Departments/Secretariat/assets/",  # ORDER, 승인 기록, 종결 기록, 조사 자료, 보고 자료
     "Audits/",  # 외부감사실(외부 보고서)
     "Departments/Quality/assets/acceptance/",  # 인수 시험(품질. Workflow/03 「시험실」)
     "Departments/Quality/docs/nonconformance/",  # 부적합 기록(품질. Workflow/03 「부적합 관리」)
@@ -72,8 +75,16 @@ GOVERNANCE_PATHS = (
 # 핫픽스 대상 조건 「수정 파일 3개 이하」(Workflow/03 「핫픽스 트랙」). scope 항목 수와 덮는 변경 파일 수에 함께 쓴다
 HOTFIX_MAX_SCOPE = 3
 
+# 공식 기록의 번호: <세 자리 번호>[-<파생 번호>]. 기록 파일명과 종결 기록 파일명이 같은 번호 형식을 쓰게 한 곳에 둔다
+RECORD_NUMBER = r"\d{3}(?:-\d+)?"
 # 공식 기록 파일명: <종류>-<세 자리 번호>[-<파생 번호>]_v<두 자리 버전>.md (Workflow/07 「번호와 버전」)
-RECORD_NAME = re.compile(r"^(REQ|HOTFIX)-(\d{3}(?:-\d+)?)_v(\d{2})\.md$")
+RECORD_NAME = re.compile(rf"^(REQ|HOTFIX)-({RECORD_NUMBER})_v(\d{{2}})\.md$")
+# 종결 기록: <CLOSE_DIR_REL>/종결기록_<YYYYMMDD>_<기록 이름>.md (Workflow/07 「번호와 버전」의 「종결 기록」)
+# 기록 이름은 끝난 기록의 파일명에서 _v<버전>.md를 뗀 것이다(REQ-xxx, REQ-xxx-n, HOTFIX-xxx)
+CLOSE_DIR_REL = "Departments/Secretariat/assets/inbox"
+CLOSE_PREFIX = "종결기록_"
+CLOSE_NAME = re.compile(rf"^{CLOSE_PREFIX}\d{{8}}_((?:REQ|HOTFIX)-{RECORD_NUMBER})\.md$")
+CLOSE_SOURCE = "Workflow/07_문서_서식_및_번호 「번호와 버전」의 「종결 기록」"
 # 승인·확인 시각 형식: YYYY-MM-DDTHH:MM:SS+09:00 (Workflow/07 「머리말」)
 APPROVAL_TIME = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\+09:00$")
 
@@ -188,17 +199,99 @@ def approval_problem(rec, key):
     return None
 
 
-def load_records():
-    """(승인된 기록 목록, 승인되지 않은 기록과 사유 목록)을 돌려준다."""
-    approved, rejected = [], []
+def is_close_record_candidate(rel):
+    """종결 기록 폴더 아래(하위 폴더 포함)에서 이름이 종결 기록 접두어로 시작하는 경로인지 판단한다."""
+    return rel.startswith(CLOSE_DIR_REL + "/") and rel.rsplit("/", 1)[-1].startswith(CLOSE_PREFIX)
+
+
+def close_record_name(rel):
+    """종결 기록이 폴더 바로 아래에 있고 이름이 형식에 맞으면 기록 이름을, 아니면 None을 돌려준다."""
+    parent, _, base = rel.rpartition("/")
+    if parent != CLOSE_DIR_REL:
+        return None
+    m = CLOSE_NAME.match(base)
+    return m.group(1) if m else None
+
+
+def check_close_record_names(files, staged):
+    """순서 5 앞. 커밋 대상에 있는 종결 기록의 위치·이름이 형식에 맞으면 True, 아니면 False를 돌려준다.
+
+    종결 기록은 대조 제외 구역(Departments/Secretariat/assets/) 안에 있어 순서 6의 대조를 받지 않는다.
+    이름이 틀린 종결 기록은 끝난 기록 판단에 쓰이지 않으므로, 확인하지 않으면 아무 출력 없이 효력을 잃고
+    끝난 안건이 통과 근거로 남는다. 그래서 대조 제외(순서 5)와 Lab/ 처리보다 먼저 확인해
+    종결 기록만 담은 커밋도 이 확인을 받게 한다 (REQ-028)
+    """
+    in_index = index_paths() if staged else None
+    if staged and in_index is None:
+        return False
+    bad = []
+    for rel in files:
+        if not is_close_record_candidate(rel):
+            continue
+        # 지운 파일과 이름 변경의 원래 경로는 커밋 대상에 없으므로 대상이 아니다
+        if staged and rel not in in_index:
+            continue
+        if not staged and not (ROOT_DIR / rel).is_file():
+            continue
+        if close_record_name(rel) is None:
+            bad.append(rel)
+    if bad:
+        print("[FAIL] 종결 기록의 위치나 이름이 형식에 맞지 않습니다:")
+        for rel in bad:
+            print(f"  - {rel}")
+        print(f"       원인: 종결 기록은 {CLOSE_DIR_REL}/ 바로 아래에 "
+              f"{CLOSE_PREFIX}<YYYYMMDD>_<기록 이름>.md 형식(정규식 {CLOSE_NAME.pattern})으로 두어야 합니다.")
+        print(f"       조치: {CLOSE_SOURCE} 형식으로 위치와 이름을 바꿔 다시 스테이징하십시오.")
+        return False
+    return True
+
+
+def load_closed_records():
+    """HEAD에 커밋된 종결 기록을 {기록 이름: 경로}로 돌려준다. 조회에 실패하면 None을 돌려준다.
+
+    --staged 검사와 작업 트리 검사 모두 HEAD만 읽는다. 커밋된 종결 기록만 효력이 있으므로(Workflow/07 「종결 기록」),
+    안건을 끝내는 커밋에 그 종결 기록을 함께 넣어도 그 커밋의 검사에서는 그 안건이 통과 근거로 남는다.
+    index나 작업 트리를 읽으면 그 안건 자신의 커밋이 막히고, 두 검사의 판단이 어긋난다 (REQ-028)
+    """
+    cmd = ["git", "-c", "core.quotepath=false", "ls-tree", "-r", "--name-only", "-z", "HEAD", "--",
+           CLOSE_DIR_REL + "/"]
+    res = subprocess.run(cmd, cwd=ROOT_DIR, capture_output=True)
+    if res.returncode != 0:
+        print(f"[FAIL] HEAD의 종결 기록 목록을 조회할 수 없습니다 (종료 코드 {res.returncode}).")
+        print(f"       원인: {res.stderr.decode('utf-8', 'replace').strip()}")
+        print(f"       조치: {' '.join(cmd)}를 직접 실행해 오류를 해결한 뒤 다시 실행하십시오.")
+        return None
+    closed = {}
+    for rel in res.stdout.decode("utf-8", "replace").split("\0"):
+        # 판단 대상은 폴더 바로 아래의 파일뿐이다(Workflow/06 「끝난 기록(구현)」). 내용은 읽지 않는다
+        if not rel or rel.rpartition("/")[0] != CLOSE_DIR_REL or not is_close_record_candidate(rel):
+            continue
+        name = close_record_name(rel)
+        if name is None:
+            print(f"[WARN] 형식에 맞지 않는 종결 기록이어서 끝난 기록 판단에 쓰지 않습니다: {rel}")
+            print(f"       조치: {CLOSE_SOURCE} 형식의 종결 기록을 새로 만들어 커밋하고 대표님께 보고하십시오.")
+            continue
+        closed.setdefault(name, rel)
+    return closed
+
+
+def load_records(closed):
+    """(승인되었고 끝나지 않은 기록 목록, 승인되지 않은 기록과 사유 목록, 끝난 기록과 종결 기록 경로 목록)을 돌려준다.
+
+    closed는 load_closed_records()의 결과다. 판단 단위는 기록 이름이며 버전과 관계없다
+    (REQ-010과 REQ-010-1은 다른 기록이다).
+    """
+    approved, rejected, ended = [], [], []
     for f in load_latest(ROOT_DIR / "Departments" / "Secretariat" / "docs" / "requests", "REQ"):
         rec = parse_header(f, "approved")
         rec["kind"] = "REQ"
+        rec["record"] = f"REQ-{RECORD_NAME.match(f.name).group(2)}"
         problem = approval_problem(rec, "approved")
         (rejected if problem else approved).append((rec, problem))
     for f in load_latest(ROOT_DIR / "Departments" / "Secretariat" / "results", "HOTFIX"):
         rec = parse_header(f, "confirmed")
         rec["kind"] = "HOTFIX"
+        rec["record"] = f"HOTFIX-{RECORD_NAME.match(f.name).group(2)}"
         problem = approval_problem(rec, "confirmed")
         # 항목 수 검사는 기록만으로 판단할 수 있는 요건이다. 항목 하나가 폴더이면 여러 파일을 덮으므로
         # 실제 변경 파일 수는 변경 목록을 알아야 하며 hotfix_file_count_problem()이 따로 검사한다
@@ -209,7 +302,17 @@ def load_records():
             if governance:
                 problem = f"scope에 핫픽스 제외 경로 포함: {', '.join(governance)} - 거버넌스 파일·CEO/·_archive/는 핫픽스 대상이 아님"
         (rejected if problem else approved).append((rec, problem))
-    return [r for r, _ in approved], rejected
+    # 승인 요건을 갖추지 못한 기록은 끝났어도 rejected에 사유와 함께 둔다(통과 근거가 아닌 것은 같다)
+    still_open = []
+    for rec, _ in approved:
+        if rec["record"] in closed:
+            ended.append((rec, closed[rec["record"]]))
+        else:
+            still_open.append(rec)
+    if ended:
+        print(f"[INFO] 끝난 기록 {len(ended)}건을 통과 근거에서 뺍니다(HEAD의 종결 기록): "
+              f"{', '.join(rec['record'] for rec, _ in ended)}")
+    return still_open, rejected, ended
 
 
 def hotfix_file_count_problem(rec, files):
@@ -600,7 +703,7 @@ def check_standard(staged=False):
 
     # 파이프라인 밖 실험 커밋은 대조할 REQ가 없으므로 Lab/ 변경만 담은 커밋은 scope 대조 없이 통과시킨다.
     # 실험 파일이 다른 안건 커밋에 섞이는 것은 섞인 커밋만 scope로 막는다: Lab/ 경로를 빼지 않고
-    # 순서 5·6으로 넘겨 그 밖의 경로와 함께 승인된 REQ 하나의 scope 안에 있어야 통과하게 한다 (REQ-016).
+    # 순서 5·6으로 넘겨 그 밖의 경로와 함께 승인되었고 끝나지 않은 REQ 하나의 scope 안에 있어야 통과하게 한다 (REQ-016).
     # 작업 트리 검사에서 빼는 이유는 CEO/와 같다(커밋하지 않은 실험 파일 때문에 다른 안건의 검사가 멈추지 않게 한다).
     # Lab/ 처리는 비밀정보 검출 대상을 줄이지 않으므로, 통과와 경로 제외는 순서 4를 마친 뒤에 한다 (REQ-018)
     lab = [f for f in files if f.startswith(LAB_PREFIX)]
@@ -611,6 +714,10 @@ def check_standard(staged=False):
             print(f"  - {f}")
 
     if not check_secrets(files, staged):
+        return False
+
+    # 순서 5 앞: 종결 기록의 위치·이름 확인. 이유는 check_close_record_names()의 설명 (REQ-028)
+    if not check_close_record_names(files, staged):
         return False
 
     if lab_only:
@@ -627,15 +734,18 @@ def check_standard(staged=False):
         print("[PASS] 모든 변경 파일이 scope 대조 제외 구역 안에 있습니다.")
         return True
 
-    approved, rejected = load_records()
+    closed = load_closed_records()
+    if closed is None:
+        return False
+    approved, rejected, ended = load_records(closed)
     covering = [r for r in approved if covers(r, work_files)]
-    # 파일 수를 넘은 HOTFIX는 건너뛰고, 같은 변경 파일을 덮는 승인된 REQ가 있으면 그 REQ로 통과시킨다
+    # 파일 수를 넘은 HOTFIX는 건너뛰고, 같은 변경 파일을 덮는 승인되었고 끝나지 않은 REQ가 있으면 그 REQ로 통과시킨다
     matched = next((r for r in covering if not hotfix_file_count_problem(r, work_files)), None)
     if matched:
         print(f"[PASS] 변경 파일이 {matched['name']} (승인: {matched['approved']})의 scope 안에 있습니다.")
         return run_tests(work_files)
 
-    print("[FAIL] 변경 파일 전체를 포함하는 승인된 REQ 또는 확인된 HOTFIX가 없습니다. 대상 파일:")
+    print("[FAIL] 변경 파일 전체를 포함하는 승인되었고 끝나지 않은 REQ 또는 확인되었고 끝나지 않은 HOTFIX가 없습니다. 대상 파일:")
     for f in work_files:
         print(f"  - {f}")
     for rec in covering:
@@ -644,6 +754,11 @@ def check_standard(staged=False):
     for rec, problem in rejected:
         if covers(rec, work_files):
             print(f"       참고: {rec['name']}의 scope는 대상 파일을 포함하지만 승인 요건을 갖추지 못했습니다 ({problem}).")
+    for rec, close_path in ended:
+        if covers(rec, work_files):
+            print(f"       참고: {rec['name']}의 scope는 대상 파일을 포함하지만 끝난 안건이어서 통과 근거로 쓰지 않습니다"
+                  f"(종결 기록 {close_path}). 다시 할 일은 파생 안건이나 새 REQ로 진행하십시오"
+                  "(Workflow/03_라이프사이클 「진행 중 변경과 파생 안건」).")
     return False
 
 

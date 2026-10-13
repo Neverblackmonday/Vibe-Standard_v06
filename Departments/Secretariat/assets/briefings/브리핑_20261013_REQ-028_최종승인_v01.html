@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>브리핑: REQ-028 최종 판정서 승인</title>
+<style>
+  body { margin: 0; padding: 24px; font-family: sans-serif; line-height: 1.6; color: #1f2328; background: #ffffff; }
+  main { max-width: 960px; margin: 0 auto; }
+  h1 { font-size: 1.5rem; margin: 0 0 16px; }
+  h2 { font-size: 1.15rem; margin: 24px 0 8px; }
+  .top { border: 2px solid #1f2328; border-radius: 8px; padding: 16px; margin-bottom: 24px; }
+  .top h2 { margin-top: 0; }
+  table { border-collapse: collapse; width: 100%; margin: 8px 0; }
+  th, td { border: 1px solid #d0d7de; padding: 6px 8px; text-align: left; vertical-align: top; }
+  th { background: #f6f8fa; }
+  code { font-family: monospace; background: #f6f8fa; padding: 0 4px; }
+  footer { margin-top: 32px; padding-top: 12px; border-top: 1px solid #d0d7de; font-size: 0.875rem; color: #57606a; }
+</style>
+</head>
+<body>
+<main>
+  <h1>브리핑: REQ-028 최종 판정서 승인</h1>
+
+  <section class="top">
+    <h2>결론</h2>
+    <p><code>REQ-028_v04</code>(끝난 REQ·HOTFIX를 커밋 전 검사의 통과 근거에서 빼기와 종결 기록)의 최종 판정은 <code>pass</code>입니다(<code>RES-028_v02</code>, 2026-10-13T17:48:58+09:00). 체크리스트 1~4와 결정 D1~D13의 반영 근거가 판정서와 결과서에 모두 있고, 결함은 없습니다. 문체 지적 1건(<code>DEV-028_v02</code> 2절의 변경 목록 표기)은 이월됩니다.</p>
+    <h2>대표님이 할 일</h2>
+    <ul>
+      <li>승인하시면 「RES-028_v02 승인」을 보내 주십시오. 승인 문구는 아래 반영(덮어쓰기 7건)과 삭제(6건)의 승인으로도 봅니다.</li>
+      <li>승인 뒤 셸을 실행할 수 있는 비서실에 「최종 승인 커밋」 호출 문구를 전해 주십시오(대화창 보고에 전문이 있습니다).</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>① 결정 열의 결정과 반영 위치</h2>
+    <p>원천: <code>Departments/Quality/results/RES-028_v01.md</code> 2절 「결정 열 대조」(재판정 <code>RES-028_v02</code>가 그대로 유지). 「01」~「07」은 설계 적용본 <code>Workflow/0n</code>입니다.</p>
+    <table>
+      <tr><th>결정</th><th>내용(모두 권고안)</th><th>반영 위치</th></tr>
+      <tr><td>D1</td><td>종결 기록을 공식 진행 상태의 근거로 두고 검사와 다른 도구가 같은 기록을 읽음</td><td>05 1절, 07 1.1절 2항, 06 4절 「끝난 기록(구현)」</td></tr>
+      <tr><td>D2</td><td>계층 3 「한계」의 종결 안건 문장 삭제, 2.1절 완화 근거 수정</td><td>06 1절 표 계층 3, 2.1절</td></tr>
+      <tr><td>D3</td><td>RT 색인을 정하지 않음</td><td>적용본에 RT 색인 규정 없음</td></tr>
+      <tr><td>D4</td><td>커밋 메시지 형식 검사와 관계없이 종결 판단</td><td>07 1.1절 1항, 검사기는 파일명만 읽음</td></tr>
+      <tr><td>D5</td><td>종결 기록을 그 안건의 커밋에 함께 넣음</td><td>05 1절 「커밋」 항·1.1절 6번 ⑪·8.3절 「요청 커밋」, 07 1.1절 2·6항</td></tr>
+      <tr><td>D6</td><td>흡수·중단 뒤 종료는 대표님이 정함</td><td>07 1.1절 5항, 03 7절</td></tr>
+      <tr><td>D7</td><td>끝난 안건은 다시 열지 않음</td><td>03 6절 표, 07 1.1절 7항</td></tr>
+      <tr><td>D8</td><td>커밋하는 주체가 기록, 커밋 없는 종결은 비서실</td><td>07 1.1절 6항 표, 02 2.1절·4절 표</td></tr>
+      <tr><td>D9</td><td>파이프라인 안에서 근거 커밋 확인, 최종 판정이 대조</td><td><code>DEV-028_v02</code> 8절</td></tr>
+      <tr><td>D10</td><td><code>6c5d512</code> 다음부터 대조 시작 때의 HEAD(<code>e956bab</code>)까지</td><td><code>DEV-028_v02</code> 9절(커밋 32개)</td></tr>
+      <tr><td>D11</td><td>구현 단계에서 개발이 대조, 최종 판정 확인</td><td><code>DEV-028_v02</code> 9절, <code>RES-028_v01</code> 3절 4행</td></tr>
+      <tr><td>D12</td><td>범위 밖 변경은 고치지 않고 상세 보고</td><td>범위 밖 0건(<code>DEV-028_v02</code> 9·12절)</td></tr>
+      <tr><td>D13</td><td>effort <code>medium</code></td><td>모든 산출물 머리말</td></tr>
+    </table>
+
+    <h2>② 덮어쓰기·삭제 경로</h2>
+    <p>덮어쓰기(반영 명령. 기준 커밋 <code>e956bab</code>): 원천은 <code>RPT-028_v03</code> 4절, <code>DEV-028_v02</code> 4절</p>
+    <ul>
+      <li><code>Workflow/01_표준_개요.md</code></li>
+      <li><code>Workflow/02_부서_구조_및_작업구역.md</code></li>
+      <li><code>Workflow/03_라이프사이클.md</code></li>
+      <li><code>Workflow/05_인수인계_및_실행명령.md</code></li>
+      <li><code>Workflow/06_통제장치_및_배포.md</code></li>
+      <li><code>Workflow/07_문서_서식_및_번호.md</code></li>
+      <li><code>Departments/Development/assets/scripts/check_standard.py</code></li>
+    </ul>
+    <p>원본에서 지울 파일: 없음(두 결과서). 삭제 대상(모두 미추적 일회성 파일, <code>RES-028_v02</code> 7절):</p>
+    <ul>
+      <li><code>Departments/Design/workspace/REQ-028_copy_spec_20261013a.py</code></li>
+      <li><code>Departments/Design/workspace/REQ-028_tags_20261013b.py</code></li>
+      <li><code>Departments/Development/workspace/REQ-028_단위시험_20261013a.py</code></li>
+      <li><code>Departments/Development/workspace/REQ-028_범위대조_20261013c.py</code></li>
+      <li><code>Departments/Development/workspace/REQ-028_복사_20261013d.py</code></li>
+      <li><code>Departments/Development/workspace/REQ-028_종결확인_20261013b.py</code></li>
+    </ul>
+    <p>커밋 때 함께 넣는 기록: 기존 기록의 종결 기록 26개(<code>Departments/Secretariat/assets/inbox/종결기록_20261013_*.md</code>)와, 반영 뒤 비서실이 작성하는 <code>REQ-028</code> 자신의 종결 기록(<code>DEV-028_v02</code> 4절).</p>
+
+    <h2>③ 원천 문서</h2>
+    <ul>
+      <li>REQ: <code>Departments/Secretariat/docs/requests/REQ-028_v04.md</code>(승인 기록 <code>Departments/Secretariat/assets/inbox/승인기록_20261013_REQ-028_v04.md</code>)</li>
+      <li>최종 판정서: <code>Departments/Quality/results/RES-028_v02.md</code>(직전 <code>RES-028_v01.md</code>)</li>
+      <li>결과서: <code>Departments/Design/results/RPT-028_v03.md</code>, <code>Departments/Development/results/DEV-028_v02.md</code></li>
+      <li>EC: <code>Departments/Design/docs/tad/EC-028_v02.md</code>, 인수 시험: <code>Departments/Quality/results/ACC-028_v02.md</code></li>
+      <li>PM 실행 기록: <code>Departments/Secretariat/workspace/실행기록_REQ-028.md</code></li>
+    </ul>
+  </section>
+
+  <footer>
+    <p>작성 날짜: 2026-10-13</p>
+    <p>작성 서비스·세션 식별자와 모델: 코워크·20261011T1048, claude-opus-5-5(설정 모델. 실제 서빙 모델은 확인 불가)</p>
+    <p>원천 문서: <code>Departments/Quality/results/RES-028_v02.md</code>, <code>Departments/Quality/results/RES-028_v01.md</code>, <code>Departments/Design/results/RPT-028_v03.md</code>, <code>Departments/Development/results/DEV-028_v02.md</code></p>
+  </footer>
+</main>
+</body>
+</html>
