@@ -19,7 +19,7 @@ has_tests: "yes" # yes | no
 - 명세 판정서: `Departments/Quality/results/RES-007-SPEC_vNN.md` (명세 판정이 없으면 「해당 없음」)
 - 시각 디자인 판정서: `Departments/Quality/results/RES-007-DESIGN_vNN.md` (시각 디자인 판정이 없으면 「해당 없음」)
 - 명세 결과서: `Departments/Design/results/RPT-007_v01.md`
-- 수정 버전이면 직전 ACC와 개발의 결함 보고(DEV 7절) 경로. 최초 작성이면 「해당 없음」
+- 수정 버전이면 직전 ACC와 개발부의 결함 보고(DEV 7절) 경로. 최초 작성이면 「해당 없음」
 
 ## 2. 체크리스트 항목 분류
 | 체크리스트 번호 | 요청 원문 항목 | 확인 구분(실행·열람·혼합) | 시험 함수 | 근거(확인 방법 문구) |

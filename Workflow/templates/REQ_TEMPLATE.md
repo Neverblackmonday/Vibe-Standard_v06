@@ -2,6 +2,7 @@
 task_id: "007"
 classification: "Major" # Critical | Major | Minor. 정의 기준과 분류별 단계·기본 모델 등급은 Workflow/03_라이프사이클 「분류별 단계」. 근거는 2절 「분류 근거」에 적는다
 created: "YYYY-MM-DD"
+created_at: "" # 이 버전 파일을 처음 저장할 때 조회한 시각. 형식 "YYYY-MM-DDTHH:MM:SS+09:00"(Workflow/03_라이프사이클 「REQ 작성 파이프라인」 1항)
 source_order: "" # 이 버전을 작성할 때 근거로 삼은 ORDER의 경로와 버전(예: "Departments/Secretariat/assets/inbox/ORD-001_v01.md"). 1절 출처와 같게 적는다(Workflow/07_문서_서식_및_번호 「머리말」)
 approved: "" # 대표님 직접 기재 또는 Workflow/07_문서_서식_및_번호 「승인 기록」 절차. 형식 "YYYY-MM-DDTHH:MM:SS+09:00". 비어 있으면 작업·커밋 불가
 author:
@@ -52,14 +53,14 @@ scope:
 
 | 단계 | 부서 | 작업 | 대상 경로 |
 | :--- | :--- | :--- | :--- |
-| EC 판단 | 설계 | EC 필요 여부 판단과 기록 | `Departments/Design/results/RPT-007_v01.md` |
-| EC 작성 | 설계 | EC 작성 | `Departments/Design/docs/tad/EC-007_v01.md` |
-| EC 판정 | 품질 | EC 판정 | `Departments/Quality/results/RES-007-EC_v01.md` |
-| 명세 | 설계 | PRD·TAD 작성 | `Departments/Design/docs/prd/01_개요.md` |
-| 명세 판정 | 품질 | 명세 판정 | `Departments/Quality/results/RES-007-SPEC_v01.md` |
-| 인수 시험 | 품질 | 인수 시험 작성과 구현 전 실행 | `Departments/Quality/assets/acceptance/REQ-007_v01/`, `Departments/Quality/results/ACC-007_v01.md` |
-| 구현 | 개발 | 구현과 단위 테스트 | `Departments/Development/assets/src/main.py` |
-| 최종 판정 | 품질 | 체크리스트 번호별 근거 대조 | `Departments/Quality/results/RES-007_v01.md` |
+| EC 판단 | 설계부 | EC 필요 여부 판단과 기록 | `Departments/Design/results/RPT-007_v01.md` |
+| EC 작성 | 설계부 | EC 작성 | `Departments/Design/docs/tad/EC-007_v01.md` |
+| EC 판정 | 품질보증부 | EC 판정 | `Departments/Quality/results/RES-007-EC_v01.md` |
+| 명세 | 설계부 | PRD·TAD 작성 | `Departments/Design/docs/prd/01_개요.md` |
+| 명세 판정 | 품질보증부 | 명세 판정 | `Departments/Quality/results/RES-007-SPEC_v01.md` |
+| 인수 시험 | 품질보증부 | 인수 시험 작성과 구현 전 실행 | `Departments/Quality/assets/acceptance/REQ-007_v01/`, `Departments/Quality/results/ACC-007_v01.md` |
+| 구현 | 개발부 | 구현과 단위 테스트 | `Departments/Development/assets/src/main.py` |
+| 최종 판정 | 품질보증부 | 체크리스트 번호별 근거 대조 | `Departments/Quality/results/RES-007_v01.md` |
 
 ## 5. 검증 및 완료 기준 (체크리스트)
 > 작성 기준은 `Workflow/03_라이프사이클` 「REQ 작성 파이프라인」을 따른다. 항목마다 확인 방법을 한 줄로 적는다. 확인 방법이 명령·시험의 실행 결과인 항목은 Critical·Major에서 인수 시험의 대상이 된다(`Workflow/03_라이프사이클` 「시험실」).

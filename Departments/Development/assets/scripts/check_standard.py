@@ -20,6 +20,8 @@ check_standard.py - 바이브 코딩 표준 v04 커밋 전 검사기
    scope 대조 제외 구역(WHITELIST_PREFIXES, 품질의 인수 시험·부적합 기록 경로, 부서 직속 results/·workspace/)을 뺀다
 6. 남은 변경 파일 전체가 승인되었고 끝나지 않은 REQ(최신 버전) 하나 또는 확인되었고 끝나지 않은 HOTFIX(최신 버전) 하나의
    scope에 들어가야 한다. 끝난 기록은 HEAD에 커밋된 종결 기록의 파일명으로 판단한다(Workflow/07 「종결 기록」).
+   HOTFIX는 HOTFIX_DIRS_REL의 두 위치(Departments/Development/results, Departments/Secretariat/results)를 합쳐 읽고,
+   같은 번호가 두 위치에 모두 있으면 그 번호를 통과 근거에서 빼고 경고한다.
    HOTFIX로 통과하려면 남은 변경 파일이 HOTFIX_MAX_SCOPE개 이하여야 한다
 7. 소스코드·테스트가 바뀌었으면 단위 테스트를 실행한다
 """
@@ -71,6 +73,12 @@ GOVERNANCE_PATHS = (
     "Workflow",
     "CEO",
     "_archive",
+)
+# HOTFIX 기록을 읽는 위치. 핫픽스 수행이 개발부 핫픽스팀(V03)으로 옮겨 새 HOTFIX는 앞 위치에 쓰지만,
+# 이미 작성된 HOTFIX는 옮기지 않으므로 옛 위치(비서실)도 함께 읽는다 (REQ-031)
+HOTFIX_DIRS_REL = (
+    "Departments/Development/results",
+    "Departments/Secretariat/results",
 )
 # 핫픽스 대상 조건 「수정 파일 3개 이하」(Workflow/03 「핫픽스 트랙」). scope 항목 수와 덮는 변경 파일 수에 함께 쓴다
 HOTFIX_MAX_SCOPE = 3
@@ -275,6 +283,30 @@ def load_closed_records():
     return closed
 
 
+def load_latest_hotfixes():
+    """HOTFIX_DIRS_REL의 위치를 합쳐 HOTFIX의 번호별 최신 버전 파일 목록을 돌려준다.
+
+    같은 번호가 두 위치에 모두 있으면 어느 기록이 근거인지 정할 수 없으므로 그 번호를 통과 근거에서 빼고
+    [WARN]으로 알린다. 번호 규칙(Workflow/07 「HOTFIX」)이 두 위치를 함께 보아 번호를 정하므로 생기지 않아야 하는
+    경우이며, 다른 안건의 커밋까지 막지 않도록 실패로 하지 않는다 (REQ-031)
+    """
+    by_number = {}
+    for rel in HOTFIX_DIRS_REL:
+        for f in load_latest(ROOT_DIR / rel, "HOTFIX"):
+            by_number.setdefault(RECORD_NAME.match(f.name).group(2), []).append(f)
+    result = []
+    for number in sorted(by_number):
+        found = by_number[number]
+        if len(found) > 1:
+            print(f"[WARN] HOTFIX-{number}이 두 위치에 있어 통과 근거에서 뺍니다:")
+            for f in found:
+                print(f"  - {f.relative_to(ROOT_DIR).as_posix()}")
+            print("       조치: 같은 HOTFIX 번호가 두 위치에 있습니다. 대표님께 보고하십시오.")
+            continue
+        result.append(found[0])
+    return result
+
+
 def load_records(closed):
     """(승인되었고 끝나지 않은 기록 목록, 승인되지 않은 기록과 사유 목록, 끝난 기록과 종결 기록 경로 목록)을 돌려준다.
 
@@ -288,7 +320,7 @@ def load_records(closed):
         rec["record"] = f"REQ-{RECORD_NAME.match(f.name).group(2)}"
         problem = approval_problem(rec, "approved")
         (rejected if problem else approved).append((rec, problem))
-    for f in load_latest(ROOT_DIR / "Departments" / "Secretariat" / "results", "HOTFIX"):
+    for f in load_latest_hotfixes():
         rec = parse_header(f, "confirmed")
         rec["kind"] = "HOTFIX"
         rec["record"] = f"HOTFIX-{RECORD_NAME.match(f.name).group(2)}"

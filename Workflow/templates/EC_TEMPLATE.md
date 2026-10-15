@@ -20,7 +20,7 @@ scope:
 
 ## 1. 개요
 - **관련 안건**: `Departments/Secretariat/docs/requests/REQ-007_v01`
-- **EC 판단**: 설계 결과서 「EC 판단」 절 경로와 해당 기준(`Workflow/03_라이프사이클` 「EC 적용 기준」의 항 번호)
+- **EC 판단**: 설계부 결과서 「EC 판단」 절 경로와 해당 기준(`Workflow/03_라이프사이클` 「EC 적용 기준」의 항 번호)
 - **변경 배경**: REQ 「배경 및 목적」 가운데 이번 변경과 직접 관련된 사실
 - **변경 목표**: REQ 목적을 이번 EC가 달성할 결과로 바꾸어 적는다
 
@@ -45,9 +45,9 @@ scope:
 ### 3.2 단계별 작업
 | 단계 | 부서 | 작업 | 산출물 |
 | :--- | :--- | :--- | :--- |
-| 명세 | 설계 | PRD·TAD 작성 | `Departments/Design/docs/prd/01_개요.md` |
-| 인수 시험 | 품질 | 인수 시험 작성과 구현 전 실행 | `Departments/Quality/assets/acceptance/REQ-007_v01/`, `Departments/Quality/results/ACC-007_v01.md` |
-| 구현 | 개발 | 구현과 테스트 | `Departments/Development/assets/src/main.py` |
+| 명세 | 설계부 | PRD·TAD 작성 | `Departments/Design/docs/prd/01_개요.md` |
+| 인수 시험 | 품질보증부 | 인수 시험 작성과 구현 전 실행 | `Departments/Quality/assets/acceptance/REQ-007_v01/`, `Departments/Quality/results/ACC-007_v01.md` |
+| 구현 | 개발부 | 구현과 테스트 | `Departments/Development/assets/src/main.py` |
 
 ## 4. 위험 분석 및 대응
 | 번호 | 위험 | 영향 | 대응 |

@@ -2,10 +2,9 @@
 hotfix_id: "003"
 created: "YYYY-MM-DD"
 author:
-  agent: "Secretariat"
+  agent: "Development" # 핫픽스팀(V03) 세션
   model: "Claude Opus 5.5" # 실제 실행 모델
-  effort: "medium" # 실제 적용 effort
-  session: "<서비스>·<세션 이름>" # 작성 세션의 세션 식별자(Workflow/05_인수인계_및_실행명령 「비서실 동시 운용」)
+  effort: "medium (실행 명령 기준)" # 핫픽스 실행 명령 지시문의 effort 값과 출처(Workflow/04_모델_운용 「모델 메타데이터 기록」)
 origin: "" # 결함을 들여온 안건의 기록 이름과 버전(예: "REQ-024_v03", "HOTFIX-005_v01"). 알 수 없으면 "확인 불가". 근거는 1절 「원인 안건 근거」(Workflow/07_문서_서식_및_번호 「머리말」)
 confirmed: "" # 대표님 직접 기재 또는 Workflow/07_문서_서식_및_번호 「승인 기록」 절차. 형식 "YYYY-MM-DDTHH:MM:SS+09:00". 비어 있으면 커밋 불가
 scope:
@@ -20,7 +19,7 @@ scope:
 ## 1. 지시 원문과 사전 승인
 - **지시 원문**:
   > 대표님 지시를 원형 그대로 인용한다.
-- **사전 승인**: 비서실이 제시한 대상 목록을 대표님이 승인한 일시(`Workflow/03_라이프사이클` 「핫픽스 트랙」)
+- **사전 승인**: 비서실 세션이 제시한 대상 목록을 대표님이 승인한 일시와 승인을 받은 세션 식별자(핫픽스 실행 명령 지시문의 「사전 승인」)(`Workflow/03_라이프사이클` 「핫픽스 트랙」)
 - **승인된 대상 파일**:
 
 | 번호 | 경로 | 원인 | 변경 요지 |
@@ -32,6 +31,8 @@ scope:
 - **원인 안건 근거**: 머리말 `origin`을 정한 근거(예: 결함이 든 줄을 바꾼 커밋의 `git log` 결과와 그 커밋의 근거 줄). 「확인 불가」이면 찾아본 방법
 
 ## 2. 수정 내역
+> `deny` 경로 대상 파일은 고치지 않고 변경 후 원문을 수정안으로 적는다(`Workflow/03_라이프사이클` 「핫픽스 트랙」 2항). 이 안내문은 작성할 때 지운다.
+
 ### 2.1 `Departments/Development/assets/src/main.py`
 - **변경 전**:
 ```text
@@ -57,4 +58,4 @@ scope:
 
 ## 5. 대표님 사후 확인
 - 대표님이 2~4절을 확인한 뒤 `confirmed:`를 적거나 `Workflow/07_문서_서식_및_번호` 「승인 기록」대로 기재하게 한다. 대표님 확인이 독립 판정을 대신한다.
-- 커밋 메시지: 제목 줄 `fix: [HOTFIX-003] 요약`, 근거 줄 `Confirmed-HOTFIX: Departments/Secretariat/results/HOTFIX-003_v01.md`. 비서실이 「요청 커밋」으로 커밋하면 `Request-Record: <요청 기록 경로>`를 더한다(`Workflow/07_문서_서식_및_번호` 「번호와 버전」의 「커밋 메시지」)
+- 커밋 메시지: 제목 줄 `fix: [HOTFIX-003] 요약`, 근거 줄 `Confirmed-HOTFIX: Departments/Development/results/HOTFIX-003_v01.md`. 형상통제팀(C02)이 「요청 커밋」으로 커밋하면 `Request-Record: <요청 기록 경로>`를 더한다(`Workflow/07_문서_서식_및_번호` 「번호와 버전」의 「커밋 메시지」)

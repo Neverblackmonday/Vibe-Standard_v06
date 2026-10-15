@@ -7,13 +7,13 @@ author:
   effort: "medium (실행 명령 기준)" # 실행 명령 지시문의 effort 값과 출처. 얻을 수 없으면 "확인 불가"(Workflow/04_모델_운용 「모델 메타데이터 기록」)
 ---
 
-# DEV-007: 개발 결과서
+# DEV-007: 개발부 결과서
 
 ## 1. 입력 문서
 - REQ: `Departments/Secretariat/docs/requests/REQ-007_v01.md`
 - EC: `Departments/Design/docs/tad/EC-007_v01.md` (EC가 없으면 「해당 없음」. EC의 유무는 `Workflow/03_라이프사이클` 「EC 적용 기준」 첫 문단)
 - 명세: 참조한 PRD·TAD 경로
-- 설계 결과서: `Departments/Design/results/RPT-007_vNN.md`(「EC 판단」 절. EC가 없는 Critical·Major이면 「구현 계획」 절 포함). 설계 결과서 자신이면 「해당 없음」
+- 설계부 결과서: `Departments/Design/results/RPT-007_vNN.md`(「EC 판단」 절. EC가 없는 Critical·Major이면 「구현 계획」 절 포함). 설계부 결과서 자신이면 「해당 없음」
 - 시각 디자인 문서: 입력으로 쓴 시각 디자인 문서 경로와 근거(그 안건의 시각 디자인 판정서 경로, 또는 HEAD 커밋 해시. `Workflow/03_라이프사이클` 「시각 디자인 단계」). 쓰지 않았으면 「해당 없음」
 
 ## 2. 변경 파일
@@ -59,7 +59,7 @@ author:
 | :---: | :--- | :--- | :---: |
 | 1 | `Departments/Quality/assets/acceptance/REQ-007_v01/test_req007.py::test_c1_<요지>` | 사유 | 1 |
 
-## 8. EC 판단 (설계 결과서만)
+## 8. EC 판단 (설계부 결과서만)
 > 기준과 기록 규칙은 `Workflow/03_라이프사이클` 「EC 적용 기준」을 따른다. 같은 안건에서 이 결과서의 다음 버전을 쓰면 이 절을 그대로 옮긴다. 판단을 바꾸면 바꾼 판단과 근거 판정서 경로를 적는다.
 
 | 항목 | 기재 |
@@ -71,7 +71,7 @@ author:
 | 실험 결과 인용 | 실험 단계가 있고 EC 없음이면 실험 결과서 경로와 6절 요지. 그 밖은 「해당 없음」 |
 | 판단 변경 | 판단을 바꾸었으면 이전 판단과 근거 판정서 경로. 아니면 「해당 없음」 |
 
-## 9. 구현 계획 (EC가 없는 Critical·Major의 설계 결과서만)
+## 9. 구현 계획 (EC가 없는 Critical·Major의 설계부 결과서만)
 > 구현 방법은 이 절과 명세 산출물이 정한다(`Workflow/03_라이프사이클` 「REQ 작성 파이프라인」 1항). 명세 판정이 이 절을 판정한다.
 
 | 번호 | 구현 단계 작업 | 대상 경로 | 완료 기준 | 확인 방법 |
