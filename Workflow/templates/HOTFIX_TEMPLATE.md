@@ -20,6 +20,7 @@ scope:
 - **지시 원문**:
   > 대표님 지시를 원형 그대로 인용한다.
 - **사전 승인**: 비서실 세션이 제시한 대상 목록을 대표님이 승인한 일시와 승인을 받은 세션 식별자(핫픽스 실행 명령 지시문의 「사전 승인」)(`Workflow/03_라이프사이클` 「핫픽스 트랙」)
+- **기준 모델·effort**: V03 칸 「분류 없음」의 유효 값(모델 등급, 모델 ID, effort)과 출처(기본값·CEO 설정), CEO 설정 `saved_at`(없으면 「없음(기본값)」). `python Departments/Development/Implementation/assets/scripts/resolve_model.py --hotfix --part V03`의 출력으로 적는다(`Workflow/04_모델_운용` 「모델 메타데이터 기록」). 머리말 `author.model`·`effort`는 실제 실행 값이다
 - **승인된 대상 파일**:
 
 | 번호 | 경로 | 원인 | 변경 요지 |

@@ -7,6 +7,7 @@ check_commit_msg.py - 바이브 코딩 표준 커밋 메시지 검사기 (commit
 근거 줄의 키와 트레일러, 첫 커밋 예외)와 같은 문서 「문서 체계」(근거 줄 경로의 위치·파일명)다.
 검사의 동작(대상, 예외, 실패 출력)은 Workflow/06_통제장치_및_배포 「커밋 메시지 검사」가 정한다.
 이 스크립트는 그 구현이며 메시지 파일과 Git 저장소를 읽기만 한다.
+근거 줄 Model-Effort(실행 모델·effort 줄)는 경로가 아니며, 있을 때만 값의 형식을 확인한다(REQ-033).
 
 사용법: python check_commit_msg.py <메시지 파일>   # .githooks/commit-msg가 "$1"을 넘긴다
 종료 코드: 0 통과, 1 실패
@@ -26,7 +27,11 @@ SOURCE = "Workflow/07_문서_서식_및_번호 「커밋 메시지」"
 
 # 근거 줄의 키(Workflow/07 「커밋 메시지」의 「근거 줄의 키와 트레일러」). 키 목록은 이 상수 하나에 둔다
 EVIDENCE_KEYS = ("Approved-REQ", "Approved-RES", "Approval-Record", "Style-Check-RES", "Confirmed-HOTFIX",
-                 "Request-Record", "Follows")
+                 "Request-Record", "Follows", "Model-Effort")
+# 경로가 아닌 근거 줄(Workflow/07 「커밋 메시지」의 「같은 안건의 여러 커밋」·「실행 모델·effort 줄」)
+NON_PATH_KEYS = ("Follows", "Model-Effort")
+# Model-Effort 값: <모델> / <effort>. 있을 때만 형식을 확인한다(Workflow/06 「커밋 메시지 검사」 5번). (REQ-033)
+MODEL_EFFORT_SEP = " / "
 EVIDENCE_LINE = re.compile(r"^(" + "|".join(EVIDENCE_KEYS) + r"): (.*)$")
 # 제목 줄: <유형>: [<기록 이름>] <요약>. 기록 이름에는 버전을 적지 않는다
 SUBJECT = re.compile(r"^[a-z]+: \[(REQ-" + cs.RECORD_NUMBER + r"|HOTFIX-\d{3}|CEO)\] \S.*$")
@@ -36,12 +41,25 @@ SCISSORS = re.compile(r"^# -+ >8 -+$")
 SHORT_HASH = re.compile(r"^[0-9a-f]{7,40}$")
 
 # 커밋 종류별로 쓸 수 있는 키와 반드시 있어야 하는 키(Workflow/07 「커밋 메시지」 표와 「같은 안건의 여러 커밋」)
+# Model-Effort는 어느 종류에서든 쓸 수 있고 필수가 아니다. 커밋한 주체를 메시지만으로 가릴 수 없기 때문이다
 KIND_KEYS = {
-    "REQ": ({"Approved-REQ", "Approved-RES", "Approval-Record", "Style-Check-RES", "Follows"},
+    "REQ": ({"Approved-REQ", "Approved-RES", "Approval-Record", "Style-Check-RES", "Follows", "Model-Effort"},
             ("Approved-REQ", "Approved-RES", "Approval-Record")),
-    "HOTFIX": ({"Confirmed-HOTFIX", "Request-Record", "Follows"}, ("Confirmed-HOTFIX",)),
-    "CEO": ({"Request-Record", "Follows"}, ()),
+    "HOTFIX": ({"Confirmed-HOTFIX", "Request-Record", "Follows", "Model-Effort"}, ("Confirmed-HOTFIX",)),
+    "CEO": ({"Request-Record", "Follows", "Model-Effort"}, ()),
 }
+
+
+def model_effort_problem(value):
+    """Model-Effort 값의 형식이 틀리면 사유를, 맞으면 None을 돌려준다(경로로 보지 않는다)."""
+    parts = value.split(MODEL_EFFORT_SEP)
+    if not value:
+        return "값이 비어 있습니다"
+    if "<" in value or ">" in value:
+        return "자리 표시(<·>)가 남아 있습니다. 커밋한 세션의 모델과 effort로 채웁니다"
+    if len(parts) != 2 or not all(p.strip() for p in parts):
+        return f"「<모델 ID 또는 모델 이름>{MODEL_EFFORT_SEP}<effort 또는 「확인 불가」>」 형식(앞뒤 공백 한 칸씩인 / 로 두 부분)이 아닙니다"
+    return None
 
 
 def path_rule(key, number):
@@ -161,7 +179,12 @@ def check_message(msg_path):
         problems.append("index(커밋될 트리)를 조회할 수 없어 근거 줄 경로를 확인하지 못했습니다.")
         in_index = set()
     for key, (no, value) in seen.items():
-        if key == "Follows":
+        if key == "Model-Effort":
+            problem = model_effort_problem(value)
+            if problem:
+                problems.append(f"{no}행 {key}: {problem}.")
+            continue
+        if key in NON_PATH_KEYS:
             continue
         if not value or " " in value or "\\" in value or value.startswith(("/", "..")):
             problems.append(f"{no}행 {key}: {value} - 저장소 루트 기준 상대 경로(/로 나눔)여야 합니다.")

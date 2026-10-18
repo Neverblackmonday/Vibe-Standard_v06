@@ -25,6 +25,9 @@ check_standard.py - 바이브 코딩 표준 v05 커밋 전 검사기
    REQ는 REQ_DIR_REL, HOTFIX는 HOTFIX_DIR_REL에서 읽는다.
    HOTFIX로 통과하려면 남은 변경 파일이 HOTFIX_MAX_SCOPE개 이하여야 한다
 8. 소스코드·테스트가 바뀌었으면 단위 테스트를 실행한다
+9. 프로세스 맵 검사(경고): 5~8을 실행하는 경우 3을 거친 뒤 남은 변경 경로에 Workflow/ 아래 경로가 있으면
+   check_process_map.py의 run_checks()로 프로세스 맵 연결·누락 검사를 실행한다. 오류와 실행 실패는 [WARN]으로만
+   출력하고 1~8의 판단과 종료 코드를 바꾸지 않는다(커밋을 막지 않음. Workflow/03 「프로세스 맵」, REQ-033 D5 대안 (가))
 """
 
 import os
@@ -848,6 +851,59 @@ def run_tests(work_files):
     return True
 
 
+# ---------------------------------------------------------------- 프로세스 맵 검사 (순서 9)
+
+PROCESS_MAP_SOURCE = "`Workflow/03_라이프사이클` 「프로세스 맵」"
+
+
+def staged_text_reader():
+    """index(커밋 대상)의 내용을 읽는 함수를 만든다. 순서 4의 내용 읽기와 같은 함수(index_entries, read_blobs)를 쓴다.
+
+    index에 없는 경로는 None(커밋될 트리에 없음)이다. 조회에 실패하면 RuntimeError를 낸다.
+    """
+    entries = index_entries()
+    if entries is None:
+        raise RuntimeError("커밋 대상 목록(git ls-files -s)을 조회하지 못했습니다")
+
+    def read(rel):
+        sha = entries.get(rel)
+        if sha is None:
+            return None
+        blobs = read_blobs([sha])
+        if blobs is None:
+            raise RuntimeError(f"커밋 대상의 내용을 읽지 못했습니다: {rel}")
+        return blobs[sha].decode("utf-8", errors="replace")
+
+    return read
+
+
+def report_process_map(files, staged):
+    """순서 9. Workflow/ 아래 변경이 있으면 프로세스 맵 검사를 실행해 결과를 [WARN]·[PASS]로만 출력한다.
+
+    커밋을 막지 않는 검사이므로(REQ-033 D5 대안 (가)) 돌려주는 값이 없고, 실패도 예외로 내보내지 않는다.
+    같은 로직을 다시 구현하지 않도록 check_process_map.py의 run_checks()를 불러 쓴다.
+    """
+    if not any(f.startswith("Workflow/") for f in files):
+        return
+    lines = []
+    try:
+        # 순서 9를 실행할 때만 가져온다. check_process_map이 이 모듈을 가져오므로 위쪽에서 가져오면 서로를 기다린다
+        import check_process_map as cpm
+        read = staged_text_reader() if staged else cpm.file_reader(ROOT_DIR)
+        errors, stats = cpm.run_checks(read)
+        lines = [cpm.format_error(err) for err in errors]
+    except Exception as e:  # noqa: BLE001  커밋을 막지 않는 검사이므로 실행 실패도 경고 한 건으로 출력하고 넘어간다
+        lines = [f"실행 실패: {type(e).__name__}: {e}"]
+        stats = None
+    if not lines:
+        print(f"[PASS] 프로세스 맵 검사: 오류 0건(트랙 {stats['tracks']}개, 단계 {stats['steps']}개, "
+              f"파트 {stats['parts']}개, 칸 {stats['cells']}개).")
+        return
+    for line in lines:
+        print(f"[WARN] {line}")
+    print(f"[WARN] 프로세스 맵 검사 오류 {len(lines)}건(커밋을 막지 않음. {PROCESS_MAP_SOURCE})")
+
+
 def check_standard(staged=False):
     if is_initial_commit():
         print("[PASS] 초기화 커밋으로 확인되어 검사를 생략합니다.")
@@ -917,6 +973,14 @@ def check_standard(staged=False):
     if lab and not staged:
         files = [f for f in files if not f.startswith(LAB_PREFIX)]
 
+    # 순서 5~8의 판단과 종료 코드는 그대로 두고, 순서 9(경고만)를 그 결과와 관계없이 뒤에 실행한다 (REQ-033)
+    ok = check_scope_steps(files, staged)
+    report_process_map(files, staged)
+    return ok
+
+
+def check_scope_steps(files, staged):
+    """순서 5~8. 통과하면 True, 실패하면 False를 돌려준다."""
     # 순서 5: 옛 경로 잔존 검사. 변경 파일이 아니라 대상 범위 전체를 본다 (REQ-032)
     if not check_old_paths(staged):
         return False

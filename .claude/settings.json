@@ -16,6 +16,8 @@
       "Bash(python Departments/Development/Implementation/assets/scripts/check_env.py*)",
       "Bash(python Departments/Development/Implementation/assets/scripts/prepare_final_commit.py*)",
       "Bash(python Departments/Development/Implementation/assets/scripts/check_overlap.py*)",
+      "Bash(python Departments/Development/Implementation/assets/scripts/check_process_map.py*)",
+      "Bash(python Departments/Development/Implementation/assets/scripts/resolve_model.py*)",
       "Bash(python -m pytest*)",
       "Bash(python Departments/*/*/workspace/*)",
       "PowerShell(git status *)",
@@ -27,6 +29,8 @@
       "PowerShell(python Departments/Development/Implementation/assets/scripts/check_env.py *)",
       "PowerShell(python Departments/Development/Implementation/assets/scripts/prepare_final_commit.py *)",
       "PowerShell(python Departments/Development/Implementation/assets/scripts/check_overlap.py *)",
+      "PowerShell(python Departments/Development/Implementation/assets/scripts/check_process_map.py *)",
+      "PowerShell(python Departments/Development/Implementation/assets/scripts/resolve_model.py *)",
       "PowerShell(python -m pytest *)"
     ],
     "deny": [

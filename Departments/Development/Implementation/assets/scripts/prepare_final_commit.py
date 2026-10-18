@@ -10,6 +10,7 @@ Workflow/06_통제장치_및_배포 「준비·판단 명령」이 정한다. �
 
 사용법: python prepare_final_commit.py <최종 판정서 경로>
 출력: 1) 반영 목록 2) 삭제 목록 3) 스테이징 목록(경로마다 분류 번호 ①~⑪) 4) 분류하지 못한 변경 5) 커밋 메시지
+      (근거 줄 끝, Follows 앞에 Model-Effort 자리 줄. C02가 채운다. REQ-033)
 종료 코드: 0 준비 완료, 1 실패(읽을 기록이 없거나 형식이 맞지 않음, 판정 결과가 pass가 아님)
 """
 
@@ -31,6 +32,7 @@ EC_DIR_REL = "Departments/Design/EC/docs"
 ORDER_NAME = re.compile(r"^ORD-(\d{3})_v\d{2}\.md$")
 INLINE_CODE = re.compile(r"`([^`\n]+)`")
 H1_TITLE = re.compile(r"^# (REQ-" + cs.RECORD_NUMBER + r"): (.+?)\s*$")
+MODEL_EFFORT_PLACEHOLDER = "Model-Effort: <이 세션의 모델> / <effort>"
 
 
 class PrepError(Exception):
@@ -338,6 +340,9 @@ class Case:
                  f"Approval-Record: {self.approval_rel}"]
         if self.style_check_rel:
             lines.append(f"Style-Check-RES: {self.style_check_rel}")
+        # 실행 모델·effort 줄은 근거 줄 끝(Follows 앞)에 둔다. 이 명령은 커밋할 세션의 모델을 알 수 없으므로 자리만 만들고
+        # C02가 채운다. 채우지 않으면 <·> 때문에 커밋 메시지 검사가 실패한다(Workflow/07 「커밋 메시지」) (REQ-033)
+        lines.append(MODEL_EFFORT_PLACEHOLDER)
         prev = previous_record_commit(self.record)
         if prev:
             lines.append(f"Follows: {prev[:7]}")
@@ -390,7 +395,8 @@ def main(argv):
         print("  - 없음")
     for _, status, rel in sorted(unclassified, key=lambda x: x[2]):
         print(f"  - {rel} [{status.strip()}]")
-    print("5) 커밋 메시지(Workflow/07_문서_서식_및_번호 「커밋 메시지」. 아래 줄을 그대로 쓴다)")
+    print("5) 커밋 메시지(Workflow/07_문서_서식_및_번호 「커밋 메시지」. 아래 줄을 그대로 쓰고, "
+          "Model-Effort 줄의 <…> 자리만 이 세션의 모델과 effort로 채운다)")
     print("----- 커밋 메시지 시작 -----")
     for line in message:
         print(line)
