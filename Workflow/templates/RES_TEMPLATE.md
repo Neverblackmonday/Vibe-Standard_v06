@@ -37,8 +37,8 @@ auditor:
 | 완료 시각 조회 | `date -Iseconds` | 결과 원문과 같다 | 결과 원문(머리말 `completed_at`과 같다) |
 | 범위 대조 | `git status --porcelain -uall` | YYYY-MM-DDTHH:MM:SS+09:00 | 결과 원문 |
 | 변경 규모(최종 판정만) | `git diff --stat` | YYYY-MM-DDTHH:MM:SS+09:00 | 결과 원문 |
-| 커밋 전 검사 | `python Departments/Development/assets/scripts/check_standard.py` | YYYY-MM-DDTHH:MM:SS+09:00 | 결과 원문 |
-| 인수 시험 재실행(최종 판정, 인수 시험 단계가 있으면) | `python -m pytest Departments/Quality/assets/acceptance/REQ-007_v01` | YYYY-MM-DDTHH:MM:SS+09:00 | 결과 원문 |
+| 커밋 전 검사 | `python Departments/Development/Implementation/assets/scripts/check_standard.py` | YYYY-MM-DDTHH:MM:SS+09:00 | 결과 원문 |
+| 인수 시험 재실행(최종 판정, 인수 시험 단계가 있으면) | `python -m pytest Departments/Quality/Test/assets/acceptance/REQ-007_v01` | YYYY-MM-DDTHH:MM:SS+09:00 | 결과 원문 |
 | 인수 시험 해시 대조(최종 판정, 인수 시험 단계가 있으면) | `git diff --no-index --full-index /dev/null <시험 파일>` | YYYY-MM-DDTHH:MM:SS+09:00 | 결과 원문 |
 | 대신한 명령(실행하지 못한 명령이 있으면) | 대신 실행한 명령 | YYYY-MM-DDTHH:MM:SS+09:00 | 실행하지 못한 명령과 메시지 원문, 대신한 명령의 결과 원문 |
 
@@ -61,7 +61,7 @@ auditor:
 
 | 번호 | 경로 | 추적 여부 | 근거 |
 | :---: | :--- | :--- | :--- |
-| 1 | `Departments/Development/workspace/REQ-007_대조_20261009a.py` | 추적 / 미추적 | 근거 |
+| 1 | `Departments/Development/Implementation/workspace/REQ-007_대조_20261009a.py` | 추적 / 미추적 | 근거 |
 
 ## 8. 인수 시험 판정 (최종 판정, 인수 시험 단계가 있는 경우만)
 > 기준은 `Workflow/03_라이프사이클` 「단계별 통과 조건과 판정 기준」의 최종 판정 기준 8이다. 인수 시험 단계가 없으면 「해당 없음」으로 적는다. 시험성적서로 보는 범위는 `Workflow/03_라이프사이클` 「시험실」 9항을 따른다.

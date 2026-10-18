@@ -1,6 +1,6 @@
 @echo off
 chcp 65001 > nul
-echo [바이브 코딩 표준 v04] 프로젝트 초기 설정을 시작합니다.
+echo [바이브 코딩 표준 v05] 프로젝트 초기 설정을 시작합니다.
 
 :: 1. Git 저장소 초기화
 if not exist ".git" (
@@ -16,14 +16,21 @@ git config core.hooksPath .githooks
 if errorlevel 1 goto :fail
 echo - Git 환경(core.quotepath, core.hooksPath)을 설정했습니다.
 
-:: 3. 초기 커밋 생성 (훅 파일에 실행 권한을 기록한다)
+:: 3. 설치 점검: 훅 경로, 훅 파일, Claude Code 폴더 신뢰 상태, allow 적용 조건을 읽기만 하고 점검한다
+::    훅 문제는 실패로 끝내고, 신뢰·allow 문제는 안내만 하고 설치를 마친다(Workflow/06 「설치·PM 기동 전 점검」)
+python Departments/Development/Implementation/assets/scripts/check_env.py --setup
+if errorlevel 1 goto :fail
+
+:: 4. 초기 커밋 생성 (훅 파일에 실행 권한을 기록한다)
 git rev-parse --verify HEAD > nul 2>&1
 if errorlevel 1 (
     git add .
     if errorlevel 1 goto :fail
     git update-index --chmod=+x .githooks/pre-commit
     if errorlevel 1 goto :fail
-    git commit -m "chore: 바이브 코딩 표준 v04 초기화"
+    git update-index --chmod=+x .githooks/commit-msg
+    if errorlevel 1 goto :fail
+    git commit -m "chore: 바이브 코딩 표준 v05 초기화"
     if errorlevel 1 goto :fail
     echo - 초기 커밋을 생성했습니다.
 ) else (
@@ -36,5 +43,5 @@ exit /b 0
 
 :fail
 echo.
-echo [실패] 위 Git 명령이 실패해 설정을 중단했습니다. 오류 내용을 확인하십시오. 예: git config user.name, user.email 미설정
+echo [실패] 위 명령이 실패해 설정을 중단했습니다. 오류 내용을 확인하십시오. 예: git config user.name, user.email 미설정, 설치 점검의 [FAIL] 항목
 exit /b 1

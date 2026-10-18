@@ -5,12 +5,12 @@ updated: "YYYY-MM-DD"
 related_req:
   - "REQ-007"
 related_prd:
-  - "Departments/Design/docs/prd/01_개요"
+  - "Departments/Design/Spec/docs/prd/01_개요"
 ---
 
 # TAD: 기술 아키텍처 명세서 제목
 
-> 작성 방법: 이 파일을 복사해 `Departments/Design/docs/tad/<번호>_<주제>.md`(예: `01_아키텍처.md`)로 저장한다. 파일명에 버전 번호를 붙이지 않는다. 머리말 규격은 `Workflow/07_문서_서식_및_번호` 「머리말」을 따른다.
+> 작성 방법: 이 파일을 복사해 `Departments/Design/Spec/docs/tad/<번호>_<주제>.md`(예: `01_아키텍처.md`)로 저장한다. 파일명에 버전 번호를 붙이지 않는다. 머리말 규격은 `Workflow/07_문서_서식_및_번호` 「머리말」을 따른다.
 
 ## 1. 아키텍처 개요
 시스템 전체 구성과 주요 데이터 흐름을 적는다.
@@ -24,7 +24,7 @@ flowchart LR
 ## 2. 구성 요소
 | 구성 요소 | 책임 | 파일 위치 | 의존 대상 |
 | :--- | :--- | :--- | :--- |
-| 구성 요소 A | 담당 기능 | `Departments/Development/assets/src/<파일>` | 구성 요소 B |
+| 구성 요소 A | 담당 기능 | `Departments/Development/Implementation/assets/src/<파일>` | 구성 요소 B |
 
 ## 3. 데이터 모델
 | 엔터티 | 필드 | 타입 | 제약 | 설명 |
@@ -57,7 +57,7 @@ flowchart LR
 ## 8. 요구사항 추적표
 | 요구사항 | 구성 요소 | 인터페이스 | 테스트 |
 | :---: | :--- | :---: | :--- |
-| FR-01 | 구성 요소 A | IF-01 | `Departments/Development/assets/tests/test_<이름>.py` |
+| FR-01 | 구성 요소 A | IF-01 | `Departments/Development/Implementation/assets/tests/test_<이름>.py` |
 
 ---
 

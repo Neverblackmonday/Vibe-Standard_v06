@@ -6,7 +6,7 @@ author:
   model: "Claude Opus 5.5" # 실제 실행 모델
   effort: "medium (실행 명령 기준)" # 실행 명령 지시문의 effort 값과 출처. 얻을 수 없으면 "확인 불가"(Workflow/04_모델_운용 「모델 메타데이터 기록」)
 event: "fail" # fail | rejected | stop (stop은 판정 없이 멈춘 중단)
-source: "Departments/Quality/results/RES-007-REQ_v01.md" # 판정서 경로. event가 stop이면 PM 실행 기록 경로
+source: "Departments/Quality/Review/results/RES-007-REQ_v01.md" # 판정서 경로. event가 stop이면 PM 실행 기록 경로
 stop: "" # Workflow/03_라이프사이클 「중단 조건」 번호. 없으면 ""
 causes:
   # 원인 분류 코드(Workflow/03_라이프사이클 「부적합 관리」). 결함·사유마다 하나
@@ -16,7 +16,7 @@ proposals: [] # 개정을 제안한 원인 분류 코드 목록. 제안하면 ca
 
 # NCR-007_01: 부적합 기록
 
-> 파일명은 `NCR-<번호>_<두 자리 일련번호>.md`이고 위치는 `Departments/Quality/docs/nonconformance/`다(`Workflow/07_문서_서식_및_번호` 「번호와 버전」). 작성 기준은 `Workflow/03_라이프사이클` 「부적합 관리」를 따른다. 작성 뒤 고치지 않는다. 이 안내문은 작성할 때 지운다.
+> 파일명은 `NCR-<번호>_<두 자리 일련번호>.md`이고 위치는 `Departments/Quality/Nonconformance/docs/`다(`Workflow/07_문서_서식_및_번호` 「번호와 버전」). 작성 기준은 `Workflow/03_라이프사이클` 「부적합 관리」를 따른다. 작성 뒤 고치지 않는다. 이 안내문은 작성할 때 지운다.
 
 ## 1. 부적합 요약
 - **사건**: `fail` / `rejected` / 중단과 그 요지

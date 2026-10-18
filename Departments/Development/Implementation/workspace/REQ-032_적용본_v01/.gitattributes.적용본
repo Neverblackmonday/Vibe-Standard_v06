@@ -1,0 +1,26 @@
+# 줄바꿈 기본 규칙: 텍스트 파일은 index와 작업 트리 모두 LF로 둔다. 뒤의 *.bat·*.cmd(CRLF)와 .githooks/*(LF) 규칙이 이긴다(Workflow/06 「줄바꿈 규칙」)
+* text=auto eol=lf
+*.bat text eol=crlf
+*.cmd text eol=crlf
+.githooks/* text eol=lf
+
+# 배포본(git archive) 제외 규칙: 표준 개정 기록과 내부 작업물(실험실(Lab/)의 실험 파일, 품질보증부의 인수 시험·부적합 기록 포함)은 신규 프로젝트 배포본에 넣지 않는다
+# 팀 직속 results/·workspace/(비서팀의 연락·셸 작업 폴더 포함)와 비서팀 assets/ 하위 폴더를 뺀다(Workflow/02 「팀 폴더와 공통 하위폴더」)
+_archive/** export-ignore
+Audits/** export-ignore
+Audits/.gitkeep -export-ignore
+Departments/**/REQ-[0-9][0-9][0-9]*.md export-ignore
+Departments/**/EC-[0-9][0-9][0-9]*.md export-ignore
+Departments/*/*/results/** export-ignore
+Departments/*/*/results/.gitkeep -export-ignore
+Departments/*/*/workspace/** export-ignore
+Departments/*/*/workspace/.gitkeep -export-ignore
+Departments/Secretariat/Secretary/assets/*/** export-ignore
+Departments/Secretariat/Secretary/assets/*.* export-ignore
+Departments/Secretariat/Secretary/assets/*/.gitkeep -export-ignore
+Lab/** export-ignore
+Lab/.gitkeep -export-ignore
+Departments/Quality/Test/assets/acceptance/** export-ignore
+Departments/Quality/Test/assets/acceptance/.gitkeep -export-ignore
+Departments/Quality/Nonconformance/docs/** export-ignore
+Departments/Quality/Nonconformance/docs/.gitkeep -export-ignore

@@ -1,0 +1,11 @@
+#!/bin/sh
+# 바이브 코딩 표준 v05 커밋 전 검사: 커밋 대상(index)만 검사한다(Workflow/06_통제장치_및_배포 「커밋 전 검사」)
+python Departments/Development/Implementation/assets/scripts/check_standard.py --staged
+if [ $? -ne 0 ]; then
+  echo ""
+  echo "[BLOCKED] 표준 검사에 실패해 커밋을 중단했습니다."
+  echo "   위 결함을 해결한 뒤 다시 커밋하십시오."
+  exit 1
+fi
+
+exit 0

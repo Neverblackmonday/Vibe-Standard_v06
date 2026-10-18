@@ -11,7 +11,7 @@ author:
 > 위치·이름·버전은 `Workflow/07_문서_서식_및_번호` 「문서 체계」·「번호와 버전」, 절차는 `Workflow/03_라이프사이클` 「기획 트랙」을 따른다. 기획안은 판정하지 않는다. 함께 작성하는 기획 브리핑은 `Workflow/05_인수인계_및_실행명령` 「브리핑」을 따른다. 이 안내문은 작성할 때 지운다.
 
 ## 1. 출처
-- 아이디어 백로그: `Departments/Secretariat/assets/planning/백로그_YYYYMMDD_<주제>_vNN.md`
+- 아이디어 백로그: `Departments/Secretariat/Secretary/assets/planning/백로그_YYYYMMDD_<주제>_vNN.md`
 - 항목 번호: 백로그 「정리」 표의 번호
 
 ## 2. 항목별 기획
@@ -30,4 +30,4 @@ author:
 
 | 항목 | 결정 | 대표님 문구 원문 | 문구를 받은 시각 | 발행한 ORDER |
 | :---: | :--- | :--- | :--- | :--- |
-| 1 | Go | 대표님 원문 | YYYY-MM-DDTHH:MM:SS+09:00 | `Departments/Secretariat/assets/inbox/ORD-xxx_v01.md` |
+| 1 | Go | 대표님 원문 | YYYY-MM-DDTHH:MM:SS+09:00 | `Departments/Secretariat/Secretary/assets/inbox/ORD-xxx_v01.md` |
