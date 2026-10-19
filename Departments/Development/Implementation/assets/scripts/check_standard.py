@@ -4,7 +4,7 @@
 check_standard.py - 바이브 코딩 표준 v05 커밋 전 검사기
 
 검사 순서와 규칙의 설명은 Workflow/06_통제장치_및_배포 「커밋 전 검사」에 있다.
-옛 경로 잔존 검사의 대응 원천은 Workflow/02_부서_구조_및_작업구역 「옛 이름과 새 이름의 대응」이다.
+순서 5(형상통제 대조)의 동작은 같은 문서 「형상통제 대조」가 정하며, 구현은 check_config.py다.
 사용법: python check_standard.py              # 작업 트리 전체(git status)를 검사한다
         python check_standard.py --staged     # 커밋 대상(index)만 검사한다 (pre-commit 훅)
         python check_standard.py --scan-all   # 다른 검사 없이 추적 파일 전체와 커밋 이력 전체에서 비밀정보를 찾는다
@@ -16,7 +16,9 @@ check_standard.py - 바이브 코딩 표준 v05 커밋 전 검사기
    그 밖의 변경과 섞이면 Lab/ 경로도 6·7의 대조를 받는다
 4. 비밀정보 검출: 3의 CEO/ 처리 뒤 남은 경로(Lab/·대조 제외 경로 포함)의 내용에서 SECRET_RULES에 맞는 값을 찾으면
    차단한다(예외 목록 SECRET_ALLOWLIST_REL에 등록된 검출 제외). 값은 출력하지 않는다
-5. 옛 경로 잔존 검사: 추적 파일(작업 트리 검사는 미추적 파일 포함)에서 뺄 범위를 뺀 파일에 옛 경로가 있으면 차단한다
+5. 형상통제 대조: check_config.py의 C1~C5(옛 경로 잔존, 생성물 대조, 안전장치 핵심 무결성, 파트 대조, 이관 검사)에
+   오류가 있으면 차단한다(C6 분량은 [INFO]). C5의 담당은 7과 같은 방법으로 찾은 「커밋하는 REQ」이며,
+   그런 REQ가 없으면 C5를 건너뛴다. 담당이 아닌 행의 위반은 [WARN]이다 (REQ-034)
 6. 커밋 대상(작업 트리 검사는 작업 트리)에 있는 종결 기록(CLOSE_DIR_REL 아래에서 이름이 CLOSE_PREFIX로 시작하는 파일)이
    그 폴더 바로 아래에 있고 이름이 CLOSE_NAME 형식에 맞는지 확인한 뒤(틀리면 차단),
    scope 대조 제외 구역(WHITELIST_PREFIXES, 팀 직속 results/·workspace/)을 뺀다
@@ -30,6 +32,8 @@ check_standard.py - 바이브 코딩 표준 v05 커밋 전 검사기
    출력하고 1~8의 판단과 종료 코드를 바꾸지 않는다(커밋을 막지 않음. Workflow/03 「프로세스 맵」, REQ-033 D5 대안 (가))
 """
 
+import contextlib
+import io
 import os
 import re
 from collections import Counter
@@ -60,7 +64,8 @@ TEST_DIR_REL = "Departments/Development/Implementation/assets/tests"
 # 그 안건의 scope:에 품질 폴더가 없거나, REQ 판정 fail로 생긴 부적합 기록이어도 막히지 않게 뺀다.
 # 인수 시험의 통과는 구현 단계와 최종 판정이 확인하므로 커밋 때 다시 실행하지 않는다
 # (이 경로는 순서 6에서 빠지므로 순서 8 run_tests()의 대상이 아니다) (REQ-017)
-# 판정 전제 제외(AGENTS.md 「불변 원칙」 5항)와 달리 PM팀의 REQ 기록도 지금처럼 뺀다(REQ-032 D4)
+# 판정 전제 제외(Workflow/05_인수인계_및_실행명령 「인수인계 순서」의 「커밋」 항)와 달리 PM팀의 REQ 기록도
+# 지금처럼 뺀다(REQ-032 D4)
 WHITELIST_PREFIXES = (
     "Departments/Secretariat/PM/docs/requests/REQ-",  # REQ 기록 (승인 전 초안 포함)
     "Departments/Secretariat/Secretary/assets/",  # ORDER, 승인 기록, 종결 기록, 조사 자료, 보고 자료
@@ -103,30 +108,7 @@ CLOSE_SOURCE = "Workflow/07_문서_서식_및_번호 「번호와 버전」의 �
 # 승인·확인 시각 형식: YYYY-MM-DDTHH:MM:SS+09:00 (Workflow/07 「머리말」)
 APPROVAL_TIME = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\+09:00$")
 
-# ---------------------------------------------------------------- 옛 경로 잔존 검사 (순서 5)
-# 옛 경로는 부서 폴더 바로 아래에 공통 하위 폴더 이름이 오는 경로다(대응의 원천: Workflow/02 「옛 이름과 새 이름의 대응」).
-# 패턴을 낱말 목록으로 조립하는 이유는 이 파일 자신이 검사 대상(검사 스크립트 폴더)이어서,
-# 옛 경로를 글자 그대로 적으면 이 파일이 패턴에 맞기 때문이다(SECRET_RULES와 같은 방식)
-_OLD_DEPTS = "|".join(("Secretariat", "Design", "Development", "Quality", "Operations", "Marketing"))
-_OLD_SUBS = "|".join(("assets", "docs", "results", "workspace"))
-OLD_PATH_PATTERNS = (
-    re.compile("Departments" + "/(" + _OLD_DEPTS + r"|\*|<부서>)/(" + _OLD_SUBS + r")\b"),
-    re.compile(r"(?<![\w/.])(" + _OLD_DEPTS + ")/(" + _OLD_SUBS + r")\b"),
-)
-# 뺄 범위(Workflow/06 「커밋 전 검사」의 「옛 경로 잔존 검사(구현)」 ②, REQ-032 D12)
-RESIDUAL_EXCLUDED_TOP = ("CEO/", "_archive/", "Lab/", "Audits/")
-RESIDUAL_RECORD_PREFIXES = (
-    "Departments/Secretariat/Secretary/assets/",
-    "Departments/Secretariat/PM/docs/",
-    "Departments/Design/EC/docs/",
-    "Departments/Quality/Nonconformance/docs/",
-    "Departments/Quality/Test/assets/acceptance/",
-)
-REVISION_HISTORY_HEADING = re.compile(r"^## .*개정 이력\s*$")
-MAPPING_DOC_REL = "Workflow/02_부서_구조_및_작업구역.md"
-MAPPING_HEADING = re.compile(r"^### 2\.3(?!\d)")
-SECTION_HEADING = re.compile(r"^#{1,3} ")
-RESIDUAL_SOURCE = "Workflow/02_부서_구조_및_작업구역 「옛 이름과 새 이름의 대응」"
+# 옛 경로 잔존 검사(순서 5의 C1)는 형상통제 대조(check_config.py)로 옮겼다(REQ-032 D8, REQ-034)
 
 # 비밀정보 검출 규칙(순서 4와 --scan-all). 규칙 목록의 원천은 이 상수다(Workflow/06 「비밀정보 검출」).
 # 이 검사는 사고 이력 없이 대표님 결정으로 넣은 예방 검사이며(근거 ORD-005_v04 원문 N),
@@ -746,89 +728,31 @@ def scan_all():
     return True
 
 
-# ---------------------------------------------------------------- 옛 경로 잔존 검사 (순서 5)
+# ---------------------------------------------------------------- 형상통제 대조 (순서 5)
 
-def residual_target(rel):
-    """옛 경로 잔존 검사의 대상 파일인지 돌려준다(파일 단위로 뺄 범위를 뺀다)."""
-    if rel.startswith(RESIDUAL_EXCLUDED_TOP):
-        return False
-    parts = rel.split("/")
-    # 팀 폴더(Departments/<부>/<팀>/)의 results/·workspace/ 아래 전체는 이미 작성된 기록의 위치다
-    if len(parts) >= 5 and parts[0] == "Departments" and parts[3] in ("results", "workspace"):
-        return False
-    return not rel.startswith(RESIDUAL_RECORD_PREFIXES)
+def commit_req_record(files):
+    """「커밋하는 REQ」의 기록 이름. 순서 7과 같은 방법(승인되었고 끝나지 않은 REQ의 scope가 남은 변경 파일을 덮는지)으로
+    찾고, 없으면 None을 돌려준다(HOTFIX·요청 커밋 등).
 
-
-def residual_lines(rel, text):
-    """줄 단위로 뺄 범위(Markdown 개정 이력 H2부터 끝, 02의 2.3절)를 뺀 (줄 번호, 줄) 목록을 돌려준다."""
-    keep, in_mapping = [], False
-    for no, line in enumerate(text.split("\n"), 1):
-        line = line.rstrip("\r")
-        if rel.endswith(".md") and REVISION_HISTORY_HEADING.match(line):
-            break
-        if rel == MAPPING_DOC_REL:
-            if MAPPING_HEADING.match(line):
-                in_mapping = True
-                continue
-            if in_mapping and SECTION_HEADING.match(line):
-                in_mapping = False
-            if in_mapping:
-                continue
-        keep.append((no, line))
-    return keep
-
-
-def residual_candidates(staged):
-    """대상 후보 경로 목록. --staged는 index의 추적 파일, 작업 트리 검사는 추적 파일과 미추적 파일이다."""
-    if staged:
-        entries = index_entries()
-        return None if entries is None else sorted(entries)
-    paths = []
-    for extra in ([], ["--others", "--exclude-standard"]):
-        cmd = ["git", "-c", "core.quotepath=false", "ls-files", "-z", *extra]
-        res = subprocess.run(cmd, cwd=ROOT_DIR, capture_output=True)
-        if res.returncode != 0:
-            print(f"[FAIL] 옛 경로 잔존 검사: 파일 목록을 조회할 수 없습니다 (종료 코드 {res.returncode}).")
-            print(f"       원인: {res.stderr.decode('utf-8', 'replace').strip()}")
-            print(f"       조치: {' '.join(cmd)}를 직접 실행해 오류를 해결한 뒤 다시 실행하십시오.")
+    순서 7이 같은 조회를 다시 하며 그 출력([INFO]·[WARN]·[FAIL])을 내므로, 여기서는 출력을 버리고 판단만 한다.
+    """
+    work_files = [f for f in files if not is_whitelisted(f)]
+    if not work_files:
+        return None
+    with contextlib.redirect_stdout(io.StringIO()):
+        closed = load_closed_records()
+        if closed is None:
             return None
-        paths += [p for p in res.stdout.decode("utf-8", "replace").split("\0") if p]
-    return sorted(set(paths))
+        approved, _, _ = load_records(closed)
+    rec = next((r for r in approved if r["kind"] == "REQ" and covers(r, work_files)), None)
+    return rec["record"] if rec else None
 
 
-def check_old_paths(staged):
-    """순서 5. 옛 경로가 없으면 True, 남았거나 조회에 실패하면 False를 돌려준다."""
-    candidates = residual_candidates(staged)
-    if candidates is None:
-        return False
-    targets = [p for p in candidates if residual_target(p)]
-    print("[INFO] 옛 경로 잔존 검사: 뺀 범위 - 폴더 전체: " + ", ".join(RESIDUAL_EXCLUDED_TOP)
-          + ", 팀 폴더(Departments/<부>/<팀>/)의 results/·workspace/, " + ", ".join(RESIDUAL_RECORD_PREFIXES)
-          + f" / 줄 단위: Markdown 파일의 「개정 이력」 H2 제목부터 끝, {MAPPING_DOC_REL}의 2.3절."
-          + f" 대상 파일 {len(targets)}개.")
-    contents = read_contents(targets, staged)
-    if contents is None:
-        return False
-    hits = []
-    for rel in targets:
-        data = contents.get(rel)
-        if data is None or b"\0" in data:
-            continue
-        for no, line in residual_lines(rel, data.decode("utf-8", errors="replace")):
-            for pattern in OLD_PATH_PATTERNS:
-                m = pattern.search(line)
-                if m:
-                    hits.append(f"{rel}:{no}: {m.group(0)}")
-                    break
-    if hits:
-        print("[FAIL] 옛 경로 잔존 검사: 옛 경로가 남은 줄이 있습니다:")
-        for hit in hits:
-            print(f"  - {hit}")
-        print("       원인: REQ-032 커밋 전의 옛 경로(부서 폴더 바로 아래의 공통 하위 폴더)가 남아 있습니다.")
-        print(f"       조치: {RESIDUAL_SOURCE}의 대응대로 새 경로로 고친 뒤 다시 스테이징하십시오.")
-        return False
-    print("[PASS] 옛 경로 잔존 검사: 대상 파일에 옛 경로가 없습니다.")
-    return True
+def check_config_step(files, staged):
+    """순서 5. 형상통제 대조(check_config.py)를 실행해 C1~C5 오류가 없으면 True를 돌려준다."""
+    # 순서 5를 실행할 때만 가져온다. check_config가 이 모듈을 가져오므로 위쪽에서 가져오면 서로를 기다린다
+    import check_config
+    return check_config.run_commit_check(ROOT_DIR, staged, commit_req_record(files))
 
 
 def run_tests(work_files):
@@ -981,8 +905,8 @@ def check_standard(staged=False):
 
 def check_scope_steps(files, staged):
     """순서 5~8. 통과하면 True, 실패하면 False를 돌려준다."""
-    # 순서 5: 옛 경로 잔존 검사. 변경 파일이 아니라 대상 범위 전체를 본다 (REQ-032)
-    if not check_old_paths(staged):
+    # 순서 5: 형상통제 대조. 변경 파일이 아니라 대상 범위 전체와 생성물·원천 전체를 본다 (REQ-032, REQ-034)
+    if not check_config_step(files, staged):
         return False
 
     # 순서 6: 대조 제외

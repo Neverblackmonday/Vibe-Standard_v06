@@ -3,14 +3,15 @@
 """
 prepare_final_commit.py - 최종 승인 커밋 준비 명령
 
-규칙의 원천은 Workflow/05_인수인계_및_실행명령 「최종 판정서 승인과 커밋」(4번 반영, 5번 정리, 6번 스테이징 분류 ①~⑪,
+규칙의 원천은 Workflow/05_인수인계_및_실행명령 「최종 판정서 승인과 커밋」(4번 반영, 5번 정리, 6번 스테이징 분류 ①~⑫,
 8번 커밋)과 Workflow/07_문서_서식_및_번호 「커밋 메시지」(제목 줄, 근거 줄)다. 명령의 동작은
 Workflow/06_통제장치_및_배포 「준비·판단 명령」이 정한다. 이 스크립트는 그 구현이며 저장소를 읽기만 한다
 (커밋·삭제·이동·파일 쓰기·Git 설정 변경을 하지 않는다).
 
 사용법: python prepare_final_commit.py <최종 판정서 경로>
-출력: 1) 반영 목록 2) 삭제 목록 3) 스테이징 목록(경로마다 분류 번호 ①~⑪) 4) 분류하지 못한 변경 5) 커밋 메시지
+출력: 1) 반영 목록 2) 삭제 목록 3) 스테이징 목록(경로마다 분류 번호 ①~⑫) 4) 분류하지 못한 변경 5) 커밋 메시지
       (근거 줄 끝, Follows 앞에 Model-Effort 자리 줄. C02가 채운다. REQ-033)
+      ⑫는 그 안건의 기준선 기록이다(Workflow/05 「형상통제 절차」 2항. REQ-034)
 종료 코드: 0 준비 완료, 1 실패(읽을 기록이 없거나 형식이 맞지 않음, 판정 결과가 pass가 아님)
 """
 
@@ -25,10 +26,12 @@ import check_standard as cs  # noqa: E402  (기록 파일명, 머리말 읽기, 
 
 ROOT_DIR = cs.ROOT_DIR
 SOURCE = "Workflow/05_인수인계_및_실행명령 「최종 판정서 승인과 커밋」"
-CIRCLED = "①②③④⑤⑥⑦⑧⑨⑩⑪"
+CIRCLED = "①②③④⑤⑥⑦⑧⑨⑩⑪⑫"
 FINAL_RES_NAME = re.compile(r"^RES-(" + cs.RECORD_NUMBER + r")_v(\d{2})\.md$")
 REVIEW_RESULTS_REL = "Departments/Quality/Review/results"
 EC_DIR_REL = "Departments/Design/EC/docs"
+# 기준선 기록 위치(Workflow/07_문서_서식_및_번호 「문서 체계」 「기준선 기록」 행). 형상통제팀 직속 results/ 바로 아래다
+BASELINE_DIR_REL = "Departments/Secretariat/ConfigControl/results"
 ORDER_NAME = re.compile(r"^ORD-(\d{3})_v\d{2}\.md$")
 INLINE_CODE = re.compile(r"`([^`\n]+)`")
 H1_TITLE = re.compile(r"^# (REQ-" + cs.RECORD_NUMBER + r"): (.+?)\s*$")
@@ -298,7 +301,7 @@ class Case:
                         self.research.update(INLINE_CODE.findall(line))
 
     def classify(self, rel):
-        """경로의 분류 번호(①~⑪ 가운데 처음 맞는 것)를 돌려준다. 맞는 것이 없으면 None."""
+        """경로의 분류 번호(①~⑫ 가운데 처음 맞는 것)를 돌려준다. 맞는 것이 없으면 None."""
         n = re.escape(self.number)
         name = rel.rsplit("/", 1)[-1]
         parts = rel.split("/")
@@ -331,6 +334,9 @@ class Case:
             return 10
         if rel.startswith(cs.CLOSE_DIR_REL + "/") and re.fullmatch(rf"종결기록_\d{{8}}_{re.escape(self.record)}\.md", name):
             return 11
+        if (rel.rpartition("/")[0] == BASELINE_DIR_REL
+                and re.fullmatch(rf"기준선_\d{{8}}T\d{{6}}_{re.escape(self.record)}\.json", name)):
+            return 12
         return None
 
     def message(self):
@@ -385,7 +391,7 @@ def main(argv):
         seen.add(rel)
         num = case.classify(rel)
         (staged if num else unclassified).append((num, status, rel))
-    print(f"3) 스테이징 목록({SOURCE} 6번 ①~⑪. 이 목록을 그대로 스테이징한다)")
+    print(f"3) 스테이징 목록({SOURCE} 6번 ①~⑫. 이 목록을 그대로 스테이징한다)")
     if not staged:
         print("  - 없음")
     for num, status, rel in sorted(staged, key=lambda x: (x[0], x[2])):

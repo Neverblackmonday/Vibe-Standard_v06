@@ -1,0 +1,668 @@
+{
+  "budgets": {"global": 1000, "standard": 1000, "dept": 500, "team": 2000, "part": 1500},
+  "standard": [
+    {"doc": "AGENTS.md", "section": "문서 지도"},
+    {"doc": "AGENTS.md", "section": "불변 원칙", "items": ["승인 전 착수 금지", "범위 통제", "거버넌스 구역", "생성과 판정의 분리", "단순성 우선", "추측 금지", "단일 원천", "추적성"]}
+  ],
+  "depts": {
+    "비서실": {
+      "select": [
+        {"doc": "AGENTS.md", "section": "조직·구역과 권한 한계", "rows": ["대표실", "비서실"]},
+        {"doc": "Workflow/02_부서_구조_및_작업구역.md", "section": "부서별 책임과 산출물", "rows": ["비서실"]},
+        {"doc": "Workflow/02_부서_구조_및_작업구역.md", "section": "비서실과 PM의 책무"},
+        {"doc": "Workflow/02_부서_구조_및_작업구역.md", "section": "조직 표"},
+        {"doc": "Workflow/02_부서_구조_및_작업구역.md", "section": "팀 폴더와 공통 하위폴더"},
+        {"doc": "Workflow/02_부서_구조_및_작업구역.md", "section": "작업 구역"},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "전체 흐름"},
+        {"doc": "Workflow/04_모델_운용.md", "section": "모델 메타데이터 기록"},
+        {"doc": "Workflow/05_인수인계_및_실행명령.md", "section": "인수인계 순서"},
+        {"doc": "Workflow/05_인수인계_및_실행명령.md", "section": "완료 보고"},
+        {"doc": "Workflow/06_통제장치_및_배포.md", "section": "무인 실행 권한"},
+        {"doc": "Workflow/07_문서_서식_및_번호.md", "section": "문서 체계"},
+        {"doc": "Workflow/07_문서_서식_및_번호.md", "section": "번호와 버전"},
+        {"doc": "Workflow/07_문서_서식_및_번호.md", "section": "머리말"}
+      ],
+      "refs": [
+        {"doc": "Workflow/01_표준_개요.md", "section": "용어"}
+      ]
+    },
+    "설계부": {
+      "select": [
+        {"doc": "AGENTS.md", "section": "조직·구역과 권한 한계", "rows": ["대표실", "설계부"]},
+        {"doc": "Workflow/02_부서_구조_및_작업구역.md", "section": "부서별 책임과 산출물", "rows": ["설계부"]},
+        {"doc": "Workflow/02_부서_구조_및_작업구역.md", "section": "팀 폴더와 공통 하위폴더"},
+        {"doc": "Workflow/02_부서_구조_및_작업구역.md", "section": "작업 구역"},
+        {"doc": "Workflow/04_모델_운용.md", "section": "모델 메타데이터 기록"},
+        {"doc": "Workflow/06_통제장치_및_배포.md", "section": "무인 실행 권한"},
+        {"doc": "Workflow/07_문서_서식_및_번호.md", "section": "문서 체계", "rows": ["EC", "PRD", "TAD", "RPT", "계층 구성표", "전수 대응표"]},
+        {"doc": "Workflow/07_문서_서식_및_번호.md", "section": "문서 체계", "items": ["서식 위치", "추적 관계", "추적 식별자", "다른 안건 기록의 참조"]},
+        {"doc": "Workflow/07_문서_서식_및_번호.md", "section": "번호와 버전", "rows": ["기본", "파생 안건"]},
+        {"doc": "Workflow/07_문서_서식_및_번호.md", "section": "번호와 버전", "items": ["번호", "팀 `workspace/` 파일", "파생 번호", "버전", "서식", "PRD·TAD·시각 디자인 문서"]},
+        {"doc": "Workflow/07_문서_서식_및_번호.md", "section": "머리말"},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "판정 세션 밖의 명령 실행"},
+        {"doc": "Workflow/04_모델_운용.md", "section": "타깃 컨텍스트 규칙", "items": ["매뉴얼 읽기", "인계 패킷"]}
+      ],
+      "refs": [
+        {"doc": "Workflow/01_표준_개요.md", "section": "용어"},
+        {"doc": "Workflow/templates/DEV_TEMPLATE.md"}
+      ]
+    },
+    "개발부": {
+      "select": [
+        {"doc": "AGENTS.md", "section": "조직·구역과 권한 한계", "rows": ["대표실", "개발부"]},
+        {"doc": "Workflow/02_부서_구조_및_작업구역.md", "section": "부서별 책임과 산출물", "rows": ["개발부"]},
+        {"doc": "Workflow/02_부서_구조_및_작업구역.md", "section": "팀 폴더와 공통 하위폴더"},
+        {"doc": "Workflow/02_부서_구조_및_작업구역.md", "section": "작업 구역"},
+        {"doc": "Workflow/04_모델_운용.md", "section": "모델 메타데이터 기록"},
+        {"doc": "Workflow/06_통제장치_및_배포.md", "section": "무인 실행 권한"},
+        {"doc": "Workflow/07_문서_서식_및_번호.md", "section": "문서 체계", "rows": ["DEV", "HOTFIX", "생성 지침"]},
+        {"doc": "Workflow/07_문서_서식_및_번호.md", "section": "문서 체계", "items": ["서식 위치", "추적 관계", "추적 식별자", "다른 안건 기록의 참조"]},
+        {"doc": "Workflow/07_문서_서식_및_번호.md", "section": "번호와 버전", "rows": ["기본", "파생 안건"]},
+        {"doc": "Workflow/07_문서_서식_및_번호.md", "section": "번호와 버전", "items": ["번호", "팀 `workspace/` 파일", "파생 번호", "버전", "서식", "HOTFIX"]},
+        {"doc": "Workflow/07_문서_서식_및_번호.md", "section": "머리말", "rows": ["DEV·RPT", "HOTFIX"]},
+        {"doc": "Workflow/07_문서_서식_및_번호.md", "section": "머리말", "items": ["머리말 형식", "날짜·시각 형식", "목록 필드", "scope의 기록 문서", "작성·판정 모델"]},
+        {"doc": "Workflow/04_모델_운용.md", "section": "타깃 컨텍스트 규칙", "items": ["매뉴얼 읽기"]}
+      ],
+      "refs": [
+        {"doc": "Workflow/01_표준_개요.md", "section": "용어"}
+      ]
+    },
+    "품질보증부": {
+      "select": [
+        {"doc": "AGENTS.md", "section": "조직·구역과 권한 한계", "rows": ["대표실", "품질보증부"]},
+        {"doc": "Workflow/02_부서_구조_및_작업구역.md", "section": "부서별 책임과 산출물", "rows": ["품질보증부"]},
+        {"doc": "Workflow/02_부서_구조_및_작업구역.md", "section": "팀 폴더와 공통 하위폴더"},
+        {"doc": "Workflow/02_부서_구조_및_작업구역.md", "section": "작업 구역"},
+        {"doc": "Workflow/04_모델_운용.md", "section": "모델 메타데이터 기록"},
+        {"doc": "Workflow/06_통제장치_및_배포.md", "section": "무인 실행 권한"},
+        {"doc": "Workflow/07_문서_서식_및_번호.md", "section": "문서 체계", "rows": ["RES", "인수 시험", "ACC", "NCR"]},
+        {"doc": "Workflow/07_문서_서식_및_번호.md", "section": "문서 체계", "items": ["서식 위치", "추적 관계", "추적 식별자", "다른 안건 기록의 참조"]},
+        {"doc": "Workflow/07_문서_서식_및_번호.md", "section": "번호와 버전", "rows": ["기본", "파생 안건", "판정 구분"]},
+        {"doc": "Workflow/07_문서_서식_및_번호.md", "section": "번호와 버전", "items": ["번호", "팀 `workspace/` 파일", "파생 번호", "버전", "서식", "인수 시험", "부적합 기록"]},
+        {"doc": "Workflow/07_문서_서식_및_번호.md", "section": "머리말", "rows": ["RES", "ACC", "NCR", "`pass`", "`fail`", "`rejected`"]},
+        {"doc": "Workflow/07_문서_서식_및_번호.md", "section": "머리말", "items": ["머리말 형식", "날짜·시각 형식", "목록 필드", "scope의 기록 문서", "작성·판정 모델", "NCR의 시각 필드"]},
+        {"doc": "Workflow/04_모델_운용.md", "section": "타깃 컨텍스트 규칙", "items": ["매뉴얼 읽기"]}
+      ],
+      "refs": [
+        {"doc": "Workflow/01_표준_개요.md", "section": "용어"}
+      ]
+    },
+    "운영부": {
+      "select": [
+        {"doc": "AGENTS.md", "section": "조직·구역과 권한 한계", "rows": ["대표실", "운영부", "자료실"]},
+        {"doc": "Workflow/02_부서_구조_및_작업구역.md", "section": "부서별 책임과 산출물", "rows": ["운영부"]},
+        {"doc": "Workflow/02_부서_구조_및_작업구역.md", "section": "팀 폴더와 공통 하위폴더"},
+        {"doc": "Workflow/02_부서_구조_및_작업구역.md", "section": "작업 구역"},
+        {"doc": "Workflow/04_모델_운용.md", "section": "모델 메타데이터 기록"},
+        {"doc": "Workflow/06_통제장치_및_배포.md", "section": "무인 실행 권한"},
+        {"doc": "Workflow/07_문서_서식_및_번호.md", "section": "문서 체계", "rows": ["RPT"]},
+        {"doc": "Workflow/07_문서_서식_및_번호.md", "section": "문서 체계", "items": ["서식 위치", "추적 관계", "추적 식별자", "다른 안건 기록의 참조"]},
+        {"doc": "Workflow/07_문서_서식_및_번호.md", "section": "번호와 버전", "rows": ["기본", "파생 안건"]},
+        {"doc": "Workflow/07_문서_서식_및_번호.md", "section": "번호와 버전", "items": ["번호", "팀 `workspace/` 파일", "파생 번호", "버전", "서식"]},
+        {"doc": "Workflow/07_문서_서식_및_번호.md", "section": "머리말", "rows": ["DEV·RPT"]},
+        {"doc": "Workflow/07_문서_서식_및_번호.md", "section": "머리말", "items": ["머리말 형식", "날짜·시각 형식", "목록 필드", "scope의 기록 문서", "작성·판정 모델"]},
+        {"doc": "Workflow/04_모델_운용.md", "section": "타깃 컨텍스트 규칙", "items": ["매뉴얼 읽기"]},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "단계별 통과 조건과 판정 기준", "rows": ["지원 작업"]},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "판정 세션 밖의 명령 실행"},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "판정 전 점검", "rows": ["O01·O02·M02~M04"]},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "판정 전 점검", "items": ["실행", "판정과의 관계", "적용 시점"]}
+      ],
+      "refs": [
+        {"doc": "Workflow/01_표준_개요.md", "section": "용어"},
+        {"doc": "Workflow/06_통제장치_및_배포.md", "section": "보안 점검"},
+        {"doc": "Workflow/templates/DEV_TEMPLATE.md"}
+      ]
+    },
+    "마케팅부": {
+      "select": [
+        {"doc": "AGENTS.md", "section": "조직·구역과 권한 한계", "rows": ["대표실", "마케팅부"]},
+        {"doc": "Workflow/02_부서_구조_및_작업구역.md", "section": "부서별 책임과 산출물", "rows": ["마케팅부"]},
+        {"doc": "Workflow/02_부서_구조_및_작업구역.md", "section": "팀 폴더와 공통 하위폴더"},
+        {"doc": "Workflow/02_부서_구조_및_작업구역.md", "section": "작업 구역"},
+        {"doc": "Workflow/04_모델_운용.md", "section": "모델 메타데이터 기록"},
+        {"doc": "Workflow/06_통제장치_및_배포.md", "section": "무인 실행 권한"},
+        {"doc": "Workflow/07_문서_서식_및_번호.md", "section": "문서 체계", "rows": ["시각 디자인 문서", "RPT"]},
+        {"doc": "Workflow/07_문서_서식_및_번호.md", "section": "문서 체계", "items": ["서식 위치", "추적 관계", "추적 식별자", "다른 안건 기록의 참조"]},
+        {"doc": "Workflow/07_문서_서식_및_번호.md", "section": "번호와 버전", "rows": ["기본", "파생 안건"]},
+        {"doc": "Workflow/07_문서_서식_및_번호.md", "section": "번호와 버전", "items": ["번호", "팀 `workspace/` 파일", "파생 번호", "버전", "서식", "PRD·TAD·시각 디자인 문서"]},
+        {"doc": "Workflow/07_문서_서식_및_번호.md", "section": "머리말", "rows": ["DEV·RPT"]},
+        {"doc": "Workflow/07_문서_서식_및_번호.md", "section": "머리말", "items": ["머리말 형식", "날짜·시각 형식", "목록 필드", "scope의 기록 문서", "작성·판정 모델"]},
+        {"doc": "Workflow/04_모델_운용.md", "section": "타깃 컨텍스트 규칙", "items": ["매뉴얼 읽기"]}
+      ],
+      "refs": [
+        {"doc": "Workflow/01_표준_개요.md", "section": "용어"},
+        {"doc": "Workflow/templates/DEV_TEMPLATE.md"}
+      ]
+    }
+  },
+  "teams": {
+    "비서팀": {
+      "select": [
+        {"doc": "Workflow/04_모델_운용.md", "section": "타깃 컨텍스트 규칙", "items": ["매뉴얼 읽기"]},
+        {"doc": "Workflow/05_인수인계_및_실행명령.md", "section": "브리핑"},
+        {"doc": "Workflow/05_인수인계_및_실행명령.md", "section": "공통 규칙"},
+        {"doc": "Workflow/05_인수인계_및_실행명령.md", "section": "호출 문구"},
+        {"doc": "Workflow/05_인수인계_및_실행명령.md", "section": "비서실 동시 운용"},
+        {"doc": "Workflow/05_인수인계_및_실행명령.md", "section": "비서실 운영 방식"}
+      ],
+      "refs": [
+        {"doc": "Workflow/templates/BRIEFING_TEMPLATE.html"}
+      ]
+    },
+    "PM팀": {
+      "select": [
+        {"doc": "Workflow/02_부서_구조_및_작업구역.md", "section": "부서별 책임과 산출물", "items": ["REQ-027 적용 시점", "REQ-031 적용 시점", "REQ-032 적용 시점", "REQ-033 적용 시점", "REQ-034 적용 시점"]},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "분류별 단계"},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "판정 지적의 구분과 문체 지적 처리"},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "진행 중 변경과 파생 안건"},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "중단 조건"},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "반려와 격상"},
+        {"doc": "Workflow/04_모델_운용.md", "section": "모델 사용 규칙"},
+        {"doc": "Workflow/04_모델_운용.md", "section": "단계별 모델"},
+        {"doc": "Workflow/04_모델_운용.md", "section": "기본값 밖 사용"},
+        {"doc": "Workflow/04_모델_운용.md", "section": "CEO 설정"},
+        {"doc": "Workflow/04_모델_운용.md", "section": "effort"},
+        {"doc": "Workflow/04_모델_운용.md", "section": "타깃 컨텍스트 규칙"},
+        {"doc": "Workflow/04_모델_운용.md", "section": "계층형 지침"},
+        {"doc": "Workflow/05_인수인계_및_실행명령.md", "section": "실행 명령"},
+        {"doc": "Workflow/05_인수인계_및_실행명령.md", "section": "PM 실행 기록"},
+        {"doc": "Workflow/06_통제장치_및_배포.md", "section": "준비·판단 명령"}
+      ],
+      "refs": [
+        {"doc": "Workflow/01_표준_개요.md", "section": "용어"},
+        {"doc": "Workflow/04_모델_운용.md", "section": "기본 모델 표"}
+      ]
+    },
+    "형상통제팀": {
+      "select": [
+        {"doc": "Workflow/04_모델_운용.md", "section": "타깃 컨텍스트 규칙", "items": ["매뉴얼 읽기"]},
+        {"doc": "Workflow/05_인수인계_및_실행명령.md", "section": "공통 규칙"},
+        {"doc": "Workflow/05_인수인계_및_실행명령.md", "section": "호출 문구"},
+        {"doc": "Workflow/05_인수인계_및_실행명령.md", "section": "고정 절차"},
+        {"doc": "Workflow/05_인수인계_및_실행명령.md", "section": "비서실 동시 운용"},
+        {"doc": "Workflow/05_인수인계_및_실행명령.md", "section": "비서실 운영 방식"},
+        {"doc": "Workflow/05_인수인계_및_실행명령.md", "section": "셸 작업 지시"},
+        {"doc": "Workflow/05_인수인계_및_실행명령.md", "section": "형상통제 절차"},
+        {"doc": "Workflow/06_통제장치_및_배포.md", "section": "비서실·핫픽스 세션의 권한"},
+        {"doc": "Workflow/06_통제장치_및_배포.md", "section": "커밋 전 검사 (`check_standard.py`)", "items": ["대표님 전용 구역의 커밋", "실험실의 커밋", "품질보증부 기록의 커밋", "종결 기록의 커밋"]},
+        {"doc": "Workflow/06_통제장치_및_배포.md", "section": "형상통제 대조"},
+        {"doc": "Workflow/06_통제장치_및_배포.md", "section": "생성·반영 명령"}
+      ],
+      "refs": [
+        {"doc": "Workflow/05_인수인계_및_실행명령.md", "section": "작업 큐"}
+      ]
+    },
+    "EC팀": {
+      "select": [
+        {"doc": "Workflow/03_라이프사이클.md", "section": "EC 적용 기준"}
+      ],
+      "refs": []
+    },
+    "명세팀": {
+      "select": [
+        {"doc": "Workflow/03_라이프사이클.md", "section": "단계별 통과 조건과 판정 기준", "rows": ["명세"]},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "판정 전 점검", "rows": ["E03·E04"]},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "판정 전 점검", "items": ["실행", "판정과의 관계", "적용 시점"]},
+        {"doc": "Workflow/07_문서_서식_및_번호.md", "section": "개정 이력과 리비전 태그"}
+      ],
+      "refs": [
+        {"doc": "Workflow/03_라이프사이클.md", "section": "시각 디자인 단계"},
+        {"doc": "Workflow/templates/PRD_TEMPLATE.md"},
+        {"doc": "Workflow/templates/TAD_TEMPLATE.md"}
+      ]
+    },
+    "구현팀": {
+      "select": [
+        {"doc": "Workflow/03_라이프사이클.md", "section": "단계별 통과 조건과 판정 기준", "rows": ["구현"]},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "판정 세션 밖의 명령 실행"},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "판정 전 점검", "rows": ["V01·V02"]},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "판정 전 점검", "items": ["실행", "판정과의 관계", "적용 시점"]},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "시험실"},
+        {"doc": "Workflow/04_모델_운용.md", "section": "타깃 컨텍스트 규칙", "items": ["인계 패킷"]}
+      ],
+      "refs": [
+        {"doc": "Workflow/templates/DEV_TEMPLATE.md"}
+      ]
+    },
+    "핫픽스팀": {
+      "select": [],
+      "refs": [
+        {"doc": "Workflow/templates/HOTFIX_TEMPLATE.md"}
+      ]
+    },
+    "판정팀": {
+      "select": [
+        {"doc": "Workflow/01_표준_개요.md", "section": "구성 수단"},
+        {"doc": "Workflow/01_표준_개요.md", "section": "표준 구역과 고객 작업 구역"},
+        {"doc": "Workflow/01_표준_개요.md", "section": "용어"},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "판정 지적의 구분과 문체 지적 처리"},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "판정 세션의 명령 실행"},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "재작업 구분"},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "반려와 격상"},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "부적합 관리"}
+      ],
+      "refs": [
+        {"doc": "Workflow/templates/RES_TEMPLATE.md"},
+        {"doc": "Workflow/templates/NCR_TEMPLATE.md"}
+      ]
+    },
+    "부적합관리팀": {
+      "select": [
+        {"doc": "Workflow/03_라이프사이클.md", "section": "부적합 관리"}
+      ],
+      "refs": [
+        {"doc": "Workflow/templates/NCR_TEMPLATE.md"}
+      ]
+    },
+    "시험팀": {
+      "select": [],
+      "refs": [
+        {"doc": "Workflow/templates/ACC_TEMPLATE.md"}
+      ]
+    },
+    "배포팀": {
+      "select": [],
+      "refs": []
+    },
+    "보안팀": {
+      "select": [],
+      "refs": []
+    },
+    "디자인팀": {
+      "select": [
+        {"doc": "Workflow/03_라이프사이클.md", "section": "시각 디자인 단계"},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "단계별 통과 조건과 판정 기준", "rows": ["시각 디자인"]},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "판정 전 점검", "rows": ["M01"]},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "판정 전 점검", "items": ["실행", "판정과의 관계", "적용 시점"]}
+      ],
+      "refs": []
+    },
+    "콘텐츠팀": {
+      "select": [
+        {"doc": "Workflow/03_라이프사이클.md", "section": "단계별 통과 조건과 판정 기준", "rows": ["지원 작업"]},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "판정 전 점검", "rows": ["O01·O02·M02~M04"]},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "판정 전 점검", "items": ["실행", "판정과의 관계", "적용 시점"]}
+      ],
+      "refs": [
+        {"doc": "Workflow/03_라이프사이클.md", "section": "판정 세션 밖의 명령 실행"},
+        {"doc": "Workflow/06_통제장치_및_배포.md", "section": "보안 점검"}
+      ]
+    },
+    "홍보팀": {
+      "select": [
+        {"doc": "Workflow/03_라이프사이클.md", "section": "단계별 통과 조건과 판정 기준", "rows": ["지원 작업"]},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "판정 전 점검", "rows": ["O01·O02·M02~M04"]},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "판정 전 점검", "items": ["실행", "판정과의 관계", "적용 시점"]}
+      ],
+      "refs": [
+        {"doc": "Workflow/03_라이프사이클.md", "section": "판정 세션 밖의 명령 실행"},
+        {"doc": "Workflow/06_통제장치_및_배포.md", "section": "보안 점검"}
+      ]
+    }
+  },
+  "parts": {
+    "S01": {
+      "card": false,
+      "select": [
+        {"doc": "AGENTS.md", "section": "조직·구역과 권한 한계", "rows": ["실험실"]},
+        {"doc": "Workflow/02_부서_구조_및_작업구역.md", "section": "저장소 구조"},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "분류별 단계"},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "다른 안건이 진행 중일 때의 REQ 작성"},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "원스톱 착수 조건"},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "진행 중 변경과 파생 안건"},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "핫픽스 트랙"},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "기획 트랙"},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "파이프라인 밖 사용"},
+        {"doc": "Workflow/04_모델_운용.md", "section": "모델 사용 규칙"},
+        {"doc": "Workflow/04_모델_운용.md", "section": "단계별 모델"},
+        {"doc": "Workflow/04_모델_운용.md", "section": "CEO 설정"},
+        {"doc": "Workflow/04_모델_운용.md", "section": "effort"},
+        {"doc": "Workflow/05_인수인계_및_실행명령.md", "section": "비서실 세션의 명령 전달 방식"},
+        {"doc": "Workflow/05_인수인계_및_실행명령.md", "section": "실행 명령"},
+        {"doc": "Workflow/05_인수인계_및_실행명령.md", "section": "고정 절차"},
+        {"doc": "Workflow/05_인수인계_및_실행명령.md", "section": "셸 작업 지시"},
+        {"doc": "Workflow/05_인수인계_및_실행명령.md", "section": "작업 큐"},
+        {"doc": "Workflow/06_통제장치_및_배포.md", "section": "비서실·핫픽스 세션의 권한"},
+        {"doc": "Workflow/06_통제장치_및_배포.md", "section": "설치·PM 기동 전 점검 (`check_env.py`)"},
+        {"doc": "Workflow/06_통제장치_및_배포.md", "section": "준비·판단 명령"},
+        {"doc": "Workflow/06_통제장치_및_배포.md", "section": "배포본과 업데이트 패키지"},
+        {"doc": "Workflow/07_문서_서식_및_번호.md", "section": "개정 이력과 리비전 태그"}
+      ],
+      "refs": [
+        {"doc": "Workflow/templates/ORDER_TEMPLATE.md"},
+        {"doc": "Workflow/templates/QUEUE_TEMPLATE.md"},
+        {"doc": "Workflow/templates/PM_DIRECTIVE_TEMPLATE.md"},
+        {"doc": "Workflow/templates/BACKLOG_TEMPLATE.md"},
+        {"doc": "Workflow/templates/PLAN_TEMPLATE.md"},
+        {"doc": "Workflow/04_모델_운용.md", "section": "기본 모델 표"}
+      ]
+    },
+    "S02": {
+      "card": false,
+      "select": [
+        {"doc": "AGENTS.md", "section": "조직·구역과 권한 한계", "rows": ["외부감사실"]},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "기획 트랙"},
+        {"doc": "Workflow/templates/AUDIT_TEMPLATE.md", "section": "승인 기록 점검"}
+      ],
+      "refs": [
+        {"doc": "Workflow/templates/AUDIT_TEMPLATE.md"},
+        {"doc": "Workflow/templates/BACKLOG_TEMPLATE.md"},
+        {"doc": "Workflow/templates/PLAN_TEMPLATE.md"}
+      ]
+    },
+    "S03": {
+      "card": false,
+      "select": [
+        {"doc": "Workflow/03_라이프사이클.md", "section": "단계별 통과 조건과 판정 기준", "rows": ["최종 판정"]},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "단계별 통과 조건과 판정 기준", "items": ["REQ 원점 대조", "삭제 대상"]}
+      ],
+      "refs": []
+    },
+    "P01": {
+      "card": false,
+      "select": [
+        {"doc": "AGENTS.md", "section": "불변 원칙", "items": ["규칙 비대화 방지"]},
+        {"doc": "Workflow/01_표준_개요.md", "section": "용어"},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "REQ 작성 파이프라인"},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "판정 전 점검", "rows": ["P01"]},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "판정 전 점검", "items": ["실행", "판정과의 관계", "적용 시점"]},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "시각 디자인 단계"},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "실험 단계"}
+      ],
+      "refs": [
+        {"doc": "Workflow/templates/REQ_TEMPLATE.md"}
+      ]
+    },
+    "P02": {
+      "card": false,
+      "select": [
+        {"doc": "AGENTS.md", "section": "불변 원칙", "items": ["커밋·푸시"]},
+        {"doc": "Workflow/02_부서_구조_및_작업구역.md", "section": "부서별 책임과 산출물", "items": ["서브에이전트 정의"]},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "원스톱 파이프라인"},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "단계별 통과 조건과 판정 기준", "rows": ["실험", "EC 판단", "EC 작성", "EC 판정", "명세", "명세 판정", "시각 디자인", "시각 디자인 판정", "인수 시험", "구현", "지원 작업", "최종 판정"]},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "단계별 통과 조건과 판정 기준", "items": ["동결 문서"]},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "재작업 구분"},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "판정 세션 밖의 명령 실행"},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "시각 디자인 단계"},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "시험실"},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "부적합 관리"},
+        {"doc": "Workflow/05_인수인계_및_실행명령.md", "section": "진행 상태 보고"},
+        {"doc": "Workflow/06_통제장치_및_배포.md", "section": "서브에이전트 정의 (`.claude/agents/`)"}
+      ],
+      "refs": [
+        {"doc": "Workflow/03_라이프사이클.md", "section": "EC 적용 기준"}
+      ]
+    },
+    "C01": {
+      "card": false,
+      "select": [
+        {"doc": "Workflow/02_부서_구조_및_작업구역.md", "section": "저장소 구조"},
+        {"doc": "Workflow/02_부서_구조_및_작업구역.md", "section": "부서별 책임과 산출물", "items": ["서브에이전트 정의", "기능"]},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "프로세스 맵"},
+        {"doc": "Workflow/04_모델_운용.md", "section": "계층형 지침"},
+        {"doc": "Workflow/06_통제장치_및_배포.md", "section": "서브에이전트 정의 (`.claude/agents/`)"},
+        {"doc": "Workflow/06_통제장치_및_배포.md", "section": "알려진 과제"}
+      ],
+      "refs": []
+    },
+    "C02": {
+      "card": false,
+      "select": [
+        {"doc": "AGENTS.md", "section": "불변 원칙", "items": ["커밋·푸시"]},
+        {"doc": "Workflow/02_부서_구조_및_작업구역.md", "section": "부서별 책임과 산출물", "items": ["REQ-027 적용 시점", "REQ-031 적용 시점", "REQ-032 적용 시점", "REQ-033 적용 시점", "REQ-034 적용 시점"]},
+        {"doc": "Workflow/06_통제장치_및_배포.md", "section": "커밋 메시지 검사 (`check_commit_msg.py`)"},
+        {"doc": "Workflow/06_통제장치_및_배포.md", "section": "준비·판단 명령"},
+        {"doc": "Workflow/06_통제장치_및_배포.md", "section": "거버넌스 파일 개정 절차"},
+        {"doc": "Workflow/07_문서_서식_및_번호.md", "section": "개정 이력과 리비전 태그"}
+      ],
+      "refs": []
+    },
+    "C03": {
+      "card": false,
+      "select": [
+        {"doc": "Workflow/04_모델_운용.md", "section": "CEO 설정"}
+      ],
+      "refs": [
+        {"doc": "Workflow/05_인수인계_및_실행명령.md", "section": "작업 큐"}
+      ]
+    },
+    "E01": {
+      "card": true,
+      "select": [
+        {"doc": "Workflow/03_라이프사이클.md", "section": "단계별 통과 조건과 판정 기준", "rows": ["EC 판단"]},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "판정 전 점검", "rows": ["E01"]},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "판정 전 점검", "items": ["실행", "판정과의 관계", "적용 시점"]}
+      ],
+      "refs": []
+    },
+    "E02": {
+      "card": true,
+      "select": [
+        {"doc": "AGENTS.md", "section": "불변 원칙", "items": ["규칙 비대화 방지"]},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "단계별 통과 조건과 판정 기준", "rows": ["EC 작성", "EC 판정"]},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "판정 전 점검", "rows": ["E02"]},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "판정 전 점검", "items": ["실행", "판정과의 관계", "적용 시점"]},
+        {"doc": "Workflow/06_통제장치_및_배포.md", "section": "검사 장치 대장"}
+      ],
+      "refs": [
+        {"doc": "Workflow/templates/EC_TEMPLATE.md"}
+      ]
+    },
+    "E03": {
+      "card": true,
+      "select": [
+        {"doc": "AGENTS.md", "section": "불변 원칙", "items": ["규칙 비대화 방지"]},
+        {"doc": "Workflow/01_표준_개요.md", "section": "구성 수단"},
+        {"doc": "Workflow/01_표준_개요.md", "section": "표준 구역과 고객 작업 구역"},
+        {"doc": "Workflow/01_표준_개요.md", "section": "용어"},
+        {"doc": "Workflow/02_부서_구조_및_작업구역.md", "section": "저장소 구조"},
+        {"doc": "Workflow/02_부서_구조_및_작업구역.md", "section": "부서별 책임과 산출물", "items": ["기능"]},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "전체 흐름"},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "프로세스 맵"},
+        {"doc": "Workflow/04_모델_운용.md", "section": "모델 사용 규칙"},
+        {"doc": "Workflow/04_모델_운용.md", "section": "계층형 지침"},
+        {"doc": "Workflow/05_인수인계_및_실행명령.md", "section": "형상통제 절차"},
+        {"doc": "Workflow/06_통제장치_및_배포.md", "section": "거버넌스 파일 개정 절차"},
+        {"doc": "Workflow/06_통제장치_및_배포.md", "section": "생성·반영 명령"}
+      ],
+      "refs": []
+    },
+    "E04": {
+      "card": false,
+      "select": [
+        {"doc": "Workflow/02_부서_구조_및_작업구역.md", "section": "부서별 책임과 산출물", "items": ["설계 파라미터와 런타임 파라미터"]},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "시각 디자인 단계"},
+        {"doc": "Workflow/templates/PRD_TEMPLATE.md", "section": "제약 조건 및 가정"},
+        {"doc": "Workflow/templates/TAD_TEMPLATE.md", "section": "오류 처리 및 로깅"},
+        {"doc": "Workflow/templates/TAD_TEMPLATE.md", "section": "보안 고려 사항"}
+      ],
+      "refs": [
+        {"doc": "Workflow/06_통제장치_및_배포.md", "section": "거버넌스 파일 개정 절차"}
+      ]
+    },
+    "V01": {
+      "card": true,
+      "select": [
+        {"doc": "Workflow/02_부서_구조_및_작업구역.md", "section": "저장소 구조"},
+        {"doc": "Workflow/02_부서_구조_및_작업구역.md", "section": "부서별 책임과 산출물", "items": ["서브에이전트 정의"]},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "프로세스 맵"},
+        {"doc": "Workflow/04_모델_운용.md", "section": "모델 사용 규칙"},
+        {"doc": "Workflow/04_모델_운용.md", "section": "계층형 지침"},
+        {"doc": "Workflow/05_인수인계_및_실행명령.md", "section": "형상통제 절차"},
+        {"doc": "Workflow/06_통제장치_및_배포.md", "section": "통제 계층"},
+        {"doc": "Workflow/06_통제장치_및_배포.md", "section": "권한 설정 (`.claude/settings.json`)", "items": ["`deny`", "`Lab/`과 `Storage/`는 `deny`에 넣지", "`Edit(...)` 규칙은 실제 경로의 Edit 도구", "`ask`", "`.claude/settings.local.json`은"]},
+        {"doc": "Workflow/06_통제장치_및_배포.md", "section": "서브에이전트 정의 (`.claude/agents/`)"},
+        {"doc": "Workflow/06_통제장치_및_배포.md", "section": "커밋 전 검사 (`check_standard.py`)"},
+        {"doc": "Workflow/06_통제장치_및_배포.md", "section": "거버넌스 파일 개정 절차"},
+        {"doc": "Workflow/06_통제장치_및_배포.md", "section": "알려진 과제"}
+      ],
+      "refs": []
+    },
+    "V02": {
+      "card": false,
+      "select": [
+        {"doc": "Workflow/03_라이프사이클.md", "section": "시각 디자인 단계"}
+      ],
+      "refs": [
+        {"doc": "Workflow/06_통제장치_및_배포.md", "section": "거버넌스 파일 개정 절차"},
+        {"doc": "Workflow/06_통제장치_및_배포.md", "section": "커밋 전 검사 (`check_standard.py`)"}
+      ]
+    },
+    "V03": {
+      "card": false,
+      "select": [
+        {"doc": "Workflow/03_라이프사이클.md", "section": "핫픽스 트랙"},
+        {"doc": "Workflow/05_인수인계_및_실행명령.md", "section": "핫픽스 실행 명령"},
+        {"doc": "Workflow/05_인수인계_및_실행명령.md", "section": "완료 보고"},
+        {"doc": "Workflow/06_통제장치_및_배포.md", "section": "비서실·핫픽스 세션의 권한"}
+      ],
+      "refs": []
+    },
+    "Q01": {
+      "card": true,
+      "select": [
+        {"doc": "Workflow/03_라이프사이클.md", "section": "분류별 단계"},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "REQ 작성 파이프라인"},
+        {"doc": "Workflow/04_모델_운용.md", "section": "기본값 밖 사용"}
+      ],
+      "refs": []
+    },
+    "Q02": {
+      "card": true,
+      "select": [
+        {"doc": "Workflow/03_라이프사이클.md", "section": "EC 적용 기준"},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "단계별 통과 조건과 판정 기준", "rows": ["EC 판정"]}
+      ],
+      "refs": []
+    },
+    "Q03": {
+      "card": true,
+      "select": [
+        {"doc": "Workflow/03_라이프사이클.md", "section": "EC 적용 기준"},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "단계별 통과 조건과 판정 기준", "rows": ["명세 판정"]},
+        {"doc": "Workflow/06_통제장치_및_배포.md", "section": "거버넌스 파일 개정 절차"},
+        {"doc": "Workflow/07_문서_서식_및_번호.md", "section": "개정 이력과 리비전 태그"}
+      ],
+      "refs": []
+    },
+    "Q04": {
+      "card": false,
+      "select": [
+        {"doc": "Workflow/03_라이프사이클.md", "section": "단계별 통과 조건과 판정 기준", "rows": ["시각 디자인 판정"]},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "시각 디자인 단계"}
+      ],
+      "refs": []
+    },
+    "Q05": {
+      "card": true,
+      "select": [
+        {"doc": "Workflow/03_라이프사이클.md", "section": "EC 적용 기준"},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "단계별 통과 조건과 판정 기준", "rows": ["최종 판정"]},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "단계별 통과 조건과 판정 기준", "items": ["REQ 원점 대조", "범위 대조", "명세 정합성", "요청하지 않은 기능 없음", "기록 규칙", "사본 대조", "삭제 대상", "인수 시험", "EC 판단(Minor)", "작성 모델 대조", "배치 판정", "동결 문서"]},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "시험실"},
+        {"doc": "Workflow/04_모델_운용.md", "section": "모델 사용 규칙"},
+        {"doc": "Workflow/04_모델_운용.md", "section": "단계별 모델"},
+        {"doc": "Workflow/04_모델_운용.md", "section": "계층형 지침"},
+        {"doc": "Workflow/06_통제장치_및_배포.md", "section": "거버넌스 파일 개정 절차"},
+        {"doc": "Workflow/07_문서_서식_및_번호.md", "section": "개정 이력과 리비전 태그"}
+      ],
+      "refs": [
+        {"doc": "Workflow/05_인수인계_및_실행명령.md", "section": "형상통제 절차"}
+      ]
+    },
+    "Q06": {
+      "card": true,
+      "select": [
+        {"doc": "Workflow/03_라이프사이클.md", "section": "중단 조건"},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "판정 세션 밖의 명령 실행"}
+      ],
+      "refs": []
+    },
+    "Q07": {
+      "card": true,
+      "select": [
+        {"doc": "Workflow/03_라이프사이클.md", "section": "단계별 통과 조건과 판정 기준", "rows": ["인수 시험"]},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "단계별 통과 조건과 판정 기준", "items": ["인수 시험"]},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "시험실"},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "판정 세션 밖의 명령 실행"},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "판정 전 점검", "rows": ["Q07"]},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "판정 전 점검", "items": ["실행", "판정과의 관계", "적용 시점"]}
+      ],
+      "refs": []
+    },
+    "O01": {
+      "card": false,
+      "select": [
+        {"doc": "Workflow/02_부서_구조_및_작업구역.md", "section": "부서별 책임과 산출물", "items": ["설계 파라미터와 런타임 파라미터"]}
+      ],
+      "refs": []
+    },
+    "O02": {
+      "card": false,
+      "select": [
+        {"doc": "Workflow/06_통제장치_및_배포.md", "section": "통제 계층"},
+        {"doc": "Workflow/06_통제장치_및_배포.md", "section": "권한 설정 (`.claude/settings.json`)", "items": ["`deny`", "`Lab/`과 `Storage/`는 `deny`에 넣지", "`Edit(...)` 규칙은 실제 경로의 Edit 도구", "`ask`", "`.claude/settings.local.json`은"]}
+      ],
+      "refs": []
+    },
+    "M01": {
+      "card": false,
+      "select": [],
+      "refs": []
+    },
+    "M02": {
+      "card": false,
+      "select": [],
+      "refs": []
+    },
+    "M03": {
+      "card": false,
+      "select": [],
+      "refs": []
+    },
+    "M04": {
+      "card": false,
+      "select": [],
+      "refs": []
+    },
+    "X01": {
+      "card": true,
+      "select": [
+        {"doc": "AGENTS.md", "section": "조직·구역과 권한 한계"},
+        {"doc": "Workflow/02_부서_구조_및_작업구역.md", "section": "팀 폴더와 공통 하위폴더"},
+        {"doc": "Workflow/02_부서_구조_및_작업구역.md", "section": "작업 구역"},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "단계별 통과 조건과 판정 기준", "rows": ["실험"]},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "판정 세션 밖의 명령 실행"},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "판정 전 점검", "rows": ["X01"]},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "판정 전 점검", "items": ["실행", "판정과의 관계", "적용 시점"]},
+        {"doc": "Workflow/03_라이프사이클.md", "section": "실험실"},
+        {"doc": "Workflow/04_모델_운용.md", "section": "타깃 컨텍스트 규칙", "items": ["매뉴얼 읽기"]},
+        {"doc": "Workflow/04_모델_운용.md", "section": "모델 메타데이터 기록"},
+        {"doc": "Workflow/06_통제장치_및_배포.md", "section": "무인 실행 권한"},
+        {"doc": "Workflow/07_문서_서식_및_번호.md", "section": "문서 체계", "rows": ["DEV", "RPT"]},
+        {"doc": "Workflow/07_문서_서식_및_번호.md", "section": "문서 체계", "items": ["서식 위치", "추적 관계", "추적 식별자", "다른 안건 기록의 참조"]},
+        {"doc": "Workflow/07_문서_서식_및_번호.md", "section": "번호와 버전", "rows": ["기본", "파생 안건"]},
+        {"doc": "Workflow/07_문서_서식_및_번호.md", "section": "번호와 버전", "items": ["번호", "팀 `workspace/` 파일", "버전", "서식"]},
+        {"doc": "Workflow/07_문서_서식_및_번호.md", "section": "머리말", "rows": ["DEV·RPT"]},
+        {"doc": "Workflow/07_문서_서식_및_번호.md", "section": "머리말", "items": ["머리말 형식", "날짜·시각 형식", "목록 필드", "scope의 기록 문서", "작성·판정 모델"]}
+      ],
+      "refs": [
+        {"doc": "Workflow/templates/DEV_TEMPLATE.md"}
+      ]
+    }
+  },
+  "excluded_sections": [
+    {"doc": "AGENTS.md", "section": "개정 이력"},
+    {"doc": "Workflow/01_표준_개요.md", "section": "개정 이력"},
+    {"doc": "Workflow/02_부서_구조_및_작업구역.md", "section": "개정 이력"},
+    {"doc": "Workflow/02_부서_구조_및_작업구역.md", "section": "옛 이름과 새 이름의 대응"},
+    {"doc": "Workflow/03_라이프사이클.md", "section": "개정 이력"},
+    {"doc": "Workflow/04_모델_운용.md", "section": "개정 이력"},
+    {"doc": "Workflow/04_모델_운용.md", "section": "기본 모델 표"},
+    {"doc": "Workflow/05_인수인계_및_실행명령.md", "section": "개정 이력"},
+    {"doc": "Workflow/06_통제장치_및_배포.md", "section": "개정 이력"},
+    {"doc": "Workflow/07_문서_서식_및_번호.md", "section": "개정 이력"},
+    {"doc": "Workflow/templates/PRD_TEMPLATE.md", "section": "개정 이력"},
+    {"doc": "Workflow/templates/TAD_TEMPLATE.md", "section": "개정 이력"}
+  ]
+}

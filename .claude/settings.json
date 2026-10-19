@@ -18,6 +18,11 @@
       "Bash(python Departments/Development/Implementation/assets/scripts/check_overlap.py*)",
       "Bash(python Departments/Development/Implementation/assets/scripts/check_process_map.py*)",
       "Bash(python Departments/Development/Implementation/assets/scripts/resolve_model.py*)",
+      "Bash(python Departments/Development/Implementation/assets/scripts/check_config.py*)",
+      "Bash(python Departments/Development/Implementation/assets/scripts/check_prejudge.py*)",
+      "Bash(python Departments/Development/Implementation/assets/scripts/build_guides.py --out *)",
+      "Bash(python Departments/Development/Implementation/assets/scripts/apply_delta.py --print *)",
+      "Bash(python Departments/Development/Implementation/assets/scripts/apply_delta.py --check *)",
       "Bash(python -m pytest*)",
       "Bash(python Departments/*/*/workspace/*)",
       "PowerShell(git status *)",
@@ -31,6 +36,11 @@
       "PowerShell(python Departments/Development/Implementation/assets/scripts/check_overlap.py *)",
       "PowerShell(python Departments/Development/Implementation/assets/scripts/check_process_map.py *)",
       "PowerShell(python Departments/Development/Implementation/assets/scripts/resolve_model.py *)",
+      "PowerShell(python Departments/Development/Implementation/assets/scripts/check_config.py *)",
+      "PowerShell(python Departments/Development/Implementation/assets/scripts/check_prejudge.py *)",
+      "PowerShell(python Departments/Development/Implementation/assets/scripts/build_guides.py --out *)",
+      "PowerShell(python Departments/Development/Implementation/assets/scripts/apply_delta.py --print *)",
+      "PowerShell(python Departments/Development/Implementation/assets/scripts/apply_delta.py --check *)",
       "PowerShell(python -m pytest *)"
     ],
     "deny": [

@@ -10,7 +10,8 @@ check_process_map.py - 프로세스 맵 연결·누락 검사(모델 매트릭�
 
 사용법: python check_process_map.py [--workflow-dir <폴더>]
   --workflow-dir: Workflow/<상대 경로>로 적힌 파일을 그 폴더에서 먼저 찾고, 없으면 저장소의 Workflow/에서 찾는다
-                  (설계 적용본으로 시험하기 위한 옵션)
+                  (설계 적용본으로 시험하기 위한 옵션). 그 폴더의 변경 파일(<이름>.변경.md)은 apply_delta.py의 함수로
+                  저장소의 원본에 적용해 읽는다(Workflow/06 「생성·반영 명령」 2항. REQ-034)
 종료 코드: 0 오류 없음, 1 오류 있음, 2 파일을 읽지 못함
 커밋 전 검사(check_standard.py 순서 9)는 run_checks()를 불러 쓰며 결과를 [WARN]으로 바꿔 출력한다(커밋을 막지 않음).
 """
@@ -49,6 +50,7 @@ CELL_KEYS = ("part", "role", "effort_means") + CLASSES
 # 절 제목 비교: H2·H3 제목에서 앞 번호와 리비전 태그를 뗀 글자(03 「프로세스 맵」 1항의 section 정의)
 HEADING = re.compile(r"^#{2,3} (?:\d+(?:\.\d+)*\.? )?(.*?)\s*$")
 REVISION_TAG = re.compile(r"\s*\((?:REQ|HOTFIX)-\d{3}(?:-\d+)?_v\d{2}\)$")
+DELTA_SUFFIX = ".변경.md"
 
 ACTIONS = {
     "P1": f"데이터 파일의 키와 값을 {MAP_SOURCE} 1항·{MATRIX_SOURCE} 3항의 형식대로 고친다",
@@ -73,26 +75,42 @@ def repo_root():
     return Path(res.stdout.decode("utf-8").strip())
 
 
+def _read_file(path):
+    try:
+        return path.read_text(encoding="utf-8")
+    except (OSError, UnicodeDecodeError) as e:
+        raise LoadError(f"파일을 읽을 수 없습니다: {path} ({type(e).__name__}: {e})")
+
+
 def file_reader(root, workflow_dir=None):
     """저장소 루트 기준 경로를 받아 텍스트(없으면 None)를 돌려주는 함수를 만든다.
 
     workflow_dir를 주면 Workflow/ 아래 경로를 그 폴더에서 먼저 찾는다(설계 적용본 시험용).
+    그 폴더에 원본 대신 변경 파일(<이름>.변경.md)이 있으면 저장소의 원본에 적용한 결과를 읽는다(REQ-034).
     """
     root = Path(root)
     wf = Path(workflow_dir) if workflow_dir else None
 
     def read(rel):
-        candidates = []
         if wf is not None and rel.startswith("Workflow/"):
-            candidates.append(wf / rel[len("Workflow/"):])
-        candidates.append(root / rel)
-        for path in candidates:
-            if path.is_file():
+            sub = rel[len("Workflow/"):]
+            if (wf / sub).is_file():
+                return _read_file(wf / sub)
+            delta = wf / (sub[:-len(".md")] + DELTA_SUFFIX) if sub.endswith(".md") else None
+            if delta is not None and delta.is_file():
+                base = root / rel
+                if not base.is_file():
+                    raise LoadError(f"변경 파일의 원본이 없습니다: {delta} → {rel}")
+                # 변경 파일을 읽을 때만 가져온다(변경 파일이 없는 실행에는 필요 없다)
+                import apply_delta
                 try:
-                    return path.read_text(encoding="utf-8")
-                except (OSError, UnicodeDecodeError) as e:
-                    raise LoadError(f"파일을 읽을 수 없습니다: {path} ({type(e).__name__}: {e})")
-        return None
+                    text, _ = apply_delta.apply(_read_file(base).replace("\r\n", "\n"),
+                                                _read_file(delta).replace("\r\n", "\n"))
+                except apply_delta.DeltaError as e:
+                    raise LoadError(f"변경 파일을 적용할 수 없습니다: {delta} ({e})")
+                return text
+        path = root / rel
+        return _read_file(path) if path.is_file() else None
 
     return read
 
@@ -413,7 +431,8 @@ def main(argv):
         if workflow_dir and not Path(workflow_dir).is_dir():
             raise LoadError(f"--workflow-dir 폴더가 없습니다: {workflow_dir}")
         if workflow_dir:
-            print(f"[INFO] Workflow/ 아래 파일을 {workflow_dir}에서 먼저 찾고, 없으면 저장소의 Workflow/에서 찾습니다.")
+            print(f"[INFO] Workflow/ 아래 파일을 {workflow_dir}에서 먼저 찾고(변경 파일은 원본에 적용해 읽음), "
+                  "없으면 저장소의 Workflow/에서 찾습니다.")
         errors, stats = run_checks(file_reader(root, workflow_dir))
     except LoadError as e:
         print(f"[FAIL] 프로세스 맵 검사: 파일을 읽지 못했습니다: {e}")
