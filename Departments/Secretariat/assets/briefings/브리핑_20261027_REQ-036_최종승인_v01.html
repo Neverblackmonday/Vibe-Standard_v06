@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>브리핑: REQ-036 최종 판정서 승인</title>
+<style>
+  body { margin: 0; padding: 24px; font-family: sans-serif; line-height: 1.6; color: #1f2328; background: #ffffff; }
+  main { max-width: 960px; margin: 0 auto; }
+  h1 { font-size: 1.5rem; margin: 0 0 16px; }
+  h2 { font-size: 1.15rem; margin: 24px 0 8px; }
+  .top { border: 2px solid #1f2328; border-radius: 8px; padding: 16px; margin-bottom: 24px; }
+  .top h2 { margin-top: 0; }
+  table { border-collapse: collapse; width: 100%; margin: 8px 0; }
+  th, td { border: 1px solid #d0d7de; padding: 6px 8px; text-align: left; vertical-align: top; }
+  th { background: #f6f8fa; }
+  code { font-family: monospace; background: #f6f8fa; padding: 0 4px; }
+  footer { margin-top: 32px; padding-top: 12px; border-top: 1px solid #d0d7de; font-size: 0.875rem; color: #57606a; }
+</style>
+</head>
+<body>
+<main>
+  <h1>브리핑: REQ-036 최종 판정서 승인</h1>
+
+  <section class="top">
+    <h2>결론</h2>
+    <p><code>REQ-036</code>(ORD-013 요구 항목 1~4, Critical)의 최종 판정은 <code>pass</code>입니다(<code>RES-036_v01.md</code>, 2026-10-27 03:03:51 완료, 결함 0건, 문체 지적 0건). 판정 모델은 Claude Opus 5.5로 정해진 모델과 같습니다. 비서실이 체크리스트 1~4의 근거를 판정서·결과서와 대조했고 어긋난 곳은 없습니다. 비서실은 승인하시기를 권고합니다.</p>
+    <h2>대표님이 할 일</h2>
+    <ul>
+      <li>최종 판정서 <code>Departments/Quality/results/RES-036_v01.md</code>와 적용본의 원본 대비 차이(판정서 4절 「원본과의 차이」)를 확인하십시오.</li>
+      <li>대리 기재된 REQ 승인 필드를 대조하십시오: <code>REQ-036_v02.md</code> <code>approved: "2026-10-26T21:54:40+09:00"</code>와 승인 기록 <code>승인기록_20261026_REQ-036_v02.md</code>(D1~D6 권고안).</li>
+      <li>승인하시면 v06 폴더 루트에서 <strong>새로 연</strong> Claude Code 세션에 승인 기록 호출 문구를 입력하십시오(대화창에 드린 문구). 승인 기록 → 반영 → 정리 → 커밋까지 이어서 진행됩니다. 푸시는 하지 않습니다.</li>
+      <li>원스톱 PM 탭은 권한 모드가 auto로 바뀌어 있으므로 반영·커밋에 쓰지 마시고 종료하십시오.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>1. 결정별 반영 위치 (REQ 「결정」 열 D1~D6, 모두 권고안)</h2>
+    <table>
+      <tr><th>결정</th><th>내용</th><th>반영 위치</th></tr>
+      <tr><td>D1</td><td>PowerShell 도구의 커밋·푸시·삭제·이동도 확인</td><td><code>.claude/settings.json</code> <code>permissions.ask</code>에 PowerShell 규칙 13개 추가, <code>Workflow/06</code> 2절 「<code>ask</code>」·2.1절</td></tr>
+      <tr><td>D2</td><td><code>workspace</code> 스크립트 안의 커밋 경로는 그대로</td><td><code>allow</code> 원본과 같음, <code>Workflow/06</code> 2.1절 셋째 항목 변경 없음</td></tr>
+      <tr><td>D3</td><td>기본 줄바꿈 LF</td><td><code>.gitattributes</code> 맨 앞 <code>* text=auto eol=lf</code>(기존 예외 유지)</td></tr>
+      <tr><td>D4</td><td>작업 파일 줄바꿈 맞춤은 커밋 뒤 대표님 직접</td><td><code>DEV-036_v01.md</code> 4.1절 「D4 참고 명령」(반영 명령이 아님)</td></tr>
+      <tr><td>D5</td><td>판정 모델과 다른 기동을 미리 막음(사후 대조 유지)</td><td><code>.claude/settings.json</code> <code>hooks.PreToolUse</code>(품질 기동 검사), <code>Workflow/04</code> 1.2절 「PM의 책임」 ⑥, <code>Workflow/06</code> 2절 「훅」</td></tr>
+      <tr><td>D6</td><td>「서브에이전트 정의」는 품질 부분만</td><td><code>Workflow/04</code> 「서브에이전트 정의」 항. 정의 파일 다섯 개는 바뀌지 않음</td></tr>
+    </table>
+    <p>요구 항목 3(EC 결정 범위 대조 칸)은 <code>Workflow/templates/EC_TEMPLATE.md</code> 3.3절, <code>DEV_TEMPLATE.md</code> 10절, <code>Workflow/03</code> 5절 표에 반영됩니다.</p>
+  </section>
+
+  <section>
+    <h2>2. 덮어쓰기·삭제 경로 목록</h2>
+    <p>승인 문구는 아래 덮어쓰기와 삭제의 승인을 겸합니다(<code>Workflow/05</code> 1.1절 1번). 반영 전에 각 원본이 기준 커밋 <code>57e55ec</code>과 같은지 확인하고, 다르면 반영하지 않고 멈춥니다.</p>
+    <table>
+      <tr><th>구분</th><th>경로</th><th>근거</th></tr>
+      <tr><td>덮어쓰기</td><td><code>Workflow/03_라이프사이클.md</code>, <code>Workflow/04_모델_운용.md</code>, <code>Workflow/06_통제장치_및_배포.md</code>, <code>Workflow/templates/EC_TEMPLATE.md</code>, <code>Workflow/templates/DEV_TEMPLATE.md</code></td><td><code>RPT-036_v02.md</code> 4절 반영 명령 표</td></tr>
+      <tr><td>덮어쓰기</td><td><code>.claude/settings.json</code>, <code>.gitattributes</code></td><td><code>DEV-036_v01.md</code> 4절 반영 명령 표</td></tr>
+      <tr><td>삭제(미추적)</td><td><code>Departments/Design/workspace/REQ-036_복사_20261026a.py</code>, <code>Departments/Development/workspace/REQ-036_기록조회_20261026a.py</code>, <code>…/REQ-036_실측_20261026a.py</code>, <code>…/REQ-036_훅생성_20261026a.py</code></td><td><code>RES-036_v01.md</code> 7절, RPT·DEV 4절 「삭제 대상」</td></tr>
+    </table>
+  </section>
+
+  <section>
+    <h2>3. 비서실 검토 의견</h2>
+    <ul>
+      <li><strong>체크리스트 대조:</strong> 1(PowerShell 확인)·2(줄바꿈)는 인수 시험 9건 통과와 열람 근거, 3(결정 범위 대조 칸)은 서식 적용본 위치, 4(판정 모델)는 개발 실측(Minor 최종 판정 재현에서 다른 모델 기동이 모두 막힘)과 04 적용본 문장으로 확인됩니다.</li>
+      <li><strong>반영 뒤 제약:</strong> Minor 안건의 최종 판정처럼 판정 모델이 PM 모델과 다른 기동은 막혀 멈춥니다. 결정 2에 따라 파생 안건 <code>REQ-036-1</code>(ORD-013 「라」)에서 고칩니다. 그 전에 Minor 안건이 생기면 고급으로 올리는 승인으로 진행할 수 있습니다. ORD-013의 남은 REQ(Critical)는 영향이 없습니다.</li>
+      <li><strong>커밋에 함께 들어가는 비서실 산출물:</strong> 규정(<code>Workflow/05</code> 1.1절 6번 ③⑨⑩)에 따라 <code>ORD-013_v01~v03</code>, 그 「근거 자료」 줄의 조사 자료, REQ-036 승인 브리핑과 이 브리핑이 이 안건 커밋에 들어갑니다. <code>REQ-035</code> 미추적 9건, 셸 작업 지시·결과, 인계 문서, 대응표는 들어가지 않으며 나중에 요구 항목 5·6·8·9의 REQ나 요청 커밋으로 다룹니다.</li>
+      <li><strong>PM 실행 기록 정정 필요:</strong> 02:04:15 행이 결정 1을 「권고안」, 이동 주체를 「이 세션(Claude Code·20261026T1712)」으로 적었습니다. 대표님 결정은 「결정 1 (나)」였고, 이동은 셸 작업 결과 파일(<code>20261027T022727_ORD-013_결과-20261027T020618.md</code>)에 적힌 <code>Claude Code·20261027T0226</code> 세션이 했습니다. 옮긴 위치와 결과는 같아 판정에는 영향이 없습니다. 실행 기록은 공식 진행 상태의 근거가 아니며, 정확한 기록은 결과 파일입니다.</li>
+      <li><strong>D4 줄바꿈 맞춤 시점:</strong> 참고 명령은 <code>git stash push --include-untracked</code>로 미추적 파일 전체를 잠시 치웁니다. 커밋 뒤에도 미추적 파일이 수십 건 남으므로, 비서실 산출물을 요청 커밋으로 먼저 정리한 뒤 실행하시기를 권고합니다.</li>
+      <li><strong>권한 설정:</strong> <code>.claude/settings.local.json</code>에는 <code>Bash(echo "exit=$?")</code> 허용 한 줄만 있습니다. auto 모드는 저장되지 않았습니다.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>4. 원천 문서</h2>
+    <ul>
+      <li>REQ: <code>Departments/Secretariat/docs/requests/REQ-036_v02.md</code></li>
+      <li>최종 판정서: <code>Departments/Quality/results/RES-036_v01.md</code></li>
+      <li>결과서: <code>Departments/Design/results/RPT-036_v02.md</code>, <code>Departments/Development/results/DEV-036_v01.md</code></li>
+      <li>인수 시험: <code>Departments/Quality/results/ACC-036_v01.md</code></li>
+    </ul>
+  </section>
+
+  <footer>
+    <p>작성 날짜: 2026-10-27</p>
+    <p>작성 서비스·세션 식별자와 모델: 코워크·20261021T2313, claude-opus-5-5(설정 모델. 실제 서빙 모델은 확인 불가)</p>
+    <p>원천 문서: <code>Departments/Quality/results/RES-036_v01.md</code>, <code>Departments/Secretariat/docs/requests/REQ-036_v02.md</code></p>
+  </footer>
+</main>
+</body>
+</html>

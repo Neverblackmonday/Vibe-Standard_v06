@@ -1,0 +1,85 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git status*)",
+      "Bash(git diff*)",
+      "Bash(git log*)",
+      "Bash(git show*)",
+      "Bash(git ls-files*)",
+      "Bash(wc *)",
+      "Bash(od *)",
+      "Bash(head *)",
+      "Bash(grep *)",
+      "Bash(date*)",
+      "Bash(tar --force-local -tf *)",
+      "Bash(python Departments/Development/assets/scripts/check_standard.py*)",
+      "Bash(python -m pytest*)",
+      "Bash(python Departments/*/workspace/*)",
+      "PowerShell(git status *)",
+      "PowerShell(git diff *)",
+      "PowerShell(git log *)",
+      "PowerShell(git show *)",
+      "PowerShell(git ls-files *)",
+      "PowerShell(python Departments/Development/assets/scripts/check_standard.py *)",
+      "PowerShell(python -m pytest *)"
+    ],
+    "deny": [
+      "Edit(CEO/**)",
+      "Write(CEO/**)",
+      "Edit(AGENTS.md)",
+      "Write(AGENTS.md)",
+      "Edit(CLAUDE.md)",
+      "Write(CLAUDE.md)",
+      "Edit(setup.cmd)",
+      "Write(setup.cmd)",
+      "Edit(.claude/**)",
+      "Write(.claude/**)",
+      "Edit(.githooks/**)",
+      "Write(.githooks/**)",
+      "Edit(Departments/Development/assets/scripts/**)",
+      "Write(Departments/Development/assets/scripts/**)",
+      "Edit(Workflow/**)",
+      "Write(Workflow/**)",
+      "Edit(.gitattributes)",
+      "Write(.gitattributes)",
+      "Edit(.gitignore)",
+      "Write(.gitignore)",
+      "Edit(_archive/**)",
+      "Write(_archive/**)"
+    ],
+    "ask": [
+      "Bash(rm *)",
+      "Bash(del *)",
+      "Bash(mv *)",
+      "Bash(move *)",
+      "Bash(git commit*)",
+      "Bash(git push*)",
+      "PowerShell(git commit*)",
+      "PowerShell(git push*)",
+      "PowerShell(Remove-Item *)",
+      "PowerShell(del *)",
+      "PowerShell(erase *)",
+      "PowerShell(rd *)",
+      "PowerShell(ri *)",
+      "PowerShell(rm *)",
+      "PowerShell(rmdir *)",
+      "PowerShell(Move-Item *)",
+      "PowerShell(mi *)",
+      "PowerShell(move *)",
+      "PowerShell(mv *)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Agent",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python -c \"exec('import sys, json, os\\nT = \\'[\\ud488\\uc9c8 \\uae30\\ub3d9 \\uac80\\uc0ac] \\'\\nACT = \\' \\uc870\\uce58: \\ud638\\ucd9c \\uc778\\uc790 model\\uc5d0 \\ud310\\uc815 \\ubaa8\\ub378 ID\\ub97c \\uc8fc\\uac70\\ub098(\\ud310\\uc815 \\ubaa8\\ub378\\uc774 PM \\ubaa8\\ub378\\uacfc \\uac19\\uc73c\\uba74 \\ube7c\\uace0) \\uc9c0\\uc2dc\\ubb38\\uc758 \\ub2e8\\uacc4\\uba85 \\ud45c\\uae30(\\ub2e8\\uacc4\\uba85: <\\ub2e8\\uacc4\\uba85>)\\ub97c \\uace0\\uccd0 \\ub2e4\\uc2dc \\uae30\\ub3d9\\ud558\\uc2ed\\uc2dc\\uc624. \\uace0\\uccd0\\ub3c4 \\uae30\\ub3d9\\ud560 \\uc218 \\uc5c6\\uc73c\\uba74 \\uba48\\ucd94\\uace0 \\ubcf4\\uace0\\ud558\\uc2ed\\uc2dc\\uc624. \\uadfc\\uac70: Workflow/04_\\ubaa8\\ub378_\\uc6b4\\uc6a9 1.2\\uc808 \\u300cPM\\uc758 \\ucc45\\uc784\\u300d \\u2465, 3\\uc808 1\\ud56d, Workflow/06_\\ud1b5\\uc81c\\uc7a5\\uce58_\\ubc0f_\\ubc30\\ud3ec 2\\uc808 \\u300c\\ud6c5\\u300d.\\'\\ndef say(m):\\n    sys.stderr.buffer.write((T + m + chr(10)).encode(\\'utf-8\\'))\\n    sys.stderr.buffer.flush()\\ndef block(m):\\n    say(m + ACT)\\n    sys.exit(2)\\ndef norm(m):\\n    return m.split(\\'[\\')[0].strip().lower()\\ndef fam(m):\\n    parts = norm(m).split(\\'-\\')\\n    for f in (\\'fable\\', \\'opus\\', \\'sonnet\\'):\\n        if f in parts:\\n            return f\\n    return None\\ndef high_id(data):\\n    root = os.environ.get(\\'CLAUDE_PROJECT_DIR\\') or data.get(\\'cwd\\') or \\'\\'\\n    p = os.path.join(root, \\'Workflow\\', \\'04_\\ubaa8\\ub378_\\uc6b4\\uc6a9.md\\')\\n    if not os.path.isfile(p):\\n        block(\\'Workflow/04_\\ubaa8\\ub378_\\uc6b4\\uc6a9.md\\ub97c \\ucc3e\\uc9c0 \\ubabb\\ud574 1.1\\uc808 \\ud45c\\uc758 \\uace0\\uae09 \\uae30\\ubcf8 \\ubaa8\\ub378 ID\\ub97c \\uc77d\\uc9c0 \\ubabb\\ud588\\uc2b5\\ub2c8\\ub2e4(\\ucc3e\\uc740 \\uc704\\uce58: \\' + p + \\').\\')\\n    with open(p, encoding=\\'utf-8\\') as fh:\\n        lines = fh.read().splitlines()\\n    head = None\\n    for n, line in enumerate(lines):\\n        cells = [c.strip() for c in line.strip().strip(\\'|\\').split(\\'|\\')]\\n        if cells == [\\'\\ub4f1\\uae09\\', \\'\\ud574\\ub2f9 \\ubaa8\\ub378\\', \\'\\uae30\\ubcf8 \\ubaa8\\ub378\\', \\'\\uae30\\ubcf8 \\ubaa8\\ub378 ID\\']:\\n            head = n\\n            break\\n    if head is None:\\n        block(\\'Workflow/04_\\ubaa8\\ub378_\\uc6b4\\uc6a9.md\\uc5d0\\uc11c 1.1\\uc808 \\ud45c\\uc758 \\uba38\\ub9ac \\ud589(\\ub4f1\\uae09 | \\ud574\\ub2f9 \\ubaa8\\ub378 | \\uae30\\ubcf8 \\ubaa8\\ub378 | \\uae30\\ubcf8 \\ubaa8\\ub378 ID)\\uc744 \\ucc3e\\uc9c0 \\ubabb\\ud588\\uc2b5\\ub2c8\\ub2e4.\\')\\n    for line in lines[head + 2:]:\\n        if not line.strip().startswith(\\'|\\'):\\n            break\\n        cells = [c.strip() for c in line.strip().strip(\\'|\\').split(\\'|\\')]\\n        if len(cells) == 4 and cells[0] == \\'\\uace0\\uae09\\':\\n            v = cells[3].strip(chr(96)).strip()\\n            if v and all(c in \\'abcdefghijklmnopqrstuvwxyz0123456789.-\\' for c in v):\\n                return v\\n            break\\n    block(\\'Workflow/04_\\ubaa8\\ub378_\\uc6b4\\uc6a9.md 1.1\\uc808 \\ud45c\\uc758 \\u300c\\uace0\\uae09\\u300d \\ud589 \\u300c\\uae30\\ubcf8 \\ubaa8\\ub378 ID\\u300d \\uce78\\uc744 \\uc77d\\uc9c0 \\ubabb\\ud588\\uc2b5\\ub2c8\\ub2e4.\\')\\ndef pm_model(data):\\n    tp = data.get(\\'transcript_path\\') or \\'\\'\\n    if not os.path.isfile(tp):\\n        block(\\'\\uc138\\uc158 \\uae30\\ub85d \\ud30c\\uc77c\\uc774 \\uc5c6\\uc5b4 PM \\ubaa8\\ub378\\uc744 \\uc5bb\\uc9c0 \\ubabb\\ud588\\uc2b5\\ub2c8\\ub2e4(transcript_path: \\' + str(tp) + \\').\\')\\n    pm = None\\n    with open(tp, encoding=\\'utf-8\\') as fh:\\n        for line in fh:\\n            try:\\n                o = json.loads(line)\\n            except ValueError:\\n                continue\\n            if isinstance(o, dict) and o.get(\\'type\\') == \\'assistant\\' and not o.get(\\'isSidechain\\'):\\n                msg = o.get(\\'message\\')\\n                m = msg.get(\\'model\\') if isinstance(msg, dict) else None\\n                if isinstance(m, str) and m.strip() and not m.startswith(\\'<\\'):\\n                    pm = m.strip()\\n    if pm is None:\\n        block(\\'\\uc138\\uc158 \\uae30\\ub85d \\ud30c\\uc77c\\uc5d0\\uc11c \\uba54\\uc778 \\uc138\\uc158 \\uc751\\ub2f5\\uc758 model \\uac12\\uc744 \\ucc3e\\uc9c0 \\ubabb\\ud574 PM \\ubaa8\\ub378\\uc744 \\uc5bb\\uc9c0 \\ubabb\\ud588\\uc2b5\\ub2c8\\ub2e4.\\')\\n    return pm\\ndef stage_of(prompt):\\n    k = \\'\\ub2e8\\uacc4\\uba85\\'\\n    i = prompt.find(k)\\n    if i < 0:\\n        block(\\'\\uc9c0\\uc2dc\\ubb38\\uc5d0 \\ub2e8\\uacc4\\uba85 \\ud45c\\uae30(\\ub2e8\\uacc4\\uba85: <\\ub2e8\\uacc4\\uba85>)\\uac00 \\uc5c6\\uc2b5\\ub2c8\\ub2e4.\\')\\n    rest = prompt[i + len(k):].lstrip()\\n    if not rest.startswith(\\':\\'):\\n        block(\\'\\uc9c0\\uc2dc\\ubb38\\uc758 \\ub2e8\\uacc4\\uba85 \\ud45c\\uae30\\uac00 \\u300c\\ub2e8\\uacc4\\uba85: <\\ub2e8\\uacc4\\uba85>\\u300d \\ud615\\uc2dd\\uc774 \\uc544\\ub2d9\\ub2c8\\ub2e4.\\')\\n    raw = rest[1:].split(chr(10))[0].strip()\\n    v = \\'\\'.join(raw.split())\\n    if not v:\\n        block(\\'\\uc9c0\\uc2dc\\ubb38\\uc758 \\ub2e8\\uacc4\\uba85 \\uac12\\uc774 \\ube44\\uc5b4 \\uc788\\uc2b5\\ub2c8\\ub2e4.\\')\\n    if v.startswith(\\'\\ucd5c\\uc885\\ud310\\uc815\\'):\\n        return \\'final\\', raw\\n    if v.startswith(\\'REQ\\ud310\\uc815\\'):\\n        return \\'req\\', raw\\n    for s in (\\'EC\\ud310\\uc815\\', \\'\\uba85\\uc138\\ud310\\uc815\\', \\'\\uc2dc\\uac01\\ub514\\uc790\\uc778\\ud310\\uc815\\', \\'\\uc778\\uc218\\uc2dc\\ud5d8\\', \\'\\ubd80\\uc801\\ud569\\uae30\\ub85d\\'):\\n        if v.startswith(s):\\n            return \\'other\\', raw\\n    block(\\'\\uc9c0\\uc2dc\\ubb38\\uc758 \\ub2e8\\uacc4\\uba85 \\u300c\\' + raw + \\'\\u300d\\uc774 \\uc54c\\ub824\\uc9c4 \\ud488\\uc9c8 \\ub2e8\\uacc4\\uba85(REQ \\ud310\\uc815, EC \\ud310\\uc815, \\uba85\\uc138 \\ud310\\uc815, \\uc2dc\\uac01 \\ub514\\uc790\\uc778 \\ud310\\uc815, \\ucd5c\\uc885 \\ud310\\uc815, \\uc778\\uc218 \\uc2dc\\ud5d8, \\ubd80\\uc801\\ud569 \\uae30\\ub85d)\\uc73c\\ub85c \\uc2dc\\uc791\\ud558\\uc9c0 \\uc54a\\uc2b5\\ub2c8\\ub2e4.\\')\\ntry:\\n    data = json.loads(sys.stdin.buffer.read().decode(\\'utf-8\\'))\\n    ti = data.get(\\'tool_input\\') or {}\\n    if ti.get(\\'subagent_type\\') != \\'quality\\':\\n        sys.exit(0)\\n    stage, raw = stage_of(ti.get(\\'prompt\\') or \\'\\')\\n    pm = pm_model(data)\\n    f = fam(pm)\\n    if stage == \\'final\\':\\n        if f in (\\'fable\\', \\'opus\\'):\\n            judge = pm\\n        elif f == \\'sonnet\\':\\n            judge = high_id(data)\\n        else:\\n            block(\\'PM \\ubaa8\\ub378 \\' + pm + \\'\\uc774 \\uc54c\\ub824\\uc9c4 \\uacc4\\uc5f4(fable, opus, sonnet) \\ubc16\\uc774\\uc5b4\\uc11c \\ucd5c\\uc885 \\ud310\\uc815\\uc758 \\ud310\\uc815 \\ubaa8\\ub378\\uc744 \\uc815\\ud558\\uc9c0 \\ubabb\\ud588\\uc2b5\\ub2c8\\ub2e4.\\')\\n    elif stage == \\'req\\':\\n        if f == \\'opus\\':\\n            judge = pm\\n        elif f in (\\'fable\\', \\'sonnet\\'):\\n            judge = high_id(data)\\n        else:\\n            block(\\'PM \\ubaa8\\ub378 \\' + pm + \\'\\uc774 \\uc54c\\ub824\\uc9c4 \\uacc4\\uc5f4(fable, opus, sonnet) \\ubc16\\uc774\\uc5b4\\uc11c REQ \\ud310\\uc815\\uc758 \\ud310\\uc815 \\ubaa8\\ub378\\uc744 \\uc815\\ud558\\uc9c0 \\ubabb\\ud588\\uc2b5\\ub2c8\\ub2e4.\\')\\n    else:\\n        judge = pm\\n    arg = ti.get(\\'model\\')\\n    if arg is not None and not isinstance(arg, str):\\n        block(\\'\\ud638\\ucd9c \\uc778\\uc790 model\\uc774 \\ubb38\\uc790\\uc5f4\\uc774 \\uc544\\ub2d9\\ub2c8\\ub2e4.\\')\\n    launched = arg.strip() if arg and arg.strip() else pm\\n    if norm(launched) != norm(judge):\\n        block(\\'\\ud488\\uc9c8 \\uc11c\\ube0c\\uc5d0\\uc774\\uc804\\ud2b8 \\uae30\\ub3d9\\uc744 \\ub9c9\\uc558\\uc2b5\\ub2c8\\ub2e4. \\ub2e8\\uacc4: \\' + raw + \\', PM \\ubaa8\\ub378: \\' + pm + \\', \\ud310\\uc815 \\ubaa8\\ub378 ID: \\' + judge + \\', \\uae30\\ub3d9\\ub420 \\ubaa8\\ub378: \\' + launched + (\\'(\\ud638\\ucd9c \\uc778\\uc790)\\' if arg and arg.strip() else \\'(\\ud638\\ucd9c \\uc778\\uc790 \\uc5c6\\uc74c, PM \\ubaa8\\ub378\\uc744 \\uc774\\uc5b4\\ubc1b\\uc74c)\\') + \\'.\\')\\n    sys.exit(0)\\nexcept SystemExit:\\n    raise\\nexcept Exception as e:\\n    say(\\'\\uac80\\uc0ac\\uac00 \\uc624\\ub958\\ub85c \\ub05d\\ub098 \\ud488\\uc9c8 \\uc11c\\ube0c\\uc5d0\\uc774\\uc804\\ud2b8 \\uae30\\ub3d9\\uc744 \\ub9c9\\uc558\\uc2b5\\ub2c8\\ub2e4: \\' + type(e).__name__ + \\': \\' + str(e) + ACT)\\n    sys.exit(2)\\n')\" || exit 2"
+          }
+        ]
+      }
+    ]
+  }
+}
